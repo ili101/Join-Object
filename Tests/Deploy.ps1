@@ -19,7 +19,7 @@ try
         $ModuleName = [System.IO.Path]::GetFileNameWithoutExtension((Get-ChildItem -File -Filter *.psm1 -Name -Path "$PSScriptRoot\.."))
         try
         {
-            $VersionGallery = (Find-Module -Name $ModuleName).Version
+            $VersionGallery = (Find-Module -Name $ModuleName -ErrorAction Stop).Version
         }
         catch
         {
