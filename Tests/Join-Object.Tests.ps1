@@ -203,3 +203,38 @@ ID Sub Name Junk
 }
 
 Write-Verbose -Message 'Testing end'
+
+<# Alternative testing method
+using namespace System.Data
+Add-Type -AssemblyName System.Data.DataSetExtensions
+
+$DataTable2 = [Data.DataTable]::new('Test')
+$null = $DataTable2.Columns.Add('IDD')
+$null = $DataTable2.Columns.Add('Name')
+$null = $DataTable2.Columns.Add('Junk')
+$null = $DataTable2.Rows.Add(1,'A','AAA')
+$null = $DataTable2.Rows.Add(3,'C',$null)
+
+
+$DataTable = [Data.DataTable]::new('Test')
+$null = $DataTable.Columns.Add('IDD')
+$null = $DataTable.Columns.Add('Name')
+$null = $DataTable.Columns.Add('Junk')
+$null = $DataTable.Rows.Add(1,'A','AAA')
+$null = $DataTable.Rows.Add(3,'C',$null)
+
+[System.Linq.Enumerable]::SequenceEqual($DataTable.Rows.ItemArray, $DataTable2.Rows.ItemArray)
+
+$PSCustomObjects= @(
+    [PSCustomObject]@{ID = 1 ; Sub = 'S1'}
+    [PSCustomObject]@{ID = 2 ; Sub = 'S2'}
+    [PSCustomObject]@{ID = 3 ; Sub = 'S3'}
+    )
+$PSCustomObjects2= @(
+    [PSCustomObject]@{ID = 1 ; Sub = 'S1'}
+    [PSCustomObject]@{ID = 2 ; Sub = 'S2'}
+    [PSCustomObject]@{ID = 3 ; Sub = 'S3'}
+    )
+
+[System.Linq.Enumerable]::SequenceEqual(($PSCustomObjects2 | ForEach-Object {$_.psobject.Properties.Value}), ($PSCustomObjects | ForEach-Object {$_.psobject.Properties.Value}))
+#>
