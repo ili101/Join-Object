@@ -236,8 +236,8 @@ function Join-Object
 
         [string]$Prefix,
         [string]$Suffix,
-        [switch]$PassThru,
-        [switch]$DataTable
+        [switch]$PassThru
+        #[switch]$DataTable
     )
     if ($Left -is [PSCustomObject])
     {

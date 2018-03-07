@@ -1,5 +1,5 @@
 # version format
-version: 0.0.{build}
+version: 0.1.{build}
 
 # Build worker image (VM template)
 image: WMF 5
@@ -13,7 +13,7 @@ build: off
 
 # to run your custom scripts instead of automatic tests
 test_script:
-- ps: $VerbosePreference = 'Continue' ; . .\Install.ps1 ; Invoke-Pester
+- ps: $VerbosePreference = 'Continue' ; . .\Install.ps1 ; Invoke-Pester -EnableExit
 
 # Including commits with particular message or from specific user
 only_commits:

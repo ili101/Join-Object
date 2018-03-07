@@ -32,3 +32,8 @@ If you fund a bug or added functionality or anything else just fork and send pul
 
 ##  Changelog
 [CHANGELOG.md](https://github.com/ili101/Join-Object/blob/master/CHANGELOG.md)
+
+# More PowerShell stuff
+https://github.com/ili101/PowerShell
+
+[![Build status](https://ci.appveyor.com/api/projects/status/sk2d54q6q85i1ejm?svg=true)](https://ci.appveyor.com/project/ili101/join-object)
