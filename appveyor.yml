@@ -17,7 +17,7 @@ test_script:
 
 # Including commits with particular message or from specific user
 only_commits:
-  message: /build/                # Start a new build if message contains 'build'
+  message: /\[build\]/                # Start a new build if message contains 'build'
 
 environment:
   NugetApiKey:

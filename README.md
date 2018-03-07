@@ -4,13 +4,15 @@ Aims to provide the exact functibility of https://github.com/RamblingCookieMonst
 Initial testing shows at last 100 times faster.
 
 ## Explanation and usage Examples
-See RamblingCookieMonster guide http://ramblingcookiemonster.github.io/Join-Object/ and [Join-Object.Examples.ps1](https://github.com/ili101/PowerShell/blob/master/Examples/Join-Object.Examples.ps1)
+See RamblingCookieMonster guide http://ramblingcookiemonster.github.io/Join-Object/ and [Join-Object.Examples.ps1](https://github.com/ili101/Join-Object/blob/master/Examples/Join-Object.Examples.ps1)
 
 ## Additional functoriality
 * Supports DataTable object type.
 * Additional parameters **-ExcludeLeftProperties** and **-ExcludeRightProperties**.
 * Additional parameter **-PassThru**, If added changes the original Left Object
 * Converts DBNull to $null
+* **-RightJoinScript** and **-LeftJoinScript** parameters to support custom joining scripts.
+* -RightJoinProperty and -LeftJoinProperty supports multiple Properties (String Array) to join on multiple columns.
 
 ## To do and missing functoriality
 * -Type Parameter supports for "AllInBoth" ~~and "AllInRight"~~.
