@@ -1,12 +1,12 @@
 # version format
-version: 1.0.{build}
+version: 0.0.{build}
 
 # Build worker image (VM template)
 image: WMF 5
 
 # scripts that run after cloning repository
 install:
-- ps: choco install pester --prerelease
+- ps: choco install pester
 
 # to disable automatic builds
 build: off

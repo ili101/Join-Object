@@ -18,7 +18,7 @@ $TestDataSetSmall = {
 
 Describe -Name 'Join-Object' -Fixture {
     Context -Name "Test Small" -Fixture {
-        It -name "Testing '<TestName>', it returns '<Expected>'" -TestCases @(
+        It -name "Testing <TestName>, it returns <Expected>" -TestCases @(
             @{
                 TestName = 'Small: PSCustomObjects - DataTable'
                 TestDataSet = $TestDataSetSmall
@@ -181,7 +181,7 @@ ID Sub Name Junk
             $BeforeRight =  $Params.Right | Out-String
 
             $JoindOutput = Join-Object @Params
-            Write-Verbose -Message ('Start' + ($JoindOutput | Out-String ) + 'End') -Verbose
+            Write-Verbose -Message ('Start' + ($JoindOutput | Out-String ) + 'End')
 
             $JoindOutput | Out-String | Should -Be $Expected
             if ($Params.PassThru)
