@@ -236,8 +236,8 @@ function Join-Object
 
         [string]$Prefix,
         [string]$Suffix,
-        [switch]$PassThru
-        #[switch]$DataTable
+        [switch]$PassThru,
+        [switch]$DataTable
     )
     if ($Left -is [PSCustomObject])
     {
@@ -449,6 +449,87 @@ function Join-Object
             }
         }
     }
+    elseif ($DataTable)
+    {
+        $OutDataTable = [Data.DataTable]::new('Joined')
+        # Create Columns
+        foreach ($item in $SelectedLeftProperties.GetEnumerator())
+        {
+            if ($Left -is [Data.DataTable])
+            {
+                $null = $OutDataTable.Columns.Add($item.Value,$Left.Columns.Item($item.Name).DataType)
+            }
+            else
+            {
+                $null = $OutDataTable.Columns.Add($item.Value)
+            }
+        }
+        foreach ($item in $SelectedRightProperties.GetEnumerator())
+        {
+            if ($Right -is [Data.DataTable])
+            {
+                $null = $OutDataTable.Columns.Add($item.Value,$Right.Columns.Item($item.Name).DataType)
+            }
+            else
+            {
+                $null = $OutDataTable.Columns.Add($item.Value)
+            }
+        }
+
+        if ($Type -eq 'OnlyIfInBoth')
+        {        
+            [System.Func[System.Object, [System.Object], System.Object]]$query = {
+        	    param(
+        		    $LeftLine,
+        		    $RightLine
+        	    )
+                $Row = $OutDataTable.Rows.Add()
+                foreach ($item in $SelectedLeftProperties.GetEnumerator())
+                {
+                    if (($Value = $LeftLine.($item.Key)) -is [DBNull])
+                    {
+                        $Value = $null
+                    }
+                    $Row.($item.Value) = $Value
+                }
+                foreach ($item in $SelectedRightProperties.GetEnumerator())
+                {
+                    if (($Value = $RightLine.($item.Key)) -is [DBNull])
+                    {
+                        $Value = $null
+                    }
+                    $Row.($item.Value) = $Value
+                }
+            }
+        }
+        else
+        {
+            [System.Func[System.Object, [Collections.Generic.IEnumerable[System.Object]], System.Object]]$query = {
+        	    param(
+        		    $LeftLine,
+        		    $RightLineEnumerable
+        	    )
+                $RightLine = [System.Linq.Enumerable]::SingleOrDefault($RightLineEnumerable)
+                $Row = $OutDataTable.Rows.Add()
+                foreach ($item in $SelectedLeftProperties.GetEnumerator())
+                {
+                    if (($Value = $LeftLine.($item.Key)) -is [DBNull])
+                    {
+                        $Value = $null
+                    }
+                    $Row.($item.Value) = $Value
+                }
+                foreach ($item in $SelectedRightProperties.GetEnumerator())
+                {
+                    if (($Value = $RightLine.($item.Key)) -is [DBNull])
+                    {
+                        $Value = $null
+                    }
+                    $Row.($item.Value) = $Value
+                }
+            }
+        }
+    }
     else
     {
         if ($Type -eq 'OnlyIfInBoth')
@@ -525,7 +606,7 @@ function Join-Object
         $RightNew = $Right
     }
 
-    if ($PassThru)
+    if ($PassThru -or $DataTable)
     {
         if ($Type -eq 'OnlyIfInBoth')
         {
@@ -539,7 +620,14 @@ function Join-Object
     	        [System.Linq.Enumerable]::GroupJoin($LeftNew, $RightNew, $LeftJoinFunction, $RightJoinFunction, $query)
             )
         }
-        ,$Left
+        if ($PassThru)
+        {
+            ,$Left
+        }
+        else
+        {
+            ,$OutDataTable
+        }
     }
     else
     {

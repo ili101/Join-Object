@@ -8,7 +8,7 @@ $TestDataSetSmall = {
     )
     
     $DataTable = [Data.DataTable]::new('Test')
-    $null = $DataTable.Columns.Add('IDD')
+    $null = $DataTable.Columns.Add('IDD',[System.Int32])
     $null = $DataTable.Columns.Add('Name')
     $null = $DataTable.Columns.Add('Junk')
     $null = $DataTable.Rows.Add(1,'A','AAA')
@@ -42,6 +42,7 @@ ID Subscription R_Name
 
 
 "@
+                Count = 3
             }
             @{
                 TestName = 'Small: PSCustomObjects - DataTable, ordered'
@@ -66,6 +67,7 @@ S3            3 C
 
 
 "@
+                Count = 3
             }
             @{
                 TestName = 'Small: DataTable - PSCustomObjects'
@@ -83,12 +85,13 @@ S3            3 C
 
 IDD Name Subscription_R
 --- ---- --------------
-1   A    S1            
-3   C    S3            
+  1 A    S1            
+  3 C    S3            
 
 
 
 "@
+                Count = 2
             }
             @{
                 TestName = 'Small: PSCustomObjects - DataTable, PassThru'
@@ -114,6 +117,7 @@ ID Subscription R_Name
 
 
 "@
+                Count = 3
             }
             @{
                 TestName = 'Small: DataTable - PSCustomObjects, PassThru'
@@ -133,12 +137,13 @@ ID Subscription R_Name
 
 IDD NewName Subscription_R
 --- ------- --------------
-1   A       S1            
-3   C       S3            
+  1 A       S1            
+  3 C       S3            
 
 
 
 "@
+                Count = 2
             }
             @{
                 TestName = 'Small: PSCustomObjects - DataTable, DBNull to $null'
@@ -160,6 +165,7 @@ ID Sub Name Junk
 
 
 "@
+                Count = 3
                 ExtraTest = {$JoindOutput | Where-Object {$_.Junk} | Out-String | Should -Be @"
 
 ID Sub Name Junk
@@ -170,8 +176,33 @@ ID Sub Name Junk
 
 "@}
             }
+            @{
+                TestName = 'Small: PSCustomObjects - DataTable, DataTable'
+                TestDataSet = $TestDataSetSmall
+                Params = @{
+                    Left                   = 'DataTable'
+                    Right                  = 'PSCustomObjects'
+                    LeftJoinProperty       = 'IDD'
+                    RightJoinProperty      = 'ID'
+                    RightProperties         = @{ID= 'ID' ; Sub = 'Subscription'}
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                    DataTable              = $true
+                }
+                Expected = @"
+
+IDD Name Junk R_Subscription
+--- ---- ---- --------------
+  1 A    AAA  S1            
+  3 C         S3            
+
+
+
+"@
+                Count = 2
+            }
         ) -test {
-            param ($TestDataSet, $Params, $Expected, $ExtraTest)
+            param ($TestDataSet, $Params, $Expected, $Count, $ExtraTest)
 
             . $TestDataSet
             $Params.Left  = (Get-Variable -Name $Params.Left).Value
@@ -209,6 +240,15 @@ ID Sub Name Junk
             {
                 Should -BeOfType -ActualValue $JoindOutput -ExpectedType 'System.Array'
                 $JoindOutput | Should -BeOfType -ExpectedType 'PSCustomObject'
+            }
+
+            if ($JoindOutput -is [System.Data.DataTable])
+            {
+                $JoindOutput.Rows.Count | Should -Be $Count
+            }
+            else
+            {
+                $JoindOutput.Count | Should -Be $Count
             }
 
             if ($ExtraTest)

@@ -1,4 +1,10 @@
-﻿## 0.1.2 - 2018/03/05 (Beta)
+﻿## 0.1.4 - 2018/03/08 (Beta)
+### Added
+* **-DataTable** parameter to output as "DataTable".
+### Fixed
+* Output when using PassThru on "-Left DataTable" was returning "Array" with "DataRow"s instead of "DataTable" with "DataRow"s Object.
+
+## 0.1.2 - 2018/03/05 (Beta)
 ### Added
 * **-Type** parameter that supports "AllInLeft" and "OnlyIfInBoth".
 * **-RightJoinScript** and **-LeftJoinScript** parameters to support custom joining scripts.

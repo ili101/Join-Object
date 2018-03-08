@@ -13,11 +13,11 @@ See RamblingCookieMonster guide http://ramblingcookiemonster.github.io/Join-Obje
 * Converts DBNull to $null
 * **-RightJoinScript** and **-LeftJoinScript** parameters to support custom joining scripts.
 * -RightJoinProperty and -LeftJoinProperty supports multiple Properties (String Array) to join on multiple columns.
+* **-DataTable** parameter to output as "DataTable".
 
 ## To do and missing functoriality
 * -Type Parameter supports for "AllInBoth" ~~and "AllInRight"~~.
 * Optimize performance
-* Option to output as "DataTable"
 
 ## Install
 From repository
