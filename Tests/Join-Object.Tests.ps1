@@ -179,6 +179,8 @@ ID Sub Name Junk
 
             $BeforeLeft =  $Params.Left | Out-String
             $BeforeRight =  $Params.Right | Out-String
+            $BeforeLeftType = $Params.Left.GetType()
+            $BeforeRightType = $Params.Right.GetType()
 
             $JoindOutput = Join-Object @Params
             Write-Verbose -Message ('Start' + ($JoindOutput | Out-String ) + 'End')
@@ -193,6 +195,21 @@ ID Sub Name Junk
                 ($Params.Left | Out-String) | Should -Be $BeforeLeft
             }
             ($Params.Right | Out-String) | Should -Be $BeforeRight
+
+            if ($Params.PassThru)
+            {
+                Should -BeOfType -ActualValue $JoindOutput -ExpectedType $BeforeLeftType
+            }
+            elseif ($Params.DataTable)
+            {
+                Should -BeOfType -ActualValue $JoindOutput -ExpectedType 'System.Data.DataTable'
+                $JoindOutput | Should -BeOfType -ExpectedType 'System.Data.DataRow'
+            }
+            else
+            {
+                Should -BeOfType -ActualValue $JoindOutput -ExpectedType 'System.Array'
+                $JoindOutput | Should -BeOfType -ExpectedType 'PSCustomObject'
+            }
 
             if ($ExtraTest)
             {

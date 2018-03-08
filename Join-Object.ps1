@@ -525,21 +525,35 @@ function Join-Object
         $RightNew = $Right
     }
 
-    if ($Type -eq 'OnlyIfInBoth')
+    if ($PassThru)
     {
-        [System.Linq.Enumerable]::ToArray(
-    	    [System.Linq.Enumerable]::Join($LeftNew, $RightNew, $LeftJoinFunction, $RightJoinFunction, $query)
-        )
+        if ($Type -eq 'OnlyIfInBoth')
+        {
+            $null = [System.Linq.Enumerable]::ToArray(
+    	        [System.Linq.Enumerable]::Join($LeftNew, $RightNew, $LeftJoinFunction, $RightJoinFunction, $query)
+            )
+        }
+        else
+        {
+            $null = [System.Linq.Enumerable]::ToArray(
+    	        [System.Linq.Enumerable]::GroupJoin($LeftNew, $RightNew, $LeftJoinFunction, $RightJoinFunction, $query)
+            )
+        }
+        ,$Left
     }
     else
     {
-        [System.Linq.Enumerable]::ToArray(
-    	    [System.Linq.Enumerable]::GroupJoin($LeftNew, $RightNew, $LeftJoinFunction, $RightJoinFunction, $query)
-        )
-    }
-
-    if ($PassThru)
-    {
-        $Left
+        if ($Type -eq 'OnlyIfInBoth')
+        {
+            [System.Linq.Enumerable]::ToArray(
+    	        [System.Linq.Enumerable]::Join($LeftNew, $RightNew, $LeftJoinFunction, $RightJoinFunction, $query)
+            )
+        }
+        else
+        {
+            [System.Linq.Enumerable]::ToArray(
+    	        [System.Linq.Enumerable]::GroupJoin($LeftNew, $RightNew, $LeftJoinFunction, $RightJoinFunction, $query)
+            )
+        }
     }
 }
