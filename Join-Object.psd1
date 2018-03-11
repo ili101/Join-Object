@@ -12,7 +12,7 @@
 RootModule = 'Join-Object.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.1.4'
+ModuleVersion = '0.1.5'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -30,7 +30,14 @@ Author = 'ili'
 Copyright = '(c) 2017 ili. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'Description'
+Description = @'
+Join-Object LINQ Edition.
+Aims to provide the exact functibility of https://github.com/RamblingCookieMonster/PowerShell/blob/master/Join-Object.ps1 with much better performance.
+Initial testing shows at last 100 times faster.
+
+## Explanation and usage Examples
+See RamblingCookieMonster guide http://ramblingcookiemonster.github.io/Join-Object/ and https://github.com/ili101/Join-Object/blob/master/Examples/Join-Object.Examples.ps1
+'@
 
 # Minimum version of the Windows PowerShell engine required by this module
 # PowerShellVersion = ''
@@ -108,11 +115,9 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @' 
-## 0.1.2 - 2018/03/05 (Beta)
-### Added
-* **-Type** parameter that supports "AllInLeft" and "OnlyIfInBoth".
-* **-RightJoinScript** and **-LeftJoinScript** parameters to support custom joining scripts.
-* **-RightJoinProperty** and **-LeftJoinProperty** now supports multiple Properties (String Array) to join on multiple columns.
+## 0.1.5 - 2018/03/11 (Beta)
+### Fixed
+* Error "Cannot set Column 'foo' to be null. Please use DBNull instead." when using -DataTable on DataTable data with nulls in it.
 '@
 
     } # End of PSData hashtable

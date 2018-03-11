@@ -1,4 +1,8 @@
-﻿## 0.1.4 - 2018/03/08 (Beta)
+﻿## 0.1.5 - 2018/03/11 (Beta)
+### Fixed
+* Error "Cannot set Column 'foo' to be null. Please use DBNull instead." when using -DataTable on DataTable data with nulls in it.
+
+## 0.1.4 - 2018/03/08 (Beta)
 ### Added
 * **-DataTable** parameter to output as "DataTable".
 ### Fixed

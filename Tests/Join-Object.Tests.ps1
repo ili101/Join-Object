@@ -2,17 +2,18 @@
 
 $TestDataSetSmall = {
     $PSCustomObjects= @(
-        [PSCustomObject]@{ID = 1 ; Sub = 'S1'}
-        [PSCustomObject]@{ID = 2 ; Sub = 'S2'}
-        [PSCustomObject]@{ID = 3 ; Sub = 'S3'}
+        [PSCustomObject]@{ID = 1 ; Sub = 'S1' ; IntO = 6}
+        [PSCustomObject]@{ID = 2 ; Sub = 'S2' ; IntO = 7}
+        [PSCustomObject]@{ID = 3 ; Sub = 'S3' ; IntO = $null}
     )
     
     $DataTable = [Data.DataTable]::new('Test')
     $null = $DataTable.Columns.Add('IDD',[System.Int32])
     $null = $DataTable.Columns.Add('Name')
     $null = $DataTable.Columns.Add('Junk')
-    $null = $DataTable.Rows.Add(1,'A','AAA')
-    $null = $DataTable.Rows.Add(3,'C',$null)
+    $null = $DataTable.Columns.Add('IntT',[System.Int32])
+    $null = $DataTable.Rows.Add(1,'A','AAA',5)
+    $null = $DataTable.Rows.Add(3,'C',$null,$null)
 }
 #. $TestDataSetSmall
 
@@ -33,11 +34,11 @@ Describe -Name 'Join-Object' -Fixture {
                 }
                 Expected = @"
 
-ID Subscription R_Name
--- ------------ ------
- 1 S1           A     
- 2 S2                 
- 3 S3           C     
+ID Subscription R_Name R_IntT
+-- ------------ ------ ------
+ 1 S1           A           5
+ 2 S2                        
+ 3 S3           C            
 
 
 
@@ -58,11 +59,11 @@ ID Subscription R_Name
                 }
                 Expected = @"
 
-Subscription ID R_Name
------------- -- ------
-S1            1 A     
-S2            2       
-S3            3 C     
+Subscription ID R_Name R_IntT
+------------ -- ------ ------
+S1            1 A           5
+S2            2              
+S3            3 C            
 
 
 
@@ -83,10 +84,10 @@ S3            3 C
                 }
                 Expected = @"
 
-IDD Name Subscription_R
---- ---- --------------
-  1 A    S1            
-  3 C    S3            
+IDD Name IntT Subscription_R
+--- ---- ---- --------------
+  1 A       5 S1            
+  3 C         S3            
 
 
 
@@ -108,11 +109,11 @@ IDD Name Subscription_R
                 }
                 Expected = @"
 
-ID Subscription R_Name
--- ------------ ------
- 1 S1           A     
- 2 S2                 
- 3 S3           C     
+ID Subscription R_Name R_IntT
+-- ------------ ------ ------
+ 1 S1           A           5
+ 2 S2                        
+ 3 S3           C            
 
 
 
@@ -156,21 +157,21 @@ IDD NewName Subscription_R
                 }
                 Expected = @"
 
-ID Sub Name Junk
--- --- ---- ----
- 1 S1  A    AAA 
- 2 S2           
- 3 S3  C        
+ID Sub IntO Name Junk IntT
+-- --- ---- ---- ---- ----
+ 1 S1     6 A    AAA     5
+ 2 S2     7               
+ 3 S3       C             
 
 
 
 "@
                 Count = 3
-                ExtraTest = {$JoindOutput | Where-Object {$_.Junk} | Out-String | Should -Be @"
+                ExtraTest = {$JoindOutput | Where-Object {$_.Junk} | Format-Table | Out-String | Should -Be @"
 
-ID Sub Name Junk
--- --- ---- ----
- 1 S1  A    AAA 
+ID Sub IntO Name Junk IntT
+-- --- ---- ---- ---- ----
+ 1 S1     6 A    AAA     5
 
 
 
@@ -184,17 +185,16 @@ ID Sub Name Junk
                     Right                  = 'PSCustomObjects'
                     LeftJoinProperty       = 'IDD'
                     RightJoinProperty      = 'ID'
-                    RightProperties         = @{ID= 'ID' ; Sub = 'Subscription'}
                     ExcludeRightProperties = 'Junk'
                     Prefix                 = 'R_'
                     DataTable              = $true
                 }
                 Expected = @"
 
-IDD Name Junk R_Subscription
---- ---- ---- --------------
-  1 A    AAA  S1            
-  3 C         S3            
+IDD Name Junk IntT R_Sub R_IntO
+--- ---- ---- ---- ----- ------
+  1 A    AAA     5 S1    6     
+  3 C              S3          
 
 
 
@@ -202,8 +202,10 @@ IDD Name Junk R_Subscription
                 Count = 2
             }
         ) -test {
-            param ($TestDataSet, $Params, $Expected, $Count, $ExtraTest)
+            param ($TestDataSet, $Params, $Expected, $Count, $ExtraTest, $TestName)
 
+            #if ($TestName -ne 'Small: PSCustomObjects - DataTable, DataTable') {Continue}
+            
             . $TestDataSet
             $Params.Left  = (Get-Variable -Name $Params.Left).Value
             $Params.Right = (Get-Variable -Name $Params.Right).Value
@@ -214,18 +216,18 @@ IDD Name Junk R_Subscription
             $BeforeRightType = $Params.Right.GetType()
 
             $JoindOutput = Join-Object @Params
-            Write-Verbose -Message ('Start' + ($JoindOutput | Out-String ) + 'End')
+            Write-Verbose -Message ('Start' + ($JoindOutput | Format-Table | Out-String ) + 'End')
 
-            $JoindOutput | Out-String | Should -Be $Expected
+            $JoindOutput | Format-Table | Out-String | Should -Be $Expected
             if ($Params.PassThru)
             {
-                ($Params.Left | Out-String) | Should -Be $Expected
+                ($Params.Left | Format-Table | Out-String) | Should -Be $Expected
             }
             else
             {
-                ($Params.Left | Out-String) | Should -Be $BeforeLeft
+                ($Params.Left | Format-Table | Out-String) | Should -Be $BeforeLeft
             }
-            ($Params.Right | Out-String) | Should -Be $BeforeRight
+            ($Params.Right | Format-Table | Out-String) | Should -Be $BeforeRight
 
             if ($Params.PassThru)
             {

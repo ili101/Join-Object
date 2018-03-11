@@ -486,19 +486,11 @@ function Join-Object
                 $Row = $OutDataTable.Rows.Add()
                 foreach ($item in $SelectedLeftProperties.GetEnumerator())
                 {
-                    if (($Value = $LeftLine.($item.Key)) -is [DBNull])
-                    {
-                        $Value = $null
-                    }
-                    $Row.($item.Value) = $Value
+                    $Row.($item.Value) = $LeftLine.($item.Key)
                 }
                 foreach ($item in $SelectedRightProperties.GetEnumerator())
                 {
-                    if (($Value = $RightLine.($item.Key)) -is [DBNull])
-                    {
-                        $Value = $null
-                    }
-                    $Row.($item.Value) = $Value
+                    $Row.($item.Value) = $RightLine.($item.Key)
                 }
             }
         }
@@ -513,19 +505,11 @@ function Join-Object
                 $Row = $OutDataTable.Rows.Add()
                 foreach ($item in $SelectedLeftProperties.GetEnumerator())
                 {
-                    if (($Value = $LeftLine.($item.Key)) -is [DBNull])
-                    {
-                        $Value = $null
-                    }
-                    $Row.($item.Value) = $Value
+                    $Row.($item.Value) = $LeftLine.($item.Key)
                 }
                 foreach ($item in $SelectedRightProperties.GetEnumerator())
                 {
-                    if (($Value = $RightLine.($item.Key)) -is [DBNull])
-                    {
-                        $Value = $null
-                    }
-                    $Row.($item.Value) = $Value
+                    $Row.($item.Value) = $RightLine.($item.Key)
                 }
             }
         }
