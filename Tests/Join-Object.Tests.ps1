@@ -1,4 +1,5 @@
-﻿Write-Verbose -Message 'Testing start'
+﻿#Requires -Modules Pester
+Write-Verbose -Message 'Testing start'
 
 $TestDataSetSmall = {
     $PSCustomObjects= @(
@@ -178,7 +179,7 @@ ID Sub IntO Name Junk IntT
 "@}
             }
             @{
-                TestName = 'Small: PSCustomObjects - DataTable, DataTable'
+                TestName = 'Small: DataTable - PSCustomObjects, DataTable'
                 TestDataSet = $TestDataSetSmall
                 Params = @{
                     Left                   = 'DataTable'
@@ -200,6 +201,31 @@ IDD Name Junk IntT R_Sub R_IntO
 
 "@
                 Count = 2
+            }
+            @{
+                TestName = 'Small: PSCustomObjects - DataTable, DataTable'
+                TestDataSet = $TestDataSetSmall
+                Params = @{
+                    Left                   = 'PSCustomObjects'
+                    Right                  = 'DataTable'
+                    LeftJoinProperty       = 'ID'
+                    RightJoinProperty      = 'IDD'
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                    DataTable              = $true
+                }
+                Expected = @"
+
+ID Sub IntO R_Name R_IntT
+-- --- ---- ------ ------
+1  S1  6    A           5
+2  S2  7                 
+3  S3       C            
+
+
+
+"@
+                Count = 3
             }
         ) -test {
             param ($TestDataSet, $Params, $Expected, $Count, $ExtraTest, $TestName)

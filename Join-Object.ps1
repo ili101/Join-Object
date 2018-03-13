@@ -507,9 +507,12 @@ function Join-Object
                 {
                     $Row.($item.Value) = $LeftLine.($item.Key)
                 }
-                foreach ($item in $SelectedRightProperties.GetEnumerator())
-                {
-                    $Row.($item.Value) = $RightLine.($item.Key)
+                if ($RightLine)
+                {              
+                    foreach ($item in $SelectedRightProperties.GetEnumerator())
+                    {
+                        $Row.($item.Value) = $RightLine.($item.Key)
+                    }
                 }
             }
         }

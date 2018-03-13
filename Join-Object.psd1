@@ -12,7 +12,7 @@
 RootModule = 'Join-Object.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.1.5'
+ModuleVersion = '0.1.6'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -115,9 +115,9 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @' 
-## 0.1.5 - 2018/03/11 (Beta)
+## 0.1.6 - 2018/03/13 (Beta)
 ### Fixed
-* Error "Cannot set Column 'foo' to be null. Please use DBNull instead." when using -DataTable on DataTable data with nulls in it.
+* Error "Cannot set Column 'foo' to be null. Please use DBNull instead." when using -DataTable and -AllInLeft and some Left lines don't have Right lines to join to.
 '@
 
     } # End of PSData hashtable

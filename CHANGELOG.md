@@ -1,4 +1,8 @@
-﻿## 0.1.5 - 2018/03/11 (Beta)
+﻿## 0.1.6 - 2018/03/13 (Beta)
+### Fixed
+* Error "Cannot set Column 'foo' to be null. Please use DBNull instead." when using -DataTable and -AllInLeft and some Left lines don't have Right lines to join to.
+
+## 0.1.5 - 2018/03/11 (Beta)
 ### Fixed
 * Error "Cannot set Column 'foo' to be null. Please use DBNull instead." when using -DataTable on DataTable data with nulls in it.
 
