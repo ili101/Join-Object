@@ -26,7 +26,7 @@ Install-Module -Name Join-Object -Scope CurrentUser
 ```
 From GitHub
 ```PowerShell
-$Uri = 'https://github.com/ili101/Join-Object/raw/master/Install.ps1'; . ([Scriptblock]::Create((iwr $Uri).Content)) -FromGitHub $Uri
+$Uri = 'https://raw.githubusercontent.com/ili101/Join-Object/master/Install.ps1'; & ([Scriptblock]::Create((irm $Uri))) -FromGitHub $Uri
 ```
 
 ## Contributing
