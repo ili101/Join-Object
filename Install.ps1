@@ -80,7 +80,7 @@ Try
             $WebClient.DownloadFile($Link.download_url,(Join-Path -Path $TargetPath -ChildPath $Link.name))
             #$File = Get-Content "$TargetPath\$_"
             #$File | Set-Content "$TargetPath\$_"
-            Write-Verbose -Message ("{0} installed module file '{1}'" -f $ModuleName, $_)
+            Write-Verbose -Message ("{0} installed module file '{1}'" -f $ModuleName, $Link.name)
         }
     }
     else
