@@ -101,6 +101,9 @@ Catch
 }
 finally
 {
-    [Net.ServicePointManager]::SecurityProtocol = $SecurityProtocol
+    if ($FromGitHub)
+    {
+        [Net.ServicePointManager]::SecurityProtocol = $SecurityProtocol
+    }
     Write-Verbose -Message 'Module installation end'
 }
