@@ -237,7 +237,8 @@ function Join-Object
         [string]$Prefix,
         [string]$Suffix,
         [switch]$PassThru,
-        [switch]$DataTable
+        [switch]$DataTable,
+        [hashtable]$DataTableTypes
     )
     if ($Left -is [PSCustomObject])
     {
@@ -370,7 +371,14 @@ function Join-Object
             # Add RightLine to LeftLine
             foreach ($item in $SelectedRightProperties.GetEnumerator())
             {
-                $null = $Left.Columns.Add($item.Value)
+                if ($DataTableTypes.($item.Value) -ne $null)
+                {
+                    $null = $Left.Columns.Add($item.Value,$DataTableTypes.($item.Value))
+                }
+                else
+                {
+                    $null = $Left.Columns.Add($item.Value)
+                }
             }
         }
 
@@ -529,7 +537,14 @@ function Join-Object
             }
             else
             {
-                $null = $OutDataTable.Columns.Add($item.Value)
+                if ($DataTableTypes.($item.Value) -ne $null)
+                {
+                    $null = $OutDataTable.Columns.Add($item.Value,$DataTableTypes.($item.Value))
+                }
+                else
+                {
+                    $null = $OutDataTable.Columns.Add($item.Value)
+                }
             }
         }
         foreach ($item in $SelectedRightProperties.GetEnumerator())
@@ -540,7 +555,14 @@ function Join-Object
             }
             else
             {
-                $null = $OutDataTable.Columns.Add($item.Value)
+                if ($DataTableTypes.($item.Value) -ne $null)
+                {
+                    $null = $OutDataTable.Columns.Add($item.Value,$DataTableTypes.($item.Value))
+                }
+                else
+                {
+                    $null = $OutDataTable.Columns.Add($item.Value)
+                }
             }
         }
 
