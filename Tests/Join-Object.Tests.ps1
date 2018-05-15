@@ -227,6 +227,58 @@ ID Sub IntO R_Name R_IntT
 "@
                 Count = 3
             }
+            @{
+                TestName = 'Small: PSCustomObjects - DataTable, DataTable AllInBoth'
+                TestDataSet = $TestDataSetSmall
+                Params = @{
+                    Left                   = 'PSCustomObjects'
+                    Right                  = 'DataTable'
+                    LeftJoinProperty       = 'ID'
+                    RightJoinProperty      = 'IDD'
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                    DataTable              = $true
+                    Type                   = 'AllInBoth'
+                }
+                Expected = @"
+
+ID Sub IntO R_Name R_IntT
+-- --- ---- ------ ------
+1  S1  6    A           5
+2  S2  7                 
+3  S3       C            
+
+
+
+"@
+                Count = 3
+            }
+            @{
+                TestName = 'Small: DataTable - PSCustomObjects, DataTable AllInBoth'
+                TestDataSet = $TestDataSetSmall
+                Params = @{
+                    Left                   = 'DataTable'
+                    Right                  = 'PSCustomObjects'
+                    LeftJoinProperty       = 'IDD'
+                    RightJoinProperty      = 'ID'
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                    DataTable              = $true
+                    Type                   = 'AllInBoth'
+                }
+                Expected = @"
+
+IDD Name Junk IntT R_Sub R_IntO
+--- ---- ---- ---- ----- ------
+  1 A    AAA     5 S1    6     
+  3 C              S3          
+                   S2    7     
+
+
+
+"@
+                Count = 3
+            }
         ) -test {
             param ($TestDataSet, $Params, $Expected, $Count, $ExtraTest, $TestName)
 

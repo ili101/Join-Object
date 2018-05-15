@@ -573,9 +573,12 @@ function Join-Object
                 $LeftLine = [System.Linq.Enumerable]::SingleOrDefault($LeftLineEnumerable)
                 $RightLine = [System.Linq.Enumerable]::SingleOrDefault($RightLineEnumerable)
                 $Row = $OutDataTable.Rows.Add()
-                foreach ($item in $SelectedLeftProperties.GetEnumerator())
-                {
-                    $Row.($item.Value) = $LeftLine.($item.Key)
+                if ($LeftLine)
+                {  
+                    foreach ($item in $SelectedLeftProperties.GetEnumerator())
+                    {
+                        $Row.($item.Value) = $LeftLine.($item.Key)
+                    }
                 }
                 if ($RightLine)
                 {              
