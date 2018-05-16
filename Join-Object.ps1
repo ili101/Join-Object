@@ -238,7 +238,9 @@ function Join-Object
         [string]$Suffix,
         [switch]$PassThru,
         [switch]$DataTable,
-        [hashtable]$DataTableTypes
+        [hashtable]$DataTableTypes,
+        [string]$RightAsGroup,
+        [switch]$MultiLeft
     )
     if ($Left -is [PSCustomObject])
     {
@@ -547,21 +549,48 @@ function Join-Object
                 }
             }
         }
-        foreach ($item in $SelectedRightProperties.GetEnumerator())
+        if ($RightAsGroup)
         {
-            if ($Right -is [Data.DataTable])
+            $null = $OutDataTable.Columns.Add($RightAsGroup,[Object])
+
+            $OutDataTableRightAsGroupTemplate = [Data.DataTable]::new($RightAsGroup)
+            foreach ($item in $SelectedRightProperties.GetEnumerator())
             {
-                $null = $OutDataTable.Columns.Add($item.Value,$Right.Columns.Item($item.Name).DataType)
-            }
-            else
-            {
-                if ($DataTableTypes.($item.Value) -ne $null)
+                if ($Right -is [Data.DataTable])
                 {
-                    $null = $OutDataTable.Columns.Add($item.Value,$DataTableTypes.($item.Value))
+                    $null = $OutDataTableRightAsGroupTemplate.Columns.Add($item.Value,$Right.Columns.Item($item.Name).DataType)
                 }
                 else
                 {
-                    $null = $OutDataTable.Columns.Add($item.Value)
+                    if ($DataTableTypes.($item.Value) -ne $null)
+                    {
+                        $null = $OutDataTableRightAsGroupTemplate.Columns.Add($item.Value,$DataTableTypes.($item.Value))
+                    }
+                    else
+                    {
+                        $null = $OutDataTableRightAsGroupTemplate.Columns.Add($item.Value)
+                    }
+                }
+            }
+        }
+        else
+        {
+            foreach ($item in $SelectedRightProperties.GetEnumerator())
+            {
+                if ($Right -is [Data.DataTable])
+                {
+                    $null = $OutDataTable.Columns.Add($item.Value,$Right.Columns.Item($item.Name).DataType)
+                }
+                else
+                {
+                    if ($DataTableTypes.($item.Value) -ne $null)
+                    {
+                        $null = $OutDataTable.Columns.Add($item.Value,$DataTableTypes.($item.Value))
+                    }
+                    else
+                    {
+                        $null = $OutDataTable.Columns.Add($item.Value)
+                    }
                 }
             }
         }
@@ -586,49 +615,118 @@ function Join-Object
         }
         elseif ($Type -eq 'AllInBoth')
         {
-            [System.Func[System.Object, [Collections.Generic.IEnumerable[System.Object]], [Collections.Generic.IEnumerable[System.Object]], System.Object]]$query = {
-        	    param(
-                    $A,
-        		    $LeftLineEnumerable,
-        		    $RightLineEnumerable
-        	    )
-                $LeftLine = [System.Linq.Enumerable]::SingleOrDefault($LeftLineEnumerable)
-                $RightLine = [System.Linq.Enumerable]::SingleOrDefault($RightLineEnumerable)
-                $Row = $OutDataTable.Rows.Add()
-                if ($LeftLine)
-                {  
-                    foreach ($item in $SelectedLeftProperties.GetEnumerator())
+            if ($MultiLeft)
+            {          
+                [System.Func[System.Object, [Collections.Generic.IEnumerable[System.Object]], [Collections.Generic.IEnumerable[System.Object]], System.Object]]$query = {
+        	        param(
+                        $A,
+        		        $LeftLineEnumerable,
+        		        $RightLineEnumerable
+        	        )
+                    $LeftLines = $LeftLineEnumerable
+                    $RightLine = [System.Linq.Enumerable]::SingleOrDefault($RightLineEnumerable)
+                    $RowRight = $OutDataTable.NewRow()
+                    if ($RightLine)
+                    {              
+                        foreach ($item in $SelectedRightProperties.GetEnumerator())
+                        {
+                            $RowRight.($item.Value) = $RightLine.($item.Key)
+                        }
+                    }
+                    if ($LeftLines)
+                    {  
+                        foreach ($LeftLine in $LeftLines)
+                        {
+                            $Row = $OutDataTable.Rows.Add($RowRight.ItemArray)
+                            foreach ($item in $SelectedLeftProperties.GetEnumerator())
+                            {
+                                $Row.($item.Value) = $LeftLine.($item.Key)
+                            }
+                        }
+                    }
+                    else
                     {
-                        $Row.($item.Value) = $LeftLine.($item.Key)
+                        $OutDataTable.Rows.Add($RowRight)
                     }
                 }
-                if ($RightLine)
-                {              
-                    foreach ($item in $SelectedRightProperties.GetEnumerator())
-                    {
-                        $Row.($item.Value) = $RightLine.($item.Key)
+            }
+            else
+            {
+                [System.Func[System.Object, [Collections.Generic.IEnumerable[System.Object]], [Collections.Generic.IEnumerable[System.Object]], System.Object]]$query = {
+        	        param(
+                        $A,
+        		        $LeftLineEnumerable,
+        		        $RightLineEnumerable
+        	        )
+                    $LeftLine = [System.Linq.Enumerable]::SingleOrDefault($LeftLineEnumerable)
+                    $RightLine = [System.Linq.Enumerable]::SingleOrDefault($RightLineEnumerable)
+                    $Row = $OutDataTable.Rows.Add()
+                    if ($LeftLine)
+                    {  
+                        foreach ($item in $SelectedLeftProperties.GetEnumerator())
+                        {
+                            $Row.($item.Value) = $LeftLine.($item.Key)
+                        }
+                    }
+                    if ($RightLine)
+                    {              
+                        foreach ($item in $SelectedRightProperties.GetEnumerator())
+                        {
+                            $Row.($item.Value) = $RightLine.($item.Key)
+                        }
                     }
                 }
             }
         }
         else
         {
-            [System.Func[System.Object, [Collections.Generic.IEnumerable[System.Object]], System.Object]]$query = {
-        	    param(
-        		    $LeftLine,
-        		    $RightLineEnumerable
-        	    )
-                $RightLine = [System.Linq.Enumerable]::SingleOrDefault($RightLineEnumerable)
-                $Row = $OutDataTable.Rows.Add()
-                foreach ($item in $SelectedLeftProperties.GetEnumerator())
-                {
-                    $Row.($item.Value) = $LeftLine.($item.Key)
-                }
-                if ($RightLine)
-                {              
-                    foreach ($item in $SelectedRightProperties.GetEnumerator())
+            if ($RightAsGroup)
+            {
+                [System.Func[System.Object, [Collections.Generic.IEnumerable[System.Object]], System.Object]]$query = {
+        	        param(
+        		        $LeftLine,
+        		        $RightLineEnumerable
+        	        )
+                    $RightLines = $RightLineEnumerable
+                    $Row = $OutDataTable.Rows.Add()
+                    foreach ($item in $SelectedLeftProperties.GetEnumerator())
                     {
-                        $Row.($item.Value) = $RightLine.($item.Key)
+                        $Row.($item.Value) = $LeftLine.($item.Key)
+                    }
+                    if ($RightLines)
+                    {
+                        $OutDataTableRightAsGroup = $OutDataTableRightAsGroupTemplate.Clone()
+                        foreach ($RightLine in $RightLines)
+                        {
+                            $RowRight = $OutDataTableRightAsGroup.Rows.Add()
+                            foreach ($item in $SelectedRightProperties.GetEnumerator())
+                            {
+                                $RowRight.($item.Value) = $RightLine.($item.Key)
+                            }
+                        }
+                        $Row.$RightAsGroup = $OutDataTableRightAsGroup
+                    }
+                }
+            }
+            else
+            {
+                [System.Func[System.Object, [Collections.Generic.IEnumerable[System.Object]], System.Object]]$query = {
+        	        param(
+        		        $LeftLine,
+        		        $RightLineEnumerable
+        	        )
+                    $RightLine = [System.Linq.Enumerable]::SingleOrDefault($RightLineEnumerable)
+                    $Row = $OutDataTable.Rows.Add()
+                    foreach ($item in $SelectedLeftProperties.GetEnumerator())
+                    {
+                        $Row.($item.Value) = $LeftLine.($item.Key)
+                    }
+                    if ($RightLine)
+                    {              
+                        foreach ($item in $SelectedRightProperties.GetEnumerator())
+                        {
+                            $Row.($item.Value) = $RightLine.($item.Key)
+                        }
                     }
                 }
             }
