@@ -21,7 +21,7 @@ function Join-Object
 
         The objects in this collection should be consistent.
         We look at the properties on the first object for a baseline.
-    
+
     .PARAMETER Right
         'Right' collection of objects to join.
 
@@ -43,7 +43,7 @@ function Join-Object
             - Be a hashtable like @{Name="Product Name";Expression={$_.Name}}.
                  Name is the output property name
                  Expression is the property value ($_ as the current object)
-                
+
                  Alternatively, use the Suffix or Prefix parameter to avoid collisions
                  Each property using this hashtable syntax will be excluded from suffixes and prefixes
 
@@ -56,7 +56,7 @@ function Join-Object
             - Be a hashtable like @{Name="Product Name";Expression={$_.Name}}.
                  Name is the output property name
                  Expression is the property value ($_ as the current object)
-                
+
                  Alternatively, use the Suffix or Prefix parameter to avoid collisions
                  Each property using this hashtable syntax will be excluded from suffixes and prefixes
 
@@ -85,13 +85,13 @@ function Join-Object
           SQL equivalent: outer left join (or simply left join)
 
         AllInRight is similar to AllInLeft.
-        
+
         OnlyIfInBoth will cause all elements from Left to be placed in the output, only if there is at least one
           match in Right.
           SQL equivalent: inner join (or simply join)
-         
+
         AllInBoth will have all entries in right and left in the output. Specifically, it will have all entries
-          in right with at least one match in left, followed by all entries in Right with no matches in left, 
+          in right with at least one match in left, followed by all entries in Right with no matches in left,
           followed by all entries in Left with no matches in Right.
           SQL equivalent: full join
 
@@ -118,12 +118,12 @@ function Join-Object
         Join-Object -Left $l -Right $r -LeftJoinProperty Name -RightJoinProperty Manager -Type OnlyIfInBoth -RightProperties Department
 
 
-            # Name    Birthday             Department  
-            # ----    --------             ----------  
+            # Name    Birthday             Department
+            # ----    --------             ----------
             # jsmith4 4/14/2015 3:27:22 PM Department 4
             # jsmith5 4/14/2015 3:27:22 PM Department 5
 
-    .EXAMPLE  
+    .EXAMPLE
         #
         #Define some input data.
 
@@ -147,16 +147,16 @@ function Join-Object
 
             # Name    Birthday             j_Department j_Name       j_Manager
             # ----    --------             ------------ ------       ---------
-            # jsmith1 4/14/2015 3:27:22 PM                                    
-            # jsmith2 4/14/2015 3:27:22 PM                                    
-            # jsmith3 4/14/2015 3:27:22 PM                                    
-            # jsmith4 4/14/2015 3:27:22 PM Department 4 Department 4 jsmith4  
-            # jsmith5 4/14/2015 3:27:22 PM Department 5 Department 5 jsmith5  
+            # jsmith1 4/14/2015 3:27:22 PM
+            # jsmith2 4/14/2015 3:27:22 PM
+            # jsmith3 4/14/2015 3:27:22 PM
+            # jsmith4 4/14/2015 3:27:22 PM Department 4 Department 4 jsmith4
+            # jsmith5 4/14/2015 3:27:22 PM Department 5 Department 5 jsmith5
 
     .EXAMPLE
         #
         #Hey!  You know how to script right?  Can you merge these two CSVs, where Path1's IP is equal to Path2's IP_ADDRESS?
-        
+
         #Get CSV data
         $s1 = Import-CSV $Path1
         $s2 = Import-CSV $Path2
@@ -169,8 +169,8 @@ function Join-Object
         #
         # "Hey Warren, we need to match up SSNs to Active Directory users, and check if they are enabled or not.
         #  I'll e-mail you an unencrypted CSV with all the SSNs from gmail, what could go wrong?"
-        
-        # Import some SSNs. 
+
+        # Import some SSNs.
         $SSNs = Import-CSV -Path D:\SSNs.csv
 
         #Get AD users, and match up by a common value, samaccountname in this case:
@@ -240,7 +240,8 @@ function Join-Object
         [switch]$DataTable,
         [hashtable]$DataTableTypes,
         [string]$RightAsGroup,
-        [switch]$MultiLeft
+        [switch]$MultiLeft,
+        [switch]$KeepRightJoinProperty
     )
     if ($Left -is [PSCustomObject])
     {
@@ -250,7 +251,7 @@ function Join-Object
     {
         $Right = @($Right)
     }
-    
+
     function Get-Properties ($ObjectProperties,$SelectProperties,$ExcludeProperties,$Prefix,$Suffix)
     {
         $Properties = [ordered]@{}
@@ -278,19 +279,28 @@ function Join-Object
     }
     if ($Left -is [System.Data.DataTable])
     {
-        $SelectedLeftProperties  = Get-Properties -ObjectProperties $Left.Columns.ColumnName  -SelectProperties $LeftProperties  -ExcludeProperties $ExcludeLeftProperties
+        $SelectedLeftProperties = Get-Properties -ObjectProperties $Left.Columns.ColumnName  -SelectProperties $LeftProperties  -ExcludeProperties $ExcludeLeftProperties
     }
     else
     {
-        $SelectedLeftProperties  = Get-Properties -ObjectProperties $Left[0].PSObject.Properties.Name  -SelectProperties $LeftProperties  -ExcludeProperties $ExcludeLeftProperties
+        $SelectedLeftProperties = Get-Properties -ObjectProperties $Left[0].PSObject.Properties.Name  -SelectProperties $LeftProperties  -ExcludeProperties $ExcludeLeftProperties
+    }
+
+    if ($KeepRightJoinProperty)
+    {
+        $ExcludeProperties = $ExcludeRightProperties
+    }
+    else
+    {
+        $ExcludeProperties = (@($ExcludeRightProperties) + @($RightJoinProperty) -ne $null)
     }
     if ($Right -is [System.Data.DataTable])
     {
-        $SelectedRightProperties = Get-Properties -ObjectProperties $Right.Columns.ColumnName -SelectProperties $RightProperties -ExcludeProperties (@($ExcludeRightProperties)+@($RightJoinProperty) -ne $null) -Prefix $Prefix -Suffix $Suffix
+        $SelectedRightProperties = Get-Properties -ObjectProperties $Right.Columns.ColumnName -SelectProperties $RightProperties -ExcludeProperties $ExcludeProperties -Prefix $Prefix -Suffix $Suffix
     }
     else
     {
-        $SelectedRightProperties = Get-Properties -ObjectProperties $Right[0].PSObject.Properties.Name -SelectProperties $RightProperties -ExcludeProperties (@($ExcludeRightProperties)+@($RightJoinProperty) -ne $null) -Prefix $Prefix -Suffix $Suffix
+        $SelectedRightProperties = Get-Properties -ObjectProperties $Right[0].PSObject.Properties.Name -SelectProperties $RightProperties -ExcludeProperties $ExcludeProperties -Prefix $Prefix -Suffix $Suffix
     }
 
     if ($Type -eq 'AllInBoth')
@@ -319,14 +329,14 @@ function Join-Object
     elseif ($LeftJoinProperty.Count -gt 1)
     {
         [System.Func[System.Object, string]]$LeftJoinFunction = {
-    	    param ($LeftLine) 
+    	    param ($LeftLine)
             $LeftLine | Select-Object -Property $LeftJoinProperty
         }
     }
     else
     {
         [System.Func[System.Object, string]]$LeftJoinFunction = {
-    	    param ($LeftLine) 
+    	    param ($LeftLine)
     	    $LeftLine.$LeftJoinProperty
         }
     }
@@ -338,14 +348,14 @@ function Join-Object
     elseif ($RightJoinProperty.Count -gt 1)
     {
         [System.Func[System.Object, string]]$RightJoinFunction = {
-    	    param ($RightLine) 
+    	    param ($RightLine)
     	    $RightLine | Select-Object -Property $RightJoinProperty
         }
     }
     else
     {
         [System.Func[System.Object, string]]$RightJoinFunction = {
-    	    param ($RightLine) 
+    	    param ($RightLine)
     	    $RightLine.$RightJoinProperty
         }
     }
@@ -596,7 +606,7 @@ function Join-Object
         }
 
         if ($Type -eq 'OnlyIfInBoth')
-        {        
+        {
             [System.Func[System.Object, [System.Object], System.Object]]$query = {
         	    param(
         		    $LeftLine,
@@ -616,7 +626,7 @@ function Join-Object
         elseif ($Type -eq 'AllInBoth')
         {
             if ($MultiLeft)
-            {          
+            {
                 [System.Func[System.Object, [Collections.Generic.IEnumerable[System.Object]], [Collections.Generic.IEnumerable[System.Object]], System.Object]]$query = {
         	        param(
                         $A,
@@ -627,14 +637,14 @@ function Join-Object
                     $RightLine = [System.Linq.Enumerable]::SingleOrDefault($RightLineEnumerable)
                     $RowRight = $OutDataTable.NewRow()
                     if ($RightLine)
-                    {              
+                    {
                         foreach ($item in $SelectedRightProperties.GetEnumerator())
                         {
                             $RowRight.($item.Value) = $RightLine.($item.Key)
                         }
                     }
                     if ($LeftLines)
-                    {  
+                    {
                         foreach ($LeftLine in $LeftLines)
                         {
                             $Row = $OutDataTable.Rows.Add($RowRight.ItemArray)
@@ -662,14 +672,14 @@ function Join-Object
                     $RightLine = [System.Linq.Enumerable]::SingleOrDefault($RightLineEnumerable)
                     $Row = $OutDataTable.Rows.Add()
                     if ($LeftLine)
-                    {  
+                    {
                         foreach ($item in $SelectedLeftProperties.GetEnumerator())
                         {
                             $Row.($item.Value) = $LeftLine.($item.Key)
                         }
                     }
                     if ($RightLine)
-                    {              
+                    {
                         foreach ($item in $SelectedRightProperties.GetEnumerator())
                         {
                             $Row.($item.Value) = $RightLine.($item.Key)
@@ -722,7 +732,7 @@ function Join-Object
                         $Row.($item.Value) = $LeftLine.($item.Key)
                     }
                     if ($RightLine)
-                    {              
+                    {
                         foreach ($item in $SelectedRightProperties.GetEnumerator())
                         {
                             $Row.($item.Value) = $RightLine.($item.Key)
@@ -735,7 +745,7 @@ function Join-Object
     else
     {
         if ($Type -eq 'OnlyIfInBoth')
-        {        
+        {
             [System.Func[System.Object, [System.Object], System.Object]]$query = {
         	    param(
         		    $LeftLine,
