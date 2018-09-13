@@ -1,4 +1,14 @@
-﻿## 0.1.6 - 2018/03/13 (Beta)
+﻿## 0.1.7 - 2018/03/13 (Beta branch)
+### Added
+* **-Type AllInBoth** option.
+* **-DataTableTypes [Hashtable]** allow Overwrite of DataTable columns types.
+* **-RightAsGroup [String]** Join the right side as sub table in column with the selected name.
+* **-MultiLeft** allow multyple rows on the left side.
+* **-KeepRightJoinProperty** don't remove the right join property.
+### Fixed
+* Remove unused parameter option **-Type AllInRight**
+
+## 0.1.6 - 2018/03/13 (Beta)
 ### Fixed
 * Error "Cannot set Column 'foo' to be null. Please use DBNull instead." when using -DataTable and -AllInLeft and some Left lines don't have Right lines to join to.
 
