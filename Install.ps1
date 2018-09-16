@@ -8,9 +8,9 @@ Param (
     [String]$ModulePath,
 
     [ValidateNotNullOrEmpty()]
-    [Uri]$FromGitHub #= 'https://raw.githubusercontent.com/ili101/Join-Object/master/Install.ps1'
-    ,
-    [ValidateSet('CurrentUser','AllUsers')]
+    [Uri]$FromGitHub,
+
+    [ValidateSet('CurrentUser', 'AllUsers')]
     [string]
     $Scope = 'CurrentUser'
 )
@@ -174,7 +174,7 @@ Try
     }
 
     # Import Module
-    Import-Module -Name Join-Object -Force
+    Import-Module -Name $ModuleName -Force
     Write-Verbose -Message "$ModuleName module installation successful to $TargetPath"
 }
 Catch

@@ -1,5 +1,5 @@
 # version format
-version: 0.1.{build}
+version: 0.0.{build}
 
 # Build worker image (VM template)
 image: WMF 5
@@ -13,11 +13,18 @@ build: off
 
 # to run your custom scripts instead of automatic tests
 test_script:
-- ps: $VerbosePreference = 'Continue' ; . .\Install.ps1 ; Invoke-Pester -EnableExit
+- ps: . .\Tests\AppVeyor.ps1
+
+# Finalize pass - collect and upload results
+- ps: . .\Tests\AppVeyor.ps1 -Finalize
+
+# Skipping commits with particular message or from specific user
+skip_commits:
+  message: /\[Skip\]/
 
 # Including commits with particular message or from specific user
-only_commits:
-  message: /\[build\]/                # Start a new build if message contains 'build'
+#only_commits:
+#  message: /\[build\]/                # Start a new build if message contains 'build'
 
 environment:
   NugetApiKey:

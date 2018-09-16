@@ -26,7 +26,7 @@ $TestData1 = {
         [PSCustomObject]@{ID = 2 ; Sub = 'S2'}
         [PSCustomObject]@{ID = 3 ; Sub = 'S3'}
     )
-    
+
     $DataTable = [Data.DataTable]::new('Test')
     $null = $DataTable.Columns.Add('IDD')
     $null = $DataTable.Columns.Add('Name')
@@ -42,20 +42,20 @@ Join-Object -Left $PSCustomObjects -Right $DataTable -LeftJoinProperty ID -Right
 <# Output
 ID Subscription R_Name
 -- ------------ ------
- 1 S1           A     
- 2 S2                 
- 3 S3           C     
+ 1 S1           A
+ 2 S2
+ 3 S3           C
 
 IDD Name Subscription_R
 --- ---- --------------
-1   A    S1            
-3   C    S3            
+1   A    S1
+3   C    S3
 
 Subscription ID R_Name
 ------------ -- ------
-S1            1 A     
-S2            2       
-S3            3 C              
+S1            1 A
+S2            2
+S3            3 C
 #>
 
 . $TestData1
@@ -64,9 +64,9 @@ $PSCustomObjects
 <# $PSCustomObjects changed to:
 ID Subscription R_Name
 -- ------------ ------
- 1 S1           A     
- 2 S2                 
- 3 S3           C     
+ 1 S1           A
+ 2 S2
+ 3 S3           C
 #>
 
 . $TestData1
@@ -75,8 +75,8 @@ $DataTable
 <# $DataTable changed to:
 IDD NewName Subscription_R
 --- ------- --------------
-1   A       S1            
-3   C       S3            
+1   A       S1
+3   C       S3
 #>
 
 'DBNull to $null test'
@@ -88,9 +88,9 @@ $PSCustomObjects | Where-Object {$_.Junk} | Format-Table
 <# Output
 ID Sub Name Junk
 -- --- ---- ----
- 1 S1  A    AAA 
+ 1 S1  A    AAA
 
 ID Sub Name Junk
 -- --- ---- ----
- 1 S1  A    AAA      
+ 1 S1  A    AAA
 #>

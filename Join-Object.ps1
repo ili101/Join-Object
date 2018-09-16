@@ -200,38 +200,37 @@ function Join-Object
     [CmdletBinding()]
     Param
     (
-        [Parameter(Mandatory=$true,
-                   ValueFromPipeLine = $true)]
-        [ValidateScript({ $_ -is [PSCustomObject] -or $_ -is [Data.DataRow] })]
+        [Parameter(Mandatory = $true, ValueFromPipeLine = $true)]
+        [ValidateScript( {$_ -is [PSCustomObject] -or $_ -is [Data.DataRow]})]
         $Left,
 
         # List to join with $Left
-        [Parameter(Mandatory=$true)]
-        [ValidateScript({ $_ -is [PSCustomObject] -or $_ -is [Data.DataRow] })]
+        [Parameter(Mandatory = $true)]
+        [ValidateScript( {$_ -is [PSCustomObject] -or $_ -is [Data.DataRow]})]
         $Right,
 
         [Parameter(Mandatory = $true)]
-        [string[]] $LeftJoinProperty,
+        [string[]]$LeftJoinProperty,
 
         [Parameter(Mandatory = $true)]
-        [string[]] $RightJoinProperty,
+        [string[]]$RightJoinProperty,
 
         [ScriptBlock]$RightJoinScript,
         [ScriptBlock]$LeftJoinScript,
 
-        [ValidateScript({ $_ -is [Collections.Hashtable] -or $_ -is [string] -or $_ -is [Collections.Specialized.OrderedDictionary]})]
+        [ValidateScript( {$_ -is [Collections.Hashtable] -or $_ -is [string] -or $_ -is [Collections.Specialized.OrderedDictionary]})]
         $LeftProperties = '*',
 
         # Properties from $Right we want in the output.
         # Like LeftProperties, each can be a plain name, wildcard or hashtable. See the LeftProperties comments.
-        [ValidateScript({ $_ -is [Collections.Hashtable] -or $_ -is [string] -or $_ -is [Collections.Specialized.OrderedDictionary] })]
+        [ValidateScript( {$_ -is [Collections.Hashtable] -or $_ -is [string] -or $_ -is [Collections.Specialized.OrderedDictionary]})]
         $RightProperties = '*',
 
         [string[]]$ExcludeLeftProperties,
         [string[]]$ExcludeRightProperties,
 
-        [validateset( 'AllInLeft', 'OnlyIfInBoth', 'AllInBoth')]
-        [Parameter(Mandatory=$false)]
+        [validateset('AllInLeft', 'OnlyIfInBoth', 'AllInBoth')]
+        [Parameter(Mandatory = $false)]
         [string]$Type = 'AllInLeft',
 
         [string]$Prefix,
@@ -252,7 +251,7 @@ function Join-Object
         $Right = @($Right)
     }
 
-    function Get-Properties ($ObjectProperties,$SelectProperties,$ExcludeProperties,$Prefix,$Suffix)
+    function Get-Properties ($ObjectProperties, $SelectProperties, $ExcludeProperties, $Prefix, $Suffix)
     {
         $Properties = [ordered]@{}
         if ($SelectProperties -is [hashtable] -or $SelectProperties -is [Collections.Specialized.OrderedDictionary])
@@ -265,15 +264,15 @@ function Join-Object
             [array]::Reverse($SelectProperties.Keys) | ForEach-Object {$SelectProperties[$_] = $Prefix + $SelectProperties[$_] + $Suffix}
             $SelectProperties
             #>
-            $SelectProperties.GetEnumerator() | Where-Object {$_.Key -notin $ExcludeProperties} | ForEach-Object {$Properties.Add($_.Key,$Prefix + $_.Value + $Suffix)}
+            $SelectProperties.GetEnumerator() | Where-Object {$_.Key -notin $ExcludeProperties} | ForEach-Object {$Properties.Add($_.Key, $Prefix + $_.Value + $Suffix)}
         }
         elseif ($SelectProperties -eq '*')
         {
-            $ObjectProperties | Where-Object {$_ -notin $ExcludeProperties} | ForEach-Object {$Properties.Add($_,$Prefix + $_ + $Suffix)}
+            $ObjectProperties | Where-Object {$_ -notin $ExcludeProperties} | ForEach-Object {$Properties.Add($_, $Prefix + $_ + $Suffix)}
         }
         else
         {
-            $SelectProperties | Where-Object {$_ -notin $ExcludeProperties} | ForEach-Object {$Properties.Add($_,$Prefix + $_ + $Suffix)}
+            $SelectProperties | Where-Object {$_ -notin $ExcludeProperties} | ForEach-Object {$Properties.Add($_, $Prefix + $_ + $Suffix)}
         }
         $Properties
     }
@@ -311,7 +310,7 @@ function Join-Object
             {
                 $ScriptRoot = $PSScriptRoot
             }
-            if(!('MoreLinq.MoreEnumerable' -as [type]))
+            if (!('MoreLinq.MoreEnumerable' -as [type]))
             {
                 Add-Type -Path (Resolve-Path -Path "$ScriptRoot\morelinq.3.0.0-beta-1\lib\net451\MoreLinq.dll")
             }
@@ -329,15 +328,15 @@ function Join-Object
     elseif ($LeftJoinProperty.Count -gt 1)
     {
         [System.Func[System.Object, string]]$LeftJoinFunction = {
-    	    param ($LeftLine)
+            param ($LeftLine)
             $LeftLine | Select-Object -Property $LeftJoinProperty
         }
     }
     else
     {
         [System.Func[System.Object, string]]$LeftJoinFunction = {
-    	    param ($LeftLine)
-    	    $LeftLine.$LeftJoinProperty
+            param ($LeftLine)
+            $LeftLine.$LeftJoinProperty
         }
     }
 
@@ -348,15 +347,15 @@ function Join-Object
     elseif ($RightJoinProperty.Count -gt 1)
     {
         [System.Func[System.Object, string]]$RightJoinFunction = {
-    	    param ($RightLine)
-    	    $RightLine | Select-Object -Property $RightJoinProperty
+            param ($RightLine)
+            $RightLine | Select-Object -Property $RightJoinProperty
         }
     }
     else
     {
         [System.Func[System.Object, string]]$RightJoinFunction = {
-    	    param ($RightLine)
-    	    $RightLine.$RightJoinProperty
+            param ($RightLine)
+            $RightLine.$RightJoinProperty
         }
     }
 
@@ -385,7 +384,7 @@ function Join-Object
             {
                 if ($DataTableTypes.($item.Value) -ne $null)
                 {
-                    $null = $Left.Columns.Add($item.Value,$DataTableTypes.($item.Value))
+                    $null = $Left.Columns.Add($item.Value, $DataTableTypes.($item.Value))
                 }
                 else
                 {
@@ -397,10 +396,10 @@ function Join-Object
         if ($Type -eq 'OnlyIfInBoth')
         {
             [System.Func[System.Object, [System.Object], System.Object]]$query = {
-        	    param(
-        		    $LeftLine,
-        		    $RightLine
-        	    )
+                param(
+                    $LeftLine,
+                    $RightLine
+                )
 
                 if ($LeftLine -is [DataRow])
                 {
@@ -417,7 +416,7 @@ function Join-Object
                     {
                         if ($item.Value -notin $LeftLine.PSObject.Properties.Name)
                         {
-                            $LeftLine.PSObject.Properties.Add( [Management.Automation.PSNoteProperty]::new($item.Value,$LeftLine.($item.Key)) )
+                            $LeftLine.PSObject.Properties.Add([Management.Automation.PSNoteProperty]::new($item.Value, $LeftLine.($item.Key)))
                         }
                     }
                     # Remove from LeftLine
@@ -435,7 +434,7 @@ function Join-Object
                         {
                             $Value = $null
                         }
-                        $LeftLine.PSObject.Properties.Add( [Management.Automation.PSNoteProperty]::new($item.Value,$Value) )
+                        $LeftLine.PSObject.Properties.Add([Management.Automation.PSNoteProperty]::new($item.Value, $Value))
                     }
                 }
             }
@@ -443,11 +442,11 @@ function Join-Object
         elseif ($Type -eq 'AllInBoth')
         {
             [System.Func[System.Object, [Collections.Generic.IEnumerable[System.Object]], [Collections.Generic.IEnumerable[System.Object]], System.Object]]$query = {
-        	    param(
+                param(
                     $A,
-        		    $LeftLineEnumerable,
-        		    $RightLineEnumerable
-        	    )
+                    $LeftLineEnumerable,
+                    $RightLineEnumerable
+                )
                 $LeftLine = [System.Linq.Enumerable]::SingleOrDefault($LeftLineEnumerable)
                 $RightLine = [System.Linq.Enumerable]::SingleOrDefault($RightLineEnumerable)
 
@@ -466,7 +465,7 @@ function Join-Object
                     {
                         if ($item.Value -notin $LeftLine.PSObject.Properties.Name)
                         {
-                            $LeftLine.PSObject.Properties.Add( [Management.Automation.PSNoteProperty]::new($item.Value,$LeftLine.($item.Key)) )
+                            $LeftLine.PSObject.Properties.Add([Management.Automation.PSNoteProperty]::new($item.Value, $LeftLine.($item.Key)))
                         }
                     }
                     # Remove from LeftLine
@@ -484,7 +483,7 @@ function Join-Object
                         {
                             $Value = $null
                         }
-                        $LeftLine.PSObject.Properties.Add( [Management.Automation.PSNoteProperty]::new($item.Value,$Value) )
+                        $LeftLine.PSObject.Properties.Add([Management.Automation.PSNoteProperty]::new($item.Value, $Value))
                     }
                 }
             }
@@ -492,10 +491,10 @@ function Join-Object
         else
         {
             [System.Func[System.Object, [Collections.Generic.IEnumerable[System.Object]], System.Object]]$query = {
-        	    param(
-        		    $LeftLine,
-        		    $RightLineEnumerable
-        	    )
+                param(
+                    $LeftLine,
+                    $RightLineEnumerable
+                )
                 $RightLine = [System.Linq.Enumerable]::SingleOrDefault($RightLineEnumerable)
 
                 if ($LeftLine -is [DataRow])
@@ -513,7 +512,7 @@ function Join-Object
                     {
                         if ($item.Value -notin $LeftLine.PSObject.Properties.Name)
                         {
-                            $LeftLine.PSObject.Properties.Add( [Management.Automation.PSNoteProperty]::new($item.Value,$LeftLine.($item.Key)) )
+                            $LeftLine.PSObject.Properties.Add([Management.Automation.PSNoteProperty]::new($item.Value, $LeftLine.($item.Key)))
                         }
                     }
                     # Remove from LeftLine
@@ -531,7 +530,7 @@ function Join-Object
                         {
                             $Value = $null
                         }
-                        $LeftLine.PSObject.Properties.Add( [Management.Automation.PSNoteProperty]::new($item.Value,$Value) )
+                        $LeftLine.PSObject.Properties.Add([Management.Automation.PSNoteProperty]::new($item.Value, $Value))
                     }
                 }
             }
@@ -545,13 +544,13 @@ function Join-Object
         {
             if ($Left -is [Data.DataTable])
             {
-                $null = $OutDataTable.Columns.Add($item.Value,$Left.Columns.Item($item.Name).DataType)
+                $null = $OutDataTable.Columns.Add($item.Value, $Left.Columns.Item($item.Name).DataType)
             }
             else
             {
                 if ($DataTableTypes.($item.Value) -ne $null)
                 {
-                    $null = $OutDataTable.Columns.Add($item.Value,$DataTableTypes.($item.Value))
+                    $null = $OutDataTable.Columns.Add($item.Value, $DataTableTypes.($item.Value))
                 }
                 else
                 {
@@ -561,20 +560,20 @@ function Join-Object
         }
         if ($RightAsGroup)
         {
-            $null = $OutDataTable.Columns.Add($RightAsGroup,[Object])
+            $null = $OutDataTable.Columns.Add($RightAsGroup, [Object])
 
             $OutDataTableRightAsGroupTemplate = [Data.DataTable]::new($RightAsGroup)
             foreach ($item in $SelectedRightProperties.GetEnumerator())
             {
                 if ($Right -is [Data.DataTable])
                 {
-                    $null = $OutDataTableRightAsGroupTemplate.Columns.Add($item.Value,$Right.Columns.Item($item.Name).DataType)
+                    $null = $OutDataTableRightAsGroupTemplate.Columns.Add($item.Value, $Right.Columns.Item($item.Name).DataType)
                 }
                 else
                 {
                     if ($DataTableTypes.($item.Value) -ne $null)
                     {
-                        $null = $OutDataTableRightAsGroupTemplate.Columns.Add($item.Value,$DataTableTypes.($item.Value))
+                        $null = $OutDataTableRightAsGroupTemplate.Columns.Add($item.Value, $DataTableTypes.($item.Value))
                     }
                     else
                     {
@@ -589,13 +588,13 @@ function Join-Object
             {
                 if ($Right -is [Data.DataTable])
                 {
-                    $null = $OutDataTable.Columns.Add($item.Value,$Right.Columns.Item($item.Name).DataType)
+                    $null = $OutDataTable.Columns.Add($item.Value, $Right.Columns.Item($item.Name).DataType)
                 }
                 else
                 {
                     if ($DataTableTypes.($item.Value) -ne $null)
                     {
-                        $null = $OutDataTable.Columns.Add($item.Value,$DataTableTypes.($item.Value))
+                        $null = $OutDataTable.Columns.Add($item.Value, $DataTableTypes.($item.Value))
                     }
                     else
                     {
@@ -608,10 +607,10 @@ function Join-Object
         if ($Type -eq 'OnlyIfInBoth')
         {
             [System.Func[System.Object, [System.Object], System.Object]]$query = {
-        	    param(
-        		    $LeftLine,
-        		    $RightLine
-        	    )
+                param(
+                    $LeftLine,
+                    $RightLine
+                )
                 $Row = $OutDataTable.Rows.Add()
                 foreach ($item in $SelectedLeftProperties.GetEnumerator())
                 {
@@ -628,11 +627,11 @@ function Join-Object
             if ($MultiLeft)
             {
                 [System.Func[System.Object, [Collections.Generic.IEnumerable[System.Object]], [Collections.Generic.IEnumerable[System.Object]], System.Object]]$query = {
-        	        param(
+                    param(
                         $A,
-        		        $LeftLineEnumerable,
-        		        $RightLineEnumerable
-        	        )
+                        $LeftLineEnumerable,
+                        $RightLineEnumerable
+                    )
                     $LeftLines = $LeftLineEnumerable
                     $RightLine = [System.Linq.Enumerable]::SingleOrDefault($RightLineEnumerable)
                     $RowRight = $OutDataTable.NewRow()
@@ -663,11 +662,11 @@ function Join-Object
             else
             {
                 [System.Func[System.Object, [Collections.Generic.IEnumerable[System.Object]], [Collections.Generic.IEnumerable[System.Object]], System.Object]]$query = {
-        	        param(
+                    param(
                         $A,
-        		        $LeftLineEnumerable,
-        		        $RightLineEnumerable
-        	        )
+                        $LeftLineEnumerable,
+                        $RightLineEnumerable
+                    )
                     $LeftLine = [System.Linq.Enumerable]::SingleOrDefault($LeftLineEnumerable)
                     $RightLine = [System.Linq.Enumerable]::SingleOrDefault($RightLineEnumerable)
                     $Row = $OutDataTable.Rows.Add()
@@ -693,10 +692,10 @@ function Join-Object
             if ($RightAsGroup)
             {
                 [System.Func[System.Object, [Collections.Generic.IEnumerable[System.Object]], System.Object]]$query = {
-        	        param(
-        		        $LeftLine,
-        		        $RightLineEnumerable
-        	        )
+                    param(
+                        $LeftLine,
+                        $RightLineEnumerable
+                    )
                     $RightLines = $RightLineEnumerable
                     $Row = $OutDataTable.Rows.Add()
                     foreach ($item in $SelectedLeftProperties.GetEnumerator())
@@ -721,10 +720,10 @@ function Join-Object
             else
             {
                 [System.Func[System.Object, [Collections.Generic.IEnumerable[System.Object]], System.Object]]$query = {
-        	        param(
-        		        $LeftLine,
-        		        $RightLineEnumerable
-        	        )
+                    param(
+                        $LeftLine,
+                        $RightLineEnumerable
+                    )
                     $RightLine = [System.Linq.Enumerable]::SingleOrDefault($RightLineEnumerable)
                     $Row = $OutDataTable.Rows.Add()
                     foreach ($item in $SelectedLeftProperties.GetEnumerator())
@@ -747,10 +746,10 @@ function Join-Object
         if ($Type -eq 'OnlyIfInBoth')
         {
             [System.Func[System.Object, [System.Object], System.Object]]$query = {
-        	    param(
-        		    $LeftLine,
-        		    $RightLine
-        	    )
+                param(
+                    $LeftLine,
+                    $RightLine
+                )
                 $Row = [ordered]@{}
                 foreach ($item in $SelectedLeftProperties.GetEnumerator())
                 {
@@ -758,7 +757,7 @@ function Join-Object
                     {
                         $Value = $null
                     }
-                    $Row.Add($item.Value,$Value)
+                    $Row.Add($item.Value, $Value)
                 }
                 foreach ($item in $SelectedRightProperties.GetEnumerator())
                 {
@@ -766,7 +765,7 @@ function Join-Object
                     {
                         $Value = $null
                     }
-                    $Row.Add($item.Value,$Value)
+                    $Row.Add($item.Value, $Value)
                 }
                 [PSCustomObject]$Row
             }
@@ -774,11 +773,11 @@ function Join-Object
         elseif ($Type -eq 'AllInBoth')
         {
             [System.Func[System.Object, [Collections.Generic.IEnumerable[System.Object]], [Collections.Generic.IEnumerable[System.Object]], System.Object]]$query = {
-        	    param(
+                param(
                     $A,
-        		    $LeftLineEnumerable,
-        		    $RightLineEnumerable
-        	    )
+                    $LeftLineEnumerable,
+                    $RightLineEnumerable
+                )
                 $LeftLine = [System.Linq.Enumerable]::SingleOrDefault($LeftLineEnumerable)
                 $RightLine = [System.Linq.Enumerable]::SingleOrDefault($RightLineEnumerable)
                 $Row = [ordered]@{}
@@ -788,7 +787,7 @@ function Join-Object
                     {
                         $Value = $null
                     }
-                    $Row.Add($item.Value,$Value)
+                    $Row.Add($item.Value, $Value)
                 }
                 foreach ($item in $SelectedRightProperties.GetEnumerator())
                 {
@@ -796,7 +795,7 @@ function Join-Object
                     {
                         $Value = $null
                     }
-                    $Row.Add($item.Value,$Value)
+                    $Row.Add($item.Value, $Value)
                 }
                 [PSCustomObject]$Row
             }
@@ -804,10 +803,10 @@ function Join-Object
         else
         {
             [System.Func[System.Object, [Collections.Generic.IEnumerable[System.Object]], System.Object]]$query = {
-        	    param(
-        		    $LeftLine,
-        		    $RightLineEnumerable
-        	    )
+                param(
+                    $LeftLine,
+                    $RightLineEnumerable
+                )
                 $RightLine = [System.Linq.Enumerable]::SingleOrDefault($RightLineEnumerable)
                 $Row = [ordered]@{}
                 foreach ($item in $SelectedLeftProperties.GetEnumerator())
@@ -816,7 +815,7 @@ function Join-Object
                     {
                         $Value = $null
                     }
-                    $Row.Add($item.Value,$Value)
+                    $Row.Add($item.Value, $Value)
                 }
                 foreach ($item in $SelectedRightProperties.GetEnumerator())
                 {
@@ -824,7 +823,7 @@ function Join-Object
                     {
                         $Value = $null
                     }
-                    $Row.Add($item.Value,$Value)
+                    $Row.Add($item.Value, $Value)
                 }
                 [PSCustomObject]$Row
             }
@@ -853,28 +852,28 @@ function Join-Object
         if ($Type -eq 'OnlyIfInBoth')
         {
             $null = [System.Linq.Enumerable]::ToArray(
-    	        [System.Linq.Enumerable]::Join($LeftNew, $RightNew, $LeftJoinFunction, $RightJoinFunction, $query)
+                [System.Linq.Enumerable]::Join($LeftNew, $RightNew, $LeftJoinFunction, $RightJoinFunction, $query)
             )
         }
         elseif ($Type -eq 'AllInBoth')
         {
             $null = [System.Linq.Enumerable]::ToArray(
-    	        [MoreLinq.MoreEnumerable]::FullGroupJoin($LeftNew, $RightNew, $LeftJoinFunction, $RightJoinFunction, $query)
+                [MoreLinq.MoreEnumerable]::FullGroupJoin($LeftNew, $RightNew, $LeftJoinFunction, $RightJoinFunction, $query)
             )
         }
         else
         {
             $null = [System.Linq.Enumerable]::ToArray(
-    	        [System.Linq.Enumerable]::GroupJoin($LeftNew, $RightNew, $LeftJoinFunction, $RightJoinFunction, $query)
+                [System.Linq.Enumerable]::GroupJoin($LeftNew, $RightNew, $LeftJoinFunction, $RightJoinFunction, $query)
             )
         }
         if ($PassThru)
         {
-            ,$Left
+            , $Left
         }
         else
         {
-            ,$OutDataTable
+            , $OutDataTable
         }
     }
     else
@@ -882,19 +881,19 @@ function Join-Object
         if ($Type -eq 'OnlyIfInBoth')
         {
             [System.Linq.Enumerable]::ToArray(
-    	        [System.Linq.Enumerable]::Join($LeftNew, $RightNew, $LeftJoinFunction, $RightJoinFunction, $query)
+                [System.Linq.Enumerable]::Join($LeftNew, $RightNew, $LeftJoinFunction, $RightJoinFunction, $query)
             )
         }
         elseif ($Type -eq 'AllInBoth')
         {
             [System.Linq.Enumerable]::ToArray(
-    	        [MoreLinq.MoreEnumerable]::FullGroupJoin($LeftNew, $RightNew, $LeftJoinFunction, $RightJoinFunction, $query)
+                [MoreLinq.MoreEnumerable]::FullGroupJoin($LeftNew, $RightNew, $LeftJoinFunction, $RightJoinFunction, $query)
             )
         }
         else
         {
             [System.Linq.Enumerable]::ToArray(
-    	        [System.Linq.Enumerable]::GroupJoin($LeftNew, $RightNew, $LeftJoinFunction, $RightJoinFunction, $query)
+                [System.Linq.Enumerable]::GroupJoin($LeftNew, $RightNew, $LeftJoinFunction, $RightJoinFunction, $query)
             )
         }
     }

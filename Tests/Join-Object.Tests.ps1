@@ -2,19 +2,19 @@
 Write-Verbose -Message 'Testing start'
 
 $TestDataSetSmall = {
-    $PSCustomObjects= @(
+    $PSCustomObjects = @(
         [PSCustomObject]@{ID = 1 ; Sub = 'S1' ; IntO = 6}
         [PSCustomObject]@{ID = 2 ; Sub = 'S2' ; IntO = 7}
         [PSCustomObject]@{ID = 3 ; Sub = 'S3' ; IntO = $null}
     )
-    
+
     $DataTable = [Data.DataTable]::new('Test')
-    $null = $DataTable.Columns.Add('IDD',[System.Int32])
+    $null = $DataTable.Columns.Add('IDD', [System.Int32])
     $null = $DataTable.Columns.Add('Name')
     $null = $DataTable.Columns.Add('Junk')
-    $null = $DataTable.Columns.Add('IntT',[System.Int32])
-    $null = $DataTable.Rows.Add(1,'A','AAA',5)
-    $null = $DataTable.Rows.Add(3,'C',$null,$null)
+    $null = $DataTable.Columns.Add('IntT', [System.Int32])
+    $null = $DataTable.Rows.Add(1, 'A', 'AAA', 5)
+    $null = $DataTable.Rows.Add(3, 'C', $null, $null)
 }
 #. $TestDataSetSmall
 
@@ -22,18 +22,18 @@ Describe -Name 'Join-Object' -Fixture {
     Context -Name "Test Small" -Fixture {
         It -name "Testing <TestName>, it returns <Expected>" -TestCases @(
             @{
-                TestName = 'Small: PSCustomObjects - DataTable'
+                TestName    = 'Small: PSCustomObjects - DataTable'
                 TestDataSet = $TestDataSetSmall
-                Params = @{
+                Params      = @{
                     Left                   = 'PSCustomObjects'
                     Right                  = 'DataTable'
                     LeftJoinProperty       = 'ID'
                     RightJoinProperty      = 'IDD'
-                    LeftProperties         = @{ID= 'ID' ; Sub = 'Subscription'}
+                    LeftProperties         = @{ID = 'ID' ; Sub = 'Subscription'}
                     ExcludeRightProperties = 'Junk'
                     Prefix                 = 'R_'
                 }
-                Expected = @"
+                Expected    = @"
 
 ID Subscription R_Name R_IntT
 -- ------------ ------ ------
@@ -44,21 +44,21 @@ ID Subscription R_Name R_IntT
 
 
 "@
-                Count = 3
+                Count       = 3
             }
             @{
-                TestName = 'Small: PSCustomObjects - DataTable, ordered'
+                TestName    = 'Small: PSCustomObjects - DataTable, ordered'
                 TestDataSet = $TestDataSetSmall
-                Params = @{
+                Params      = @{
                     Left                   = 'PSCustomObjects'
                     Right                  = 'DataTable'
                     LeftJoinProperty       = 'ID'
                     RightJoinProperty      = 'IDD'
-                    LeftProperties         = [ordered]@{Sub = 'Subscription' ; ID= 'ID'}
+                    LeftProperties         = [ordered]@{Sub = 'Subscription' ; ID = 'ID'}
                     ExcludeRightProperties = 'Junk'
                     Prefix                 = 'R_'
                 }
-                Expected = @"
+                Expected    = @"
 
 Subscription ID R_Name R_IntT
 ------------ -- ------ ------
@@ -69,21 +69,21 @@ S3            3 C
 
 
 "@
-                Count = 3
+                Count       = 3
             }
             @{
-                TestName = 'Small: DataTable - PSCustomObjects'
+                TestName    = 'Small: DataTable - PSCustomObjects'
                 TestDataSet = $TestDataSetSmall
-                Params = @{
-                    Left                   = 'DataTable'
-                    Right                  = 'PSCustomObjects'
-                    LeftJoinProperty       = 'IDD'
-                    RightJoinProperty      = 'ID'
-                    RightProperties         = @{ID= 'ID' ; Sub = 'Subscription'}
+                Params      = @{
+                    Left                  = 'DataTable'
+                    Right                 = 'PSCustomObjects'
+                    LeftJoinProperty      = 'IDD'
+                    RightJoinProperty     = 'ID'
+                    RightProperties       = @{ID = 'ID' ; Sub = 'Subscription'}
                     ExcludeLeftProperties = 'Junk'
-                    Suffix                 = '_R'
+                    Suffix                = '_R'
                 }
-                Expected = @"
+                Expected    = @"
 
 IDD Name IntT Subscription_R
 --- ---- ---- --------------
@@ -93,22 +93,22 @@ IDD Name IntT Subscription_R
 
 
 "@
-                Count = 2
+                Count       = 2
             }
             @{
-                TestName = 'Small: PSCustomObjects - DataTable, PassThru'
+                TestName    = 'Small: PSCustomObjects - DataTable, PassThru'
                 TestDataSet = $TestDataSetSmall
-                Params = @{
+                Params      = @{
                     Left                   = 'PSCustomObjects'
                     Right                  = 'DataTable'
                     LeftJoinProperty       = 'ID'
                     RightJoinProperty      = 'IDD'
-                    LeftProperties         = @{ID= 'ID' ; Sub = 'Subscription'}
+                    LeftProperties         = @{ID = 'ID' ; Sub = 'Subscription'}
                     ExcludeRightProperties = 'Junk'
                     Prefix                 = 'R_'
                     PassThru               = $true
                 }
-                Expected = @"
+                Expected    = @"
 
 ID Subscription R_Name R_IntT
 -- ------------ ------ ------
@@ -119,23 +119,23 @@ ID Subscription R_Name R_IntT
 
 
 "@
-                Count = 3
+                Count       = 3
             }
             @{
-                TestName = 'Small: DataTable - PSCustomObjects, PassThru'
+                TestName    = 'Small: DataTable - PSCustomObjects, PassThru'
                 TestDataSet = $TestDataSetSmall
-                Params = @{
-                    Left                   = 'DataTable'
-                    Right                  = 'PSCustomObjects'
-                    LeftJoinProperty       = 'IDD'
-                    RightJoinProperty      = 'ID'
-                    LeftProperties         = @{IDD = 'IDD' ; Name = 'NewName'}
-                    RightProperties        = @{ID= 'ID' ; Sub = 'Subscription'}
-                    ExcludeLeftProperties  = 'Junk'
-                    Suffix                 = '_R'
-                    PassThru               = $true
+                Params      = @{
+                    Left                  = 'DataTable'
+                    Right                 = 'PSCustomObjects'
+                    LeftJoinProperty      = 'IDD'
+                    RightJoinProperty     = 'ID'
+                    LeftProperties        = @{IDD = 'IDD' ; Name = 'NewName'}
+                    RightProperties       = @{ID = 'ID' ; Sub = 'Subscription'}
+                    ExcludeLeftProperties = 'Junk'
+                    Suffix                = '_R'
+                    PassThru              = $true
                 }
-                Expected = @"
+                Expected    = @"
 
 IDD NewName Subscription_R
 --- ------- --------------
@@ -145,18 +145,18 @@ IDD NewName Subscription_R
 
 
 "@
-                Count = 2
+                Count       = 2
             }
             @{
-                TestName = 'Small: PSCustomObjects - DataTable, DBNull to $null'
+                TestName    = 'Small: PSCustomObjects - DataTable, DBNull to $null'
                 TestDataSet = $TestDataSetSmall
-                Params = @{
-                    Left                   = 'PSCustomObjects'
-                    Right                  = 'DataTable'
-                    LeftJoinProperty       = 'ID'
-                    RightJoinProperty      = 'IDD'
+                Params      = @{
+                    Left              = 'PSCustomObjects'
+                    Right             = 'DataTable'
+                    LeftJoinProperty  = 'ID'
+                    RightJoinProperty = 'IDD'
                 }
-                Expected = @"
+                Expected    = @"
 
 ID Sub IntO Name Junk IntT
 -- --- ---- ---- ---- ----
@@ -167,8 +167,8 @@ ID Sub IntO Name Junk IntT
 
 
 "@
-                Count = 3
-                ExtraTest = {$JoindOutput | Where-Object {$_.Junk} | Format-Table | Out-String | Should -Be @"
+                Count       = 3
+                ExtraTest   = {$JoindOutput | Where-Object {$_.Junk} | Format-Table | Out-String | Should -Be @"
 
 ID Sub IntO Name Junk IntT
 -- --- ---- ---- ---- ----
@@ -179,9 +179,9 @@ ID Sub IntO Name Junk IntT
 "@}
             }
             @{
-                TestName = 'Small: DataTable - PSCustomObjects, DataTable'
+                TestName    = 'Small: DataTable - PSCustomObjects, DataTable'
                 TestDataSet = $TestDataSetSmall
-                Params = @{
+                Params      = @{
                     Left                   = 'DataTable'
                     Right                  = 'PSCustomObjects'
                     LeftJoinProperty       = 'IDD'
@@ -190,7 +190,7 @@ ID Sub IntO Name Junk IntT
                     Prefix                 = 'R_'
                     DataTable              = $true
                 }
-                Expected = @"
+                Expected    = @"
 
 IDD Name Junk IntT R_Sub R_IntO
 --- ---- ---- ---- ----- ------
@@ -200,12 +200,12 @@ IDD Name Junk IntT R_Sub R_IntO
 
 
 "@
-                Count = 2
+                Count       = 2
             }
             @{
-                TestName = 'Small: PSCustomObjects - DataTable, DataTable'
+                TestName    = 'Small: PSCustomObjects - DataTable, DataTable'
                 TestDataSet = $TestDataSetSmall
-                Params = @{
+                Params      = @{
                     Left                   = 'PSCustomObjects'
                     Right                  = 'DataTable'
                     LeftJoinProperty       = 'ID'
@@ -214,7 +214,7 @@ IDD Name Junk IntT R_Sub R_IntO
                     Prefix                 = 'R_'
                     DataTable              = $true
                 }
-                Expected = @"
+                Expected    = @"
 
 ID Sub IntO R_Name R_IntT
 -- --- ---- ------ ------
@@ -225,12 +225,12 @@ ID Sub IntO R_Name R_IntT
 
 
 "@
-                Count = 3
+                Count       = 3
             }
             @{
-                TestName = 'Small: PSCustomObjects - DataTable, DataTable AllInBoth'
+                TestName    = 'Small: PSCustomObjects - DataTable, DataTable AllInBoth'
                 TestDataSet = $TestDataSetSmall
-                Params = @{
+                Params      = @{
                     Left                   = 'PSCustomObjects'
                     Right                  = 'DataTable'
                     LeftJoinProperty       = 'ID'
@@ -240,7 +240,7 @@ ID Sub IntO R_Name R_IntT
                     DataTable              = $true
                     Type                   = 'AllInBoth'
                 }
-                Expected = @"
+                Expected    = @"
 
 ID Sub IntO R_Name R_IntT
 -- --- ---- ------ ------
@@ -251,12 +251,12 @@ ID Sub IntO R_Name R_IntT
 
 
 "@
-                Count = 3
+                Count       = 3
             }
             @{
-                TestName = 'Small: DataTable - PSCustomObjects, DataTable AllInBoth'
+                TestName    = 'Small: DataTable - PSCustomObjects, DataTable AllInBoth'
                 TestDataSet = $TestDataSetSmall
-                Params = @{
+                Params      = @{
                     Left                   = 'DataTable'
                     Right                  = 'PSCustomObjects'
                     LeftJoinProperty       = 'IDD'
@@ -266,7 +266,7 @@ ID Sub IntO R_Name R_IntT
                     DataTable              = $true
                     Type                   = 'AllInBoth'
                 }
-                Expected = @"
+                Expected    = @"
 
 IDD Name Junk IntT R_Sub R_IntO
 --- ---- ---- ---- ----- ------
@@ -277,19 +277,19 @@ IDD Name Junk IntT R_Sub R_IntO
 
 
 "@
-                Count = 3
+                Count       = 3
             }
         ) -test {
             param ($TestDataSet, $Params, $Expected, $Count, $ExtraTest, $TestName)
 
             #if ($TestName -ne 'Small: PSCustomObjects - DataTable, DataTable') {Continue}
-            
+
             . $TestDataSet
-            $Params.Left  = (Get-Variable -Name $Params.Left).Value
+            $Params.Left = (Get-Variable -Name $Params.Left).Value
             $Params.Right = (Get-Variable -Name $Params.Right).Value
 
-            $BeforeLeft =  $Params.Left | Out-String
-            $BeforeRight =  $Params.Right | Out-String
+            $BeforeLeft = $Params.Left | Out-String
+            $BeforeRight = $Params.Right | Out-String
             $BeforeLeftType = $Params.Left.GetType()
             $BeforeRightType = $Params.Right.GetType()
 
