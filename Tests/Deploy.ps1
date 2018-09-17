@@ -14,7 +14,7 @@ $ErrorActionPreferenceOrg = $ErrorActionPreference
 $ErrorActionPreference = 'Stop'
 try
 {
-    if (!$Env:APPVEYOR -or $Env:APPVEYOR_REPO_BRANCH -eq "master")
+    if (!$Env:APPVEYOR -or $Env:APPVEYOR_REPO_BRANCH -eq 'master')
     {
         '[Progress] Deploy Start'
         $ModuleName = [System.IO.Path]::GetFileNameWithoutExtension((Get-ChildItem -File -Filter *.psm1 -Name -Path "$PSScriptRoot\.."))
@@ -26,7 +26,7 @@ try
         {
             if ($_.Exception.Message -notlike 'No match was found for the specified search criteria*' -or !$Force)
             {
-                Write-Error $_
+                throw $_
             }
         }
 
@@ -41,6 +41,10 @@ try
             "[Output] Deploying $ModuleName version $VersionLocal"
             Publish-Module -Name $ModuleName -NuGetApiKey $NugetApiKey -RequiredVersion $VersionLocal
         }
+        else
+        {
+            '[Progress] Deploy Skipped (Version)'
+        }
     }
     else
     {
@@ -49,9 +53,7 @@ try
 }
 catch
 {
-    "Error was $_"
-    $line = $_.InvocationInfo.ScriptLineNumber
-    "Error was in Line $line"
+    throw $_
 }
 finally
 {

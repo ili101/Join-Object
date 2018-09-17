@@ -37,17 +37,16 @@ function Get-EnvironmentInfo
 
     Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP' -Recurse |
         Get-ItemProperty -Name Version, Release -ErrorAction SilentlyContinue |
-        # For The One True framework (latest .NET 4x), change match to PSChildName -eq "Full":
-    Where-Object { $_.PSChildName -eq "Full"} |
-        Select-Object @{name = ".NET Framework"; expression = {$_.PSChildName}},
-    @{name = "Product"; expression = {$Lookup[$_.Release]}},
-    Version, Release,
-    # Some OPTIONAL extra output: PSComputerName and WindowsVersion
-    # The Computer name, so output from local machines will match remote machines:
-    @{ name = "PSComputerName"; expression = {$Env:Computername}},
-    # The Windows Version (works on Windows 10, at least):
-    @{ name = "WindowsVersion"; expression = { $WindowsVersion }},
-    @{ name = "PSVersion"; expression = { $PSVersionTable.PSVersion }}
+        Where-Object { $_.PSChildName -eq "Full"} |
+        Select-Object @(
+        @{name = ".NET Framework"; expression = {$_.PSChildName}},
+        @{name = "Product"; expression = {$Lookup[$_.Release]}},
+        'Version',
+        'Release',
+        @{name = "PSComputerName"; expression = {$Env:Computername}},
+        @{name = "WindowsVersion"; expression = { $WindowsVersion }},
+        @{name = "PSVersion"; expression = {$PSVersionTable.PSVersion}}
+    )
 }
 
 # Initialize
@@ -58,7 +57,7 @@ $TestFile = "TestResultsPS{0}.xml" -f $PSVersionTable.PSVersion
 if (!$Finalize)
 {
     "[Progress] Testing On:"
-    ((Get-EnvironmentInfo) | Out-String).Trim()
+    Get-EnvironmentInfo
     . .\Install.ps1
     Invoke-Pester -OutputFile $TestFile
 }
