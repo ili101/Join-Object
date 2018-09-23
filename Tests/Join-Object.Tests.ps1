@@ -1,5 +1,24 @@
 ﻿#Requires -Modules Pester
-Write-Verbose -Message 'Testing start'
+
+$Verbose = @{Verbose = $false}
+#$Verbose = @{Verbose = $true}
+
+if ($PSScriptRoot)
+{
+    $ScriptRoot = $PSScriptRoot
+}
+elseif ($psISE.CurrentFile.IsUntitled -eq $false)
+{
+    $ScriptRoot = Split-Path -Path $psISE.CurrentFile.FullPath
+}
+elseif ($null -ne $psEditor.GetEditorContext().CurrentFile.Path -and $psEditor.GetEditorContext().CurrentFile.Path -notlike 'untitled:*')
+{
+    $ScriptRoot = Split-Path -Path $psEditor.GetEditorContext().CurrentFile.Path
+}
+else
+{
+    $ScriptRoot = $null
+}
 
 $TestDataSetSmall = {
     $PSCustomObjects = @(
@@ -18,12 +37,30 @@ $TestDataSetSmall = {
 }
 #. $TestDataSetSmall
 
+function Format-Test
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory)]
+        [HashTable]$Test
+    )
+    if ($TestDataSetName, $Test.Params.Left, $Test.Params.Right, $Test.Description -contains $null)
+    {
+        Throw 'Missing param'
+    }
+
+    $Test.TestName = '{0}, {3}. {1} - {2}' -f $TestDataSetName, $Test.Params.Left, $Test.Params.Right, $Test.Description
+    $Test.TestDataSet = Get-Variable -Name $TestDataSetName -ValueOnly
+    $Test
+}
+
 Describe -Name 'Join-Object' -Fixture {
-    Context -Name "Test Small" -Fixture {
-        It -name "Testing <TestName>, it returns <Expected>" -TestCases @(
-            @{
-                TestName    = 'Small: PSCustomObjects - DataTable'
-                TestDataSet = $TestDataSetSmall
+    $TestDataSetName = 'TestDataSetSmall'
+    Context -Name $TestDataSetName -Fixture {
+        It -name "Testing <TestName>" -TestCases @(
+            Format-Test @{
+                Description = 'BasicError'
                 Params      = @{
                     Left                   = 'PSCustomObjects'
                     Right                  = 'DataTable'
@@ -33,22 +70,33 @@ Describe -Name 'Join-Object' -Fixture {
                     ExcludeRightProperties = 'Junk'
                     Prefix                 = 'R_'
                 }
-                Expected    = @"
-
-ID Subscription R_Name R_IntT
--- ------------ ------ ------
- 1 S1           A           5
- 2 S2                        
- 3 S3           C            
-
-
-
-"@
-                Count       = 3
             }
-            @{
-                TestName    = 'Small: PSCustomObjects - DataTable, ordered'
-                TestDataSet = $TestDataSetSmall
+            Format-Test @{
+                Description = 'DataTableError'
+                Params      = @{
+                    Left                   = 'DataTable'
+                    Right                  = 'PSCustomObjects'
+                    LeftJoinProperty       = 'IDD'
+                    RightJoinProperty      = 'ID'
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                    DataTable              = $true
+                }
+            }
+            Format-Test @{
+                Description = 'Basic'
+                Params      = @{
+                    Left                   = 'PSCustomObjects'
+                    Right                  = 'DataTable'
+                    LeftJoinProperty       = 'ID'
+                    RightJoinProperty      = 'IDD'
+                    LeftProperties         = @{ID = 'ID' ; Sub = 'Subscription'}
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                }
+            }
+            Format-Test @{
+                Description = 'Ordered'
                 Params      = @{
                     Left                   = 'PSCustomObjects'
                     Right                  = 'DataTable'
@@ -58,22 +106,9 @@ ID Subscription R_Name R_IntT
                     ExcludeRightProperties = 'Junk'
                     Prefix                 = 'R_'
                 }
-                Expected    = @"
-
-Subscription ID R_Name R_IntT
------------- -- ------ ------
-S1            1 A           5
-S2            2              
-S3            3 C            
-
-
-
-"@
-                Count       = 3
             }
-            @{
-                TestName    = 'Small: DataTable - PSCustomObjects'
-                TestDataSet = $TestDataSetSmall
+            Format-Test @{
+                Description = 'Basic'
                 Params      = @{
                     Left                  = 'DataTable'
                     Right                 = 'PSCustomObjects'
@@ -83,21 +118,9 @@ S3            3 C
                     ExcludeLeftProperties = 'Junk'
                     Suffix                = '_R'
                 }
-                Expected    = @"
-
-IDD Name IntT Subscription_R
---- ---- ---- --------------
-  1 A       5 S1            
-  3 C         S3            
-
-
-
-"@
-                Count       = 2
             }
-            @{
-                TestName    = 'Small: PSCustomObjects - DataTable, PassThru'
-                TestDataSet = $TestDataSetSmall
+            Format-Test @{
+                Description = 'PassThru'
                 Params      = @{
                     Left                   = 'PSCustomObjects'
                     Right                  = 'DataTable'
@@ -108,22 +131,9 @@ IDD Name IntT Subscription_R
                     Prefix                 = 'R_'
                     PassThru               = $true
                 }
-                Expected    = @"
-
-ID Subscription R_Name R_IntT
--- ------------ ------ ------
- 1 S1           A           5
- 2 S2                        
- 3 S3           C            
-
-
-
-"@
-                Count       = 3
             }
-            @{
-                TestName    = 'Small: DataTable - PSCustomObjects, PassThru'
-                TestDataSet = $TestDataSetSmall
+            Format-Test @{
+                Description = 'PassThru'
                 Params      = @{
                     Left                  = 'DataTable'
                     Right                 = 'PSCustomObjects'
@@ -135,52 +145,18 @@ ID Subscription R_Name R_IntT
                     Suffix                = '_R'
                     PassThru              = $true
                 }
-                Expected    = @"
-
-IDD NewName Subscription_R
---- ------- --------------
-  1 A       S1            
-  3 C       S3            
-
-
-
-"@
-                Count       = 2
             }
-            @{
-                TestName    = 'Small: PSCustomObjects - DataTable, DBNull to $null'
-                TestDataSet = $TestDataSetSmall
+            Format-Test @{
+                Description = 'DBNull to $null'
                 Params      = @{
                     Left              = 'PSCustomObjects'
                     Right             = 'DataTable'
                     LeftJoinProperty  = 'ID'
                     RightJoinProperty = 'IDD'
                 }
-                Expected    = @"
-
-ID Sub IntO Name Junk IntT
--- --- ---- ---- ---- ----
- 1 S1     6 A    AAA     5
- 2 S2     7               
- 3 S3       C             
-
-
-
-"@
-                Count       = 3
-                ExtraTest   = {$JoindOutput | Where-Object {$_.Junk} | Format-Table | Out-String | Should -Be @"
-
-ID Sub IntO Name Junk IntT
--- --- ---- ---- ---- ----
- 1 S1     6 A    AAA     5
-
-
-
-"@}
             }
-            @{
-                TestName    = 'Small: DataTable - PSCustomObjects, DataTable'
-                TestDataSet = $TestDataSetSmall
+            Format-Test @{
+                Description = 'DataTable'
                 Params      = @{
                     Left                   = 'DataTable'
                     Right                  = 'PSCustomObjects'
@@ -190,21 +166,9 @@ ID Sub IntO Name Junk IntT
                     Prefix                 = 'R_'
                     DataTable              = $true
                 }
-                Expected    = @"
-
-IDD Name Junk IntT R_Sub R_IntO
---- ---- ---- ---- ----- ------
-  1 A    AAA     5 S1    6     
-  3 C              S3          
-
-
-
-"@
-                Count       = 2
             }
-            @{
-                TestName    = 'Small: PSCustomObjects - DataTable, DataTable'
-                TestDataSet = $TestDataSetSmall
+            Format-Test @{
+                Description = 'DataTable'
                 Params      = @{
                     Left                   = 'PSCustomObjects'
                     Right                  = 'DataTable'
@@ -214,22 +178,9 @@ IDD Name Junk IntT R_Sub R_IntO
                     Prefix                 = 'R_'
                     DataTable              = $true
                 }
-                Expected    = @"
-
-ID Sub IntO R_Name R_IntT
--- --- ---- ------ ------
-1  S1  6    A           5
-2  S2  7                 
-3  S3       C            
-
-
-
-"@
-                Count       = 3
             }
-            @{
-                TestName    = 'Small: PSCustomObjects - DataTable, DataTable AllInBoth'
-                TestDataSet = $TestDataSetSmall
+            Format-Test @{
+                Description = 'AllInBoth'
                 Params      = @{
                     Left                   = 'PSCustomObjects'
                     Right                  = 'DataTable'
@@ -240,22 +191,9 @@ ID Sub IntO R_Name R_IntT
                     DataTable              = $true
                     Type                   = 'AllInBoth'
                 }
-                Expected    = @"
-
-ID Sub IntO R_Name R_IntT
--- --- ---- ------ ------
-1  S1  6    A           5
-2  S2  7                 
-3  S3       C            
-
-
-
-"@
-                Count       = 3
             }
-            @{
-                TestName    = 'Small: DataTable - PSCustomObjects, DataTable AllInBoth'
-                TestDataSet = $TestDataSetSmall
+            Format-Test @{
+                Description = 'AllInBoth'
                 Params      = @{
                     Left                   = 'DataTable'
                     Right                  = 'PSCustomObjects'
@@ -266,112 +204,66 @@ ID Sub IntO R_Name R_IntT
                     DataTable              = $true
                     Type                   = 'AllInBoth'
                 }
-                Expected    = @"
-
-IDD Name Junk IntT R_Sub R_IntO
---- ---- ---- ---- ----- ------
-  1 A    AAA     5 S1    6     
-  3 C              S3          
-                   S2    7     
-
-
-
-"@
-                Count       = 3
             }
         ) -test {
-            param ($TestDataSet, $Params, $Expected, $Count, $ExtraTest, $TestName)
-
+            param (
+                $Params,
+                $TestDataSet,
+                $TestName
+            )
             #if ($TestName -ne 'Small: PSCustomObjects - DataTable, DataTable') {Continue}
 
+            # Load Data
             . $TestDataSet
             $Params.Left = (Get-Variable -Name $Params.Left).Value
             $Params.Right = (Get-Variable -Name $Params.Right).Value
 
-            $BeforeLeft = $Params.Left | Out-String
-            $BeforeRight = $Params.Right | Out-String
-            $BeforeLeftType = $Params.Left.GetType()
-            $BeforeRightType = $Params.Right.GetType()
+            # Save Before Data Copy
+            $BeforeLeftXml = [System.Management.Automation.PSSerializer]::Serialize($Params.Left)
+            $BeforeRightXml = [System.Management.Automation.PSSerializer]::Serialize($Params.Right)
 
+            # Execute Cmdlet
             $JoindOutput = Join-Object @Params
-            Write-Verbose -Message ('Start' + ($JoindOutput | Format-Table | Out-String ) + 'End')
+            Write-Verbose ('it returns:' + ($JoindOutput | Format-Table | Out-String)) @Verbose
+            $JoindOutputXml = [System.Management.Automation.PSSerializer]::Serialize($JoindOutput)
+            $JoindOutputNew = [System.Management.Automation.PSSerializer]::Deserialize($JoindOutputXml) # Assert
 
-            $JoindOutput | Format-Table | Out-String | Should -Be $Expected
+            # Save CompareData (Xml)
+            ##Export-Clixml -Path "$ScriptRoot\CompareData\$TestName.xml" -InputObject $JoindOutput
+            #$JoindOutputXml | Set-Content -Path "$ScriptRoot\CompareData\$TestName.xml"
+
+            # Get CompareData
+            $CompareDataXml = (Get-Content -Path "$ScriptRoot\CompareData\$TestName.xml") -join [Environment]::NewLine
+            $CompareDataNew = [System.Management.Automation.PSSerializer]::Deserialize($CompareDataXml) # Assert
+            Write-Verbose ('it should return:' + ($CompareDataNew | Format-Table | Out-String)) @Verbose
+
+            # Test
+            $CompareDataXml | Should -Be $JoindOutputXml
+            #Assert-Equivalent -Actual $JoindOutputNew -Expected $CompareDataNew # Assert
+
             if ($Params.PassThru)
             {
-                ($Params.Left | Format-Table | Out-String) | Should -Be $Expected
+                [System.Management.Automation.PSSerializer]::Serialize($Params.Left) | Should -Be $CompareDataXml
             }
             else
             {
-                ($Params.Left | Format-Table | Out-String) | Should -Be $BeforeLeft
+                [System.Management.Automation.PSSerializer]::Serialize($Params.Left) | Should -Be $BeforeLeftXml
             }
-            ($Params.Right | Format-Table | Out-String) | Should -Be $BeforeRight
+            [System.Management.Automation.PSSerializer]::Serialize($Params.Right) | Should -Be $BeforeRightXml
 
-            if ($Params.PassThru)
+            if (!$Params.PassThru)
             {
-                Should -BeOfType -ActualValue $JoindOutput -ExpectedType $BeforeLeftType
-            }
-            elseif ($Params.DataTable)
-            {
-                Should -BeOfType -ActualValue $JoindOutput -ExpectedType 'System.Data.DataTable'
-                $JoindOutput | Should -BeOfType -ExpectedType 'System.Data.DataRow'
-            }
-            else
-            {
-                Should -BeOfType -ActualValue $JoindOutput -ExpectedType 'System.Array'
-                $JoindOutput | Should -BeOfType -ExpectedType 'PSCustomObject'
-            }
-
-            if ($JoindOutput -is [System.Data.DataTable])
-            {
-                $JoindOutput.Rows.Count | Should -Be $Count
-            }
-            else
-            {
-                $JoindOutput.Count | Should -Be $Count
-            }
-
-            if ($ExtraTest)
-            {
-                . $ExtraTest
+                if ($Params.DataTable)
+                {
+                    Should -BeOfType -ActualValue $JoindOutput -ExpectedType 'System.Data.DataTable'
+                    $JoindOutput | Should -BeOfType -ExpectedType 'System.Data.DataRow'
+                }
+                else
+                {
+                    Should -BeOfType -ActualValue $JoindOutput -ExpectedType 'System.Array'
+                    $JoindOutput | Should -BeOfType -ExpectedType 'PSCustomObject'
+                }
             }
         }
     }
 }
-
-Write-Verbose -Message 'Testing end'
-
-<# Alternative testing method
-using namespace System.Data
-Add-Type -AssemblyName System.Data.DataSetExtensions
-
-$DataTable2 = [Data.DataTable]::new('Test')
-$null = $DataTable2.Columns.Add('IDD')
-$null = $DataTable2.Columns.Add('Name')
-$null = $DataTable2.Columns.Add('Junk')
-$null = $DataTable2.Rows.Add(1,'A','AAA')
-$null = $DataTable2.Rows.Add(3,'C',$null)
-
-
-$DataTable = [Data.DataTable]::new('Test')
-$null = $DataTable.Columns.Add('IDD')
-$null = $DataTable.Columns.Add('Name')
-$null = $DataTable.Columns.Add('Junk')
-$null = $DataTable.Rows.Add(1,'A','AAA')
-$null = $DataTable.Rows.Add(3,'C',$null)
-
-[System.Linq.Enumerable]::SequenceEqual($DataTable.Rows.ItemArray, $DataTable2.Rows.ItemArray)
-
-$PSCustomObjects= @(
-    [PSCustomObject]@{ID = 1 ; Sub = 'S1'}
-    [PSCustomObject]@{ID = 2 ; Sub = 'S2'}
-    [PSCustomObject]@{ID = 3 ; Sub = 'S3'}
-    )
-$PSCustomObjects2= @(
-    [PSCustomObject]@{ID = 1 ; Sub = 'S1'}
-    [PSCustomObject]@{ID = 2 ; Sub = 'S2'}
-    [PSCustomObject]@{ID = 3 ; Sub = 'S3'}
-    )
-
-[System.Linq.Enumerable]::SequenceEqual(($PSCustomObjects2 | ForEach-Object {$_.psobject.Properties.Value}), ($PSCustomObjects | ForEach-Object {$_.psobject.Properties.Value}))
-#>

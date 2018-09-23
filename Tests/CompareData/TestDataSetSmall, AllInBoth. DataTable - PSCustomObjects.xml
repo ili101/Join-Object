@@ -1,0 +1,172 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>System.Data.DataTable</T>
+      <T>System.ComponentModel.MarshalByValueComponent</T>
+      <T>System.Object</T>
+    </TN>
+    <IE>
+      <Obj RefId="1">
+        <TN RefId="1">
+          <T>System.Data.DataRow</T>
+          <T>System.Object</T>
+        </TN>
+        <ToString>System.Data.DataRow</ToString>
+        <Props>
+          <I32 N="IDD">1</I32>
+          <S N="Name">A</S>
+          <S N="Junk">AAA</S>
+          <I32 N="IntT">5</I32>
+          <S N="R_Sub">S1</S>
+          <S N="R_IntO">6</S>
+        </Props>
+      </Obj>
+      <Obj RefId="2">
+        <TNRef RefId="1" />
+        <ToString>System.Data.DataRow</ToString>
+        <Props>
+          <I32 N="IDD">3</I32>
+          <S N="Name">C</S>
+          <Obj N="Junk" RefId="3">
+            <S></S>
+          </Obj>
+          <Obj N="IntT" RefId="4">
+            <S></S>
+          </Obj>
+          <S N="R_Sub">S3</S>
+          <Obj N="R_IntO" RefId="5">
+            <S></S>
+          </Obj>
+        </Props>
+      </Obj>
+      <Obj RefId="6">
+        <TNRef RefId="1" />
+        <ToString>System.Data.DataRow</ToString>
+        <Props>
+          <Obj N="IDD" RefId="7">
+            <S></S>
+          </Obj>
+          <Obj N="Name" RefId="8">
+            <S></S>
+          </Obj>
+          <Obj N="Junk" RefId="9">
+            <S></S>
+          </Obj>
+          <Obj N="IntT" RefId="10">
+            <S></S>
+          </Obj>
+          <S N="R_Sub">S2</S>
+          <S N="R_IntO">7</S>
+        </Props>
+      </Obj>
+    </IE>
+    <Props>
+      <B N="CaseSensitive">false</B>
+      <B N="IsInitialized">true</B>
+      <S N="RemotingFormat">Xml</S>
+      <Obj N="ChildRelations" RefId="11">
+        <TN RefId="2">
+          <T>System.Data.DataRelationCollection+DataTableRelationCollection</T>
+          <T>System.Data.DataRelationCollection</T>
+          <T>System.Data.InternalDataCollectionBase</T>
+          <T>System.Object</T>
+        </TN>
+        <IE />
+      </Obj>
+      <Obj N="Columns" RefId="12">
+        <TN RefId="3">
+          <T>System.Data.DataColumnCollection</T>
+          <T>System.Data.InternalDataCollectionBase</T>
+          <T>System.Object</T>
+        </TN>
+        <IE>
+          <S>IDD</S>
+          <S>Name</S>
+          <S>Junk</S>
+          <S>IntT</S>
+          <S>R_Sub</S>
+          <S>R_IntO</S>
+        </IE>
+      </Obj>
+      <Obj N="Constraints" RefId="13">
+        <TN RefId="4">
+          <T>System.Data.ConstraintCollection</T>
+          <T>System.Data.InternalDataCollectionBase</T>
+          <T>System.Object</T>
+        </TN>
+        <IE />
+      </Obj>
+      <Nil N="DataSet" />
+      <Obj N="DefaultView" RefId="14">
+        <TN RefId="5">
+          <T>System.Data.DataView</T>
+          <T>System.ComponentModel.MarshalByValueComponent</T>
+          <T>System.Object</T>
+        </TN>
+        <LST>
+          <S>System.Data.DataRowView</S>
+          <S>System.Data.DataRowView</S>
+          <S>System.Data.DataRowView</S>
+        </LST>
+      </Obj>
+      <S N="DisplayExpression"></S>
+      <Obj N="ExtendedProperties" RefId="15">
+        <TN RefId="6">
+          <T>System.Data.PropertyCollection</T>
+          <T>System.Collections.Hashtable</T>
+          <T>System.Object</T>
+        </TN>
+        <DCT />
+      </Obj>
+      <B N="HasErrors">false</B>
+      <Obj N="Locale" RefId="16">
+        <TN RefId="7">
+          <T>System.Globalization.CultureInfo</T>
+          <T>System.Object</T>
+        </TN>
+        <ToString>he-IL</ToString>
+        <Props>
+          <I32 N="LCID">1037</I32>
+          <S N="Name">he-IL</S>
+          <S N="DisplayName">Hebrew (Israel)</S>
+          <S N="IetfLanguageTag">he-IL</S>
+          <S N="ThreeLetterISOLanguageName">heb</S>
+          <S N="ThreeLetterWindowsLanguageName">HEB</S>
+          <S N="TwoLetterISOLanguageName">he</S>
+        </Props>
+      </Obj>
+      <I32 N="MinimumCapacity">50</I32>
+      <Obj N="ParentRelations" RefId="17">
+        <TNRef RefId="2" />
+        <IE />
+      </Obj>
+      <Obj N="PrimaryKey" RefId="18">
+        <TN RefId="8">
+          <T>System.Data.DataColumn[]</T>
+          <T>System.Array</T>
+          <T>System.Object</T>
+        </TN>
+        <LST />
+      </Obj>
+      <Obj N="Rows" RefId="19">
+        <TN RefId="9">
+          <T>System.Data.DataRowCollection</T>
+          <T>System.Data.InternalDataCollectionBase</T>
+          <T>System.Object</T>
+        </TN>
+        <IE>
+          <Ref RefId="1" />
+          <Ref RefId="2" />
+          <Ref RefId="6" />
+        </IE>
+      </Obj>
+      <S N="TableName">Joined</S>
+      <S N="Namespace"></S>
+      <S N="Prefix"></S>
+      <Nil N="Site" />
+      <Nil N="Container" />
+      <B N="DesignMode">false</B>
+      <B N="ContainsListCollection">false</B>
+    </Props>
+  </Obj>
+</Objs>

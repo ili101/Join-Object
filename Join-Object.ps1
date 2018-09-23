@@ -306,7 +306,7 @@ function Join-Object
     {
         try
         {
-            if (!$ScriptRoot)
+            if ($true)
             {
                 $ScriptRoot = $PSScriptRoot
             }
