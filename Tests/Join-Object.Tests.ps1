@@ -1,4 +1,5 @@
 ﻿#Requires -Modules Pester
+#Requires -Modules @{ModuleName = 'Assert' ; ModuleVersion = '0.9.2'}
 
 $Verbose = @{Verbose = $false}
 #$Verbose = @{Verbose = $true}
@@ -209,7 +210,8 @@ Describe -Name 'Join-Object' -Fixture {
             param (
                 $Params,
                 $TestDataSet,
-                $TestName
+                $TestName,
+                $Description
             )
             #if ($TestName -ne 'Small: PSCustomObjects - DataTable, DataTable') {Continue}
 
@@ -219,37 +221,47 @@ Describe -Name 'Join-Object' -Fixture {
             $Params.Right = (Get-Variable -Name $Params.Right).Value
 
             # Save Before Data Copy
-            $BeforeLeftXml = [System.Management.Automation.PSSerializer]::Serialize($Params.Left)
-            $BeforeRightXml = [System.Management.Automation.PSSerializer]::Serialize($Params.Right)
+            $BeforeLeft = [System.Management.Automation.PSSerializer]::Deserialize([System.Management.Automation.PSSerializer]::Serialize($Params.Left))
+            $BeforeRight = [System.Management.Automation.PSSerializer]::Deserialize([System.Management.Automation.PSSerializer]::Serialize($Params.Right))
 
             # Execute Cmdlet
             $JoindOutput = Join-Object @Params
             Write-Verbose ('it returns:' + ($JoindOutput | Format-Table | Out-String)) @Verbose
-            $JoindOutputXml = [System.Management.Automation.PSSerializer]::Serialize($JoindOutput)
-            $JoindOutputNew = [System.Management.Automation.PSSerializer]::Deserialize($JoindOutputXml) # Assert
+            #$JoindOutputXml = [System.Management.Automation.PSSerializer]::Serialize($JoindOutput)
+            #$JoindOutputNew = [System.Management.Automation.PSSerializer]::Deserialize($JoindOutputXml)
 
             # Save CompareData (Xml)
-            ##Export-Clixml -Path "$ScriptRoot\CompareData\$TestName.xml" -InputObject $JoindOutput
+            #Export-Clixml -Path "$ScriptRoot\CompareData\$TestName.xml" -InputObject $JoindOutput
             #$JoindOutputXml | Set-Content -Path "$ScriptRoot\CompareData\$TestName.xml"
 
             # Get CompareData
             $CompareDataXml = (Get-Content -Path "$ScriptRoot\CompareData\$TestName.xml") -join [Environment]::NewLine
-            $CompareDataNew = [System.Management.Automation.PSSerializer]::Deserialize($CompareDataXml) # Assert
+            $CompareDataNew = [System.Management.Automation.PSSerializer]::Deserialize($CompareDataXml)
             Write-Verbose ('it should return:' + ($CompareDataNew | Format-Table | Out-String)) @Verbose
 
             # Test
-            $CompareDataXml | Should -Be $JoindOutputXml
-            #Assert-Equivalent -Actual $JoindOutputNew -Expected $CompareDataNew # Assert
-
-            if ($Params.PassThru)
+            #$CompareDataXml | Should -Be $JoindOutputXml
+            if ($Description -like '*Error*')
             {
-                [System.Management.Automation.PSSerializer]::Serialize($Params.Left) | Should -Be $CompareDataXml
+                {Assert-Equivalent -Actual $JoindOutput -Expected $CompareDataNew -StrictOrder} | Should -Throw
             }
             else
             {
-                [System.Management.Automation.PSSerializer]::Serialize($Params.Left) | Should -Be $BeforeLeftXml
+                Assert-Equivalent -Actual $JoindOutput -Expected $CompareDataNew -StrictOrder
             }
-            [System.Management.Automation.PSSerializer]::Serialize($Params.Right) | Should -Be $BeforeRightXml
+
+            if ($Params.PassThru)
+            {
+                #[System.Management.Automation.PSSerializer]::Serialize($Params.Left) | Should -Be $CompareDataXml
+                Assert-Equivalent -Actual $Params.Left -Expected $CompareDataNew -StrictOrder
+            }
+            else
+            {
+                #[System.Management.Automation.PSSerializer]::Serialize($Params.Left) | Should -Be $BeforeLeftXml
+                Assert-Equivalent -Actual $Params.Left -Expected $BeforeLeft -StrictOrder
+            }
+            #[System.Management.Automation.PSSerializer]::Serialize($Params.Right) | Should -Be $BeforeRightXml
+            Assert-Equivalent -Actual $Params.Right -Expected $BeforeRight -StrictOrder
 
             if (!$Params.PassThru)
             {

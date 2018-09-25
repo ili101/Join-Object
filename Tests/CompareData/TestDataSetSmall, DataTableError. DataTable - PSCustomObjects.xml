@@ -26,7 +26,7 @@
         <ToString>System.Data.DataRow</ToString>
         <Props>
           <I32 N="IDD">3</I32>
-          <S N="Name">C</S>
+          <S N="Name">D</S>
           <Obj N="Junk" RefId="3">
             <S></S>
           </Obj>

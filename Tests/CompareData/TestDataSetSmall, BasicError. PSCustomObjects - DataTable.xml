@@ -23,11 +23,17 @@
         <MS>
           <I32 N="ID">2</I32>
           <S N="Subscription">S2</S>
-          <Nil N="R_Name" />
+          <Obj N="R_Name" RefId="3">
+            <TN RefId="2">
+              <T>System.DBNull</T>
+              <T>System.Object</T>
+            </TN>
+            <ToString />
+          </Obj>
           <Nil N="R_IntT" />
         </MS>
       </Obj>
-      <Obj RefId="3">
+      <Obj RefId="4">
         <TNRef RefId="1" />
         <MS>
           <I32 N="ID">3</I32>

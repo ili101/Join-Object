@@ -7,6 +7,7 @@ image: Visual Studio 2017
 # scripts that run after cloning repository
 install:
 - ps: choco install pester
+- ps: . .\Tests\Assert.ps1
 
 # to disable automatic builds
 build: off
