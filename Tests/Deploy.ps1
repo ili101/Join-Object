@@ -76,10 +76,11 @@ try
     if ($Env:APPVEYOR -and $AppVeyorZip)
     {
         $ZipFileName = "{0} {1} {2:yyyy-MM-dd HH-mm-ss}.zip" -f $ModuleName, $VersionLocal, (Get-Date)
+        $ZipFileFullPath = Join-Path -Path $ScriptRoot -ChildPath $ZipFileName
          "[Output] AppVeyorZip. $ModuleName, ZipFileName: $ZipFileName"
         $ModulePath = (Get-Module -Name $ModuleName -ListAvailable).ModuleBase | Split-Path
-        #Compress-Archive -Path $ModulePath -DestinationPath (Join-Path -Path $ScriptRoot -ChildPath $ZipFileName)
-        Push-AppveyorArtifact $ModulePath -FileName $ZipFileName -DeploymentName $ModuleName
+        Compress-Archive -Path $ModulePath -DestinationPath $ZipFileFullPath
+        Push-AppveyorArtifact $ZipFileFullPath -DeploymentName $ModuleName
     }
 }
 catch
