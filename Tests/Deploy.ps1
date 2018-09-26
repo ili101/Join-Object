@@ -75,7 +75,7 @@ try
     }
     if ($Env:APPVEYOR -and $AppVeyorZip)
     {
-        $ZipFileName = "{0} {1} {2:yyyy-MM-dd HH-mm-ss}.zip" -f $ModuleName, $VersionLocal, (Get-Date)
+        $ZipFileName = "{0} {1} {2} {3:yyyy-MM-dd HH-mm-ss}.zip" -f $ModuleName, $VersionLocal, $Env:APPVEYOR_REPO_BRANCH, (Get-Date)
         $ZipFileFullPath = Join-Path -Path $ScriptRoot -ChildPath $ZipFileName
          "[Output] AppVeyorZip. $ModuleName, ZipFileName: $ZipFileName"
         $ModulePath = (Get-Module -Name $ModuleName -ListAvailable).ModuleBase | Split-Path
