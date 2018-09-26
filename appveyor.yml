@@ -32,4 +32,4 @@ environment:
     secure: K+vkseiHQEbiNnvY20ZSYA+Jl0fSAbfyWc1/454xA3FgZRIRUw5vDPG2eyFFc5lj
 
 deploy_script:
-- ps: $null = Install-PackageProvider -Name NuGet -Force ; . .\Tests\Deploy.ps1
+- ps: $null = Install-PackageProvider -Name NuGet -Force ; . .\Tests\Deploy.ps1 -PowerShellGallery -AppVeyorZip

@@ -18,7 +18,7 @@ elseif ($null -ne $psEditor.GetEditorContext().CurrentFile.Path -and $psEditor.G
 }
 else
 {
-    $ScriptRoot = $null
+    $ScriptRoot = '.'
 }
 
 $TestDataSetSmall = {
