@@ -115,9 +115,8 @@ See RamblingCookieMonster guide http://ramblingcookiemonster.github.io/Join-Obje
 
             # ReleaseNotes of this module
             ReleaseNotes = @'
-## 0.1.6 - 2018/03/13 (Beta)
-### Fixed
-* Error "Cannot set Column 'foo' to be null. Please use DBNull instead." when using -DataTable and -AllInLeft and some Left lines don't have Right lines to join to.
+Change Log
+https://github.com/ili101/Join-Object/blob/master/CHANGELOG.md
 '@
 
         } # End of PSData hashtable

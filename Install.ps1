@@ -159,7 +159,7 @@ Try
     }
     else
     {
-        Get-ChildItem -Path ".\" -Exclude $ExcludeFiles | Where-Object -Property Name -Match ($Files | Convert-LikeToMatch) | ForEach-Object {
+        Get-ChildItem -Path $PSScriptRoot -Exclude $ExcludeFiles | Where-Object -Property Name -Match ($Files | Convert-LikeToMatch) | ForEach-Object {
             if ($_.Attributes -ne 'Directory')
             {
                 Copy-Item -Path $_ -Destination $TargetPath

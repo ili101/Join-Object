@@ -1,13 +1,18 @@
 # version format
-version: 0.0.{build}
+version: ({build})
 
 # Build worker image (VM template)
 image: Visual Studio 2017
 
+# Fix CRLF
+init:
+- git config --global --unset core.autocrlf
+
 # scripts that run after cloning repository
 install:
+- ps: . .\Tests\AppVeyor.ps1 -Initialize
 - ps: choco install pester
-- ps: . .\Tests\Assert.ps1
+- ps: Install-Module Assert -Force
 
 # to disable automatic builds
 build: off
