@@ -1,4 +1,4 @@
-﻿using namespace System.Data
+using namespace System.Data
 Add-Type -AssemblyName System.Data.DataSetExtensions
 function Join-Object
 {

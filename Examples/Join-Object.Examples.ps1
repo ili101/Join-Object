@@ -1,4 +1,4 @@
-﻿<# Notes
+<# Notes
 static System.Collections.Generic.IEnumerable[TResult]
 	GroupJoin[TOuter, TInner, TKey, TResult]
 		(

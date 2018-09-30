@@ -1,4 +1,4 @@
-﻿#Requires -Modules Pester
+#Requires -Modules Pester
 #Requires -Modules @{ModuleName = 'Assert' ; ModuleVersion = '0.9.2'}
 
 $Verbose = @{Verbose = $false}

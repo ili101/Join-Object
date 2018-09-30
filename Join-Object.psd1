@@ -131,4 +131,3 @@ See RamblingCookieMonster guide http://ramblingcookiemonster.github.io/Join-Obje
     # DefaultCommandPrefix = ''
 
 }
-

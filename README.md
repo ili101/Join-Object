@@ -1,5 +1,3 @@
-﻿
-
 # Join-Object (Beta)
 Join-Object LINQ Edition.
 Aims to provide the exact functibility of https://github.com/RamblingCookieMonster/PowerShell/blob/master/Join-Object.ps1 with much better performance.

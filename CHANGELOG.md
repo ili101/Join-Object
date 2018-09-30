@@ -1,4 +1,4 @@
-﻿## 0.1.7 - 2018/03/13 (Beta branch)
+## 0.1.7 - 2018/03/13 (Beta branch)
 ### Added
 * **-Type AllInBoth** option.
 * **-DataTableTypes [Hashtable]** allow Overwrite of DataTable columns types.
