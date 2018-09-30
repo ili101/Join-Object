@@ -79,7 +79,8 @@ try
         $ZipFileFullPath = Join-Path -Path $ScriptRoot -ChildPath $ZipFileName
          "[Output] AppVeyorZip. $ModuleName, ZipFileName: $ZipFileName"
         $ModulePath = (Get-Module -Name $ModuleName -ListAvailable).ModuleBase | Split-Path
-        Compress-Archive -Path $ModulePath -DestinationPath $ZipFileFullPath
+        #Compress-Archive -Path $ModulePath -DestinationPath $ZipFileFullPath
+        [System.IO.Compression.ZipFile]::CreateFromDirectory($ModulePath, $ZipFileFullPath, [System.IO.Compression.CompressionLevel]::Optimal, $true)
         Push-AppveyorArtifact $ZipFileFullPath -DeploymentName $ModuleName
     }
 }
