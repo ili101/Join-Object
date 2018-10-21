@@ -242,6 +242,7 @@ function Join-Object
         [switch]$MultiLeft,
         [switch]$KeepRightJoinProperty
     )
+
     # Set $SelectedLeftProperties and $SelectedRightProperties
     function Get-Properties
     {
@@ -285,6 +286,7 @@ function Join-Object
     }
     $SelectedRightProperties = Get-Properties -Object $Right -SelectProperties $RightProperties -ExcludeProperties $ExcludeRightProperties -Prefix $Prefix -Suffix $Suffix
 
+    # Importing package MoreLinq
     if ($Type -eq 'AllInBoth')
     {
         try
@@ -312,7 +314,7 @@ function Join-Object
         }
         catch
         {
-            throw 'Importing package failed: {0}' -f $_
+            throw 'Importing package MoreLinq failed: {0}' -f $_
         }
     }
 
