@@ -242,28 +242,29 @@ function Join-Object
         [switch]$MultiLeft,
         [switch]$KeepRightJoinProperty
     )
-    if ($Left -is [PSCustomObject])
+    # Set $SelectedLeftProperties and $SelectedRightProperties
+    function Get-Properties
     {
-        $Left = @($Left)
-    }
-    if ($Right -is [PSCustomObject])
-    {
-        $Right = @($Right)
-    }
-
-    function Get-Properties ($ObjectProperties, $SelectProperties, $ExcludeProperties, $Prefix, $Suffix)
-    {
+        [CmdletBinding()]
+        param
+        (
+            $Object,
+            $SelectProperties,
+            $ExcludeProperties,
+            $Prefix,
+            $Suffix
+        )
         $Properties = [ordered]@{}
+        if ($Object -is [System.Data.DataTable])
+        {
+            $ObjectProperties = $Object.Columns.ColumnName
+        }
+        else
+        {
+            $ObjectProperties = $Object[0].PSObject.Properties.Name
+        }
         if ($SelectProperties -is [hashtable] -or $SelectProperties -is [Collections.Specialized.OrderedDictionary])
         {
-            <#
-            foreach ($ExcludeProperty in $ExcludeProperties)
-            {
-                $SelectProperties.Remove($ExcludeProperty)
-            }
-            [array]::Reverse($SelectProperties.Keys) | ForEach-Object {$SelectProperties[$_] = $Prefix + $SelectProperties[$_] + $Suffix}
-            $SelectProperties
-            #>
             $SelectProperties.GetEnumerator() | Where-Object {$_.Key -notin $ExcludeProperties} | ForEach-Object {$Properties.Add($_.Key, $Prefix + $_.Value + $Suffix)}
         }
         elseif ($SelectProperties -eq '*')
@@ -276,31 +277,13 @@ function Join-Object
         }
         $Properties
     }
-    if ($Left -is [System.Data.DataTable])
-    {
-        $SelectedLeftProperties = Get-Properties -ObjectProperties $Left.Columns.ColumnName  -SelectProperties $LeftProperties  -ExcludeProperties $ExcludeLeftProperties
-    }
-    else
-    {
-        $SelectedLeftProperties = Get-Properties -ObjectProperties $Left[0].PSObject.Properties.Name  -SelectProperties $LeftProperties  -ExcludeProperties $ExcludeLeftProperties
-    }
+    $SelectedLeftProperties = Get-Properties -Object $Left  -SelectProperties $LeftProperties  -ExcludeProperties $ExcludeLeftProperties
 
-    if ($KeepRightJoinProperty)
+    if (!$KeepRightJoinProperty)
     {
-        $ExcludeProperties = $ExcludeRightProperties
+        $ExcludeRightProperties = @($ExcludeRightProperties) + @($RightJoinProperty) -ne $null
     }
-    else
-    {
-        $ExcludeProperties = (@($ExcludeRightProperties) + @($RightJoinProperty) -ne $null)
-    }
-    if ($Right -is [System.Data.DataTable])
-    {
-        $SelectedRightProperties = Get-Properties -ObjectProperties $Right.Columns.ColumnName -SelectProperties $RightProperties -ExcludeProperties $ExcludeProperties -Prefix $Prefix -Suffix $Suffix
-    }
-    else
-    {
-        $SelectedRightProperties = Get-Properties -ObjectProperties $Right[0].PSObject.Properties.Name -SelectProperties $RightProperties -ExcludeProperties $ExcludeProperties -Prefix $Prefix -Suffix $Suffix
-    }
+    $SelectedRightProperties = Get-Properties -Object $Right -SelectProperties $RightProperties -ExcludeProperties $ExcludeRightProperties -Prefix $Prefix -Suffix $Suffix
 
     if ($Type -eq 'AllInBoth')
     {
@@ -834,6 +817,10 @@ function Join-Object
     {
         $LeftNew = [DataTableExtensions]::AsEnumerable($Left)
     }
+    elseif ($Left -is [PSCustomObject])
+    {
+        $LeftNew = @($Left)
+    }
     else
     {
         $LeftNew = $Left
@@ -841,6 +828,10 @@ function Join-Object
     if ($Right -is [Data.DataTable])
     {
         $RightNew = [DataTableExtensions]::AsEnumerable($Right)
+    }
+    elseif ($Right -is [PSCustomObject])
+    {
+        $RightNew = @($Right)
     }
     else
     {

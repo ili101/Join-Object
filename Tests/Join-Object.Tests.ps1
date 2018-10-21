@@ -238,6 +238,19 @@ Describe -Name 'Join-Object' -Fixture {
                     Prefix                 = 'R_'
                 }
             }
+            Format-Test @{
+                Description = 'Basic KeepRightJoinProperty'
+                Params      = @{
+                    Left                   = 'PSCustomObjects'
+                    Right                  = 'DataTable'
+                    LeftJoinProperty       = 'ID'
+                    RightJoinProperty      = 'IDD'
+                    LeftProperties         = @{ID = 'ID' ; Sub = 'Subscription'}
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                    KeepRightJoinProperty  = $true
+                }
+            }
         ) -test {
             param (
                 $Params,
