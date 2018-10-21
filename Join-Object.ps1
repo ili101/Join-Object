@@ -289,18 +289,30 @@ function Join-Object
     {
         try
         {
-            if ($true)
+            if ($PSScriptRoot)
             {
                 $ScriptRoot = $PSScriptRoot
             }
+            elseif ($psISE.CurrentFile.IsUntitled -eq $false)
+            {
+                $ScriptRoot = Split-Path -Path $psISE.CurrentFile.FullPath
+            }
+            elseif ($null -ne $psEditor.GetEditorContext().CurrentFile.Path -and $psEditor.GetEditorContext().CurrentFile.Path -notlike 'untitled:*')
+            {
+                $ScriptRoot = Split-Path -Path $psEditor.GetEditorContext().CurrentFile.Path
+            }
+            else
+            {
+                $ScriptRoot = '.'
+            }
             if (!('MoreLinq.MoreEnumerable' -as [type]))
             {
-                Add-Type -Path (Resolve-Path -Path "$ScriptRoot\morelinq.3.0.0-beta-1\lib\net451\MoreLinq.dll")
+                Add-Type -Path (Resolve-Path -Path "$ScriptRoot\morelinq.*\lib\net451\MoreLinq.dll")
             }
         }
         catch
         {
-            throw '{0} Try running: "Install-Selenium"' -f $_
+            throw 'Importing package failed: {0}' -f $_
         }
     }
 
