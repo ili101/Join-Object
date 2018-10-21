@@ -56,6 +56,26 @@ function Format-Test
     $Test
 }
 
+function Get-Params
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory)]
+        [String]$Param
+    )
+    $ParamSplit = $Param -split '(?=\[)'
+    $Output = (Get-Variable -Name $ParamSplit[0]).Value
+    if ($null -ne $ParamSplit[1])
+    {
+        , $Output.Item($ParamSplit[1].Trim('[]'))
+    }
+    else
+    {
+        , $Output
+    }
+}
+
 Describe -Name 'Join-Object' -Fixture {
     $TestDataSetName = 'TestDataSetSmall'
     Context -Name $TestDataSetName -Fixture {
@@ -206,6 +226,18 @@ Describe -Name 'Join-Object' -Fixture {
                     Type                   = 'AllInBoth'
                 }
             }
+            Format-Test @{
+                Description = 'Basic Single'
+                Params      = @{
+                    Left                   = 'PSCustomObjects[0]'
+                    Right                  = 'DataTable'
+                    LeftJoinProperty       = 'ID'
+                    RightJoinProperty      = 'IDD'
+                    LeftProperties         = @{ID = 'ID' ; Sub = 'Subscription'}
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                }
+            }
         ) -test {
             param (
                 $Params,
@@ -217,8 +249,8 @@ Describe -Name 'Join-Object' -Fixture {
 
             # Load Data
             . $TestDataSet
-            $Params.Left = (Get-Variable -Name $Params.Left).Value
-            $Params.Right = (Get-Variable -Name $Params.Right).Value
+            $Params.Left = Get-Params -Param $Params.Left
+            $Params.Right = Get-Params -Param $Params.Right
 
             # Save Before Data Copy
             $BeforeLeft = [System.Management.Automation.PSSerializer]::Deserialize([System.Management.Automation.PSSerializer]::Serialize($Params.Left))
@@ -231,11 +263,11 @@ Describe -Name 'Join-Object' -Fixture {
             #$JoindOutputNew = [System.Management.Automation.PSSerializer]::Deserialize($JoindOutputXml)
 
             # Save CompareData (Xml)
-            #Export-Clixml -Path "$ScriptRoot\CompareData\$TestName.xml" -InputObject $JoindOutput
-            #$JoindOutputXml | Set-Content -Path "$ScriptRoot\CompareData\$TestName.xml"
+            #Export-Clixml -LiteralPath "$ScriptRoot\CompareData\$TestName.xml" -InputObject $JoindOutput
+            ##$JoindOutputXml | Set-Content -LiteralPath "$ScriptRoot\CompareData\$TestName.xml"
 
             # Get CompareData
-            $CompareDataXml = (Get-Content -Path "$ScriptRoot\CompareData\$TestName.xml") -join [Environment]::NewLine
+            $CompareDataXml = (Get-Content -LiteralPath "$ScriptRoot\CompareData\$TestName.xml") -join [Environment]::NewLine
             $CompareDataNew = [System.Management.Automation.PSSerializer]::Deserialize($CompareDataXml)
             Write-Verbose ('it should return:' + ($CompareDataNew | Format-Table | Out-String)) @Verbose
 
@@ -272,7 +304,14 @@ Describe -Name 'Join-Object' -Fixture {
                 }
                 else
                 {
-                    Should -BeOfType -ActualValue $JoindOutput -ExpectedType 'System.Array'
+                    if ($JoindOutput.Count -gt 0)
+                    {
+                        Should -BeOfType -ActualValue $JoindOutput -ExpectedType 'System.Array'
+                    }
+                    else
+                    {
+                        Should -BeOfType -ActualValue $JoindOutput -ExpectedType 'PSCustomObject'
+                    }
                     $JoindOutput | Should -BeOfType -ExpectedType 'PSCustomObject'
                 }
             }
