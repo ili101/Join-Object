@@ -320,13 +320,13 @@ function Join-Object
 
     if ($LeftJoinScript)
     {
-        [System.Func[System.Object, string]]$LeftJoinFunction = $LeftJoinScript
+        [System.Func[System.Object, string]]$LeftJoinFunction = $LeftJoinScript.GetNewClosure()
     }
     elseif ($LeftJoinProperty.Count -gt 1)
     {
         [System.Func[System.Object, string]]$LeftJoinFunction = {
             param ($LeftLine)
-            $LeftLine | Select-Object -Property $LeftJoinProperty
+            ($LeftLine | Select-Object -Property $LeftJoinProperty).PSObject.Properties.Value
         }
     }
     else
@@ -339,13 +339,13 @@ function Join-Object
 
     if ($RightJoinScript)
     {
-        [System.Func[System.Object, string]]$RightJoinFunction = $RightJoinScript
+        [System.Func[System.Object, string]]$RightJoinFunction = $RightJoinScript.GetNewClosure()
     }
     elseif ($RightJoinProperty.Count -gt 1)
     {
         [System.Func[System.Object, string]]$RightJoinFunction = {
             param ($RightLine)
-            $RightLine | Select-Object -Property $RightJoinProperty
+            ($RightLine | Select-Object -Property $RightJoinProperty).PSObject.Properties.Value
         }
     }
     else

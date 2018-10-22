@@ -251,17 +251,52 @@ Describe -Name 'Join-Object' -Fixture {
                     KeepRightJoinProperty  = $true
                 }
             }
+            Format-Test @{
+                Description = 'Basic Multi Join'
+                Params      = @{
+                    Left                   = 'PSCustomObjects'
+                    Right                  = 'DataTable'
+                    LeftJoinProperty       = 'ID', 'Sub'
+                    RightJoinProperty      = 'IDD', 'Name'
+                    LeftProperties         = @{ID = 'ID' ; Sub = 'Subscription'}
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                }
+                RunScript   = {
+                    $PSCustomObjects += [PSCustomObject]@{ID = 4 ; Sub = 'S4' ; IntO = 77}
+                    $null = $DataTable.Rows.Add(4, 'S4', 'ZZZ', 55)
+                }
+            }
+            Format-Test @{
+                Description = 'Basic JoinScript'
+                Params      = @{
+                    Left                   = 'PSCustomObjects'
+                    Right                  = 'DataTable'
+                    LeftJoinProperty       = 'Sub'
+                    RightJoinProperty      = 'IDD'
+                    LeftProperties         = @{ID = 'ID' ; Sub = 'Subscription'}
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                    LeftJoinScript         = {param ($Line) ($Line.$LeftJoinProperty).Replace('S','X')}
+                    RightJoinScript        = {param ($Line) 'X' + ($Line.$RightJoinProperty)}
+                }
+            }
         ) -test {
             param (
                 $Params,
                 $TestDataSet,
                 $TestName,
-                $Description
+                $Description,
+                $RunScript
             )
             #if ($TestName -ne 'Small: PSCustomObjects - DataTable, DataTable') {Continue}
 
             # Load Data
             . $TestDataSet
+            if ($RunScript)
+            {
+                . $RunScript
+            }
             $Params.Left = Get-Params -Param $Params.Left
             $Params.Right = Get-Params -Param $Params.Right
 
