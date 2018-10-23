@@ -242,8 +242,7 @@ function Join-Object
         [switch]$MultiLeft,
         [switch]$KeepRightJoinProperty
     )
-
-    # Set $SelectedLeftProperties and $SelectedRightProperties
+    #region Set $SelectedLeftProperties and $SelectedRightProperties
     function Get-Properties
     {
         [CmdletBinding()]
@@ -285,8 +284,8 @@ function Join-Object
         $ExcludeRightProperties = @($ExcludeRightProperties) + @($RightJoinProperty) -ne $null
     }
     $SelectedRightProperties = Get-Properties -Object $Right -SelectProperties $RightProperties -ExcludeProperties $ExcludeRightProperties -Prefix $Prefix -Suffix $Suffix
-
-    # Importing package MoreLinq
+    #endregion Set $SelectedLeftProperties and $SelectedRightProperties
+    #region Importing package MoreLinq
     if ($Type -eq 'AllInBoth')
     {
         try
@@ -317,7 +316,8 @@ function Join-Object
             throw 'Importing package MoreLinq failed: {0}' -f $_
         }
     }
-
+    #endregion Importing package MoreLinq
+    #region JoinScript
     if ($LeftJoinScript)
     {
         [System.Func[System.Object, string]]$LeftJoinFunction = $LeftJoinScript.GetNewClosure()
@@ -355,7 +355,7 @@ function Join-Object
             $RightLine.$RightJoinProperty
         }
     }
-
+    #endregion JoinScript
     if ($PassThru)
     {
         if ($Left -is [Data.DataTable])
