@@ -22,7 +22,8 @@ else
     $ScriptRoot = '.'
 }
 
-$Database = "$ScriptRoot\TestDataSetBig100k.db"
+$TestDataSetBig10k = "$ScriptRoot\TestDataSetBig10k.db"
+$TestDataSetBig100k = "$ScriptRoot\TestDataSetBig100k.db"
 
 function Format-Test
 {
@@ -49,7 +50,7 @@ function Get-Params
         [Parameter(Mandatory)]
         [Hashtable]$Param
     )
-    $Output = Invoke-SqliteQuery -DataSource $Database -Query ('SELECT * FROM {0}' -f $Param.Table) -As $Param.As
+    $Output = Invoke-SqliteQuery -DataSource (Get-Variable -Name $TestDataSetName -ValueOnly) -Query ('SELECT * FROM {0}' -f $Param.Table) -As $Param.As
     , $Output
 }
 
@@ -69,7 +70,7 @@ Describe -Name 'Join-Object' -Fixture {
         ) -test {
             param (
                 $Params,
-                $TestDataSet,
+                #$TestDataSet,
                 $TestName,
                 $Description,
                 $RunScript
@@ -88,7 +89,7 @@ Describe -Name 'Join-Object' -Fixture {
             $Measure = Measure-Command {
                 $JoindOutput = Join-Object @Params
             }
-            Write-Host "Execution Time: $Measure"
+            Write-Host ("Execution Time: {0}, Count: {1}, Sample: {2}" -f $Measure, $JoindOutput.Count, $JoindOutput[-1])
         }
     }
 }
