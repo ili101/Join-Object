@@ -291,9 +291,9 @@ Describe -Name 'Join-Object' -Fixture {
                     ExcludeRightProperties = 'Junk'
                     Prefix                 = 'R_'
                     DataTable              = $true
-                    DataTableTypes         = @{R_IntO = [Int]} # TODO: "Cannot set Column 'R_IntO' to be null. Please use DBNull instead"
+                    DataTableTypes         = @{R_IntO = [Int]}
                 }
-                #RunScript   = {$PSCustomObjects[-1].IntO = 0}
+                RunScript   = {$PSCustomObjects[-1].IntO = 0} # TODO: "Cannot set Column 'R_IntO' to be null. Please use DBNull instead"
             }
         ) -test {
             param (
