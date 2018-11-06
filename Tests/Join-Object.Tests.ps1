@@ -1,5 +1,5 @@
 #Requires -Modules Pester
-#Requires -Modules @{ModuleName = 'Assert' ; ModuleVersion = '0.9.2'}
+#Requires -Modules @{ModuleName = 'Assert' ; ModuleVersion = '0.9.2.1'}
 
 $Verbose = @{Verbose = $false}
 #$Verbose = @{Verbose = $true}
@@ -277,9 +277,23 @@ Describe -Name 'Join-Object' -Fixture {
                     LeftProperties         = @{ID = 'ID' ; Sub = 'Subscription'}
                     ExcludeRightProperties = 'Junk'
                     Prefix                 = 'R_'
-                    LeftJoinScript         = {param ($Line) ($Line.$LeftJoinProperty).Replace('S','X')}
+                    LeftJoinScript         = {param ($Line) ($Line.$LeftJoinProperty).Replace('S', 'X')}
                     RightJoinScript        = {param ($Line) 'X' + ($Line.$RightJoinProperty)}
                 }
+            }
+            Format-Test @{
+                Description = 'DataTableTypes'
+                Params      = @{
+                    Left                   = 'DataTable'
+                    Right                  = 'PSCustomObjects'
+                    LeftJoinProperty       = 'IDD'
+                    RightJoinProperty      = 'ID'
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                    DataTable              = $true
+                    DataTableTypes         = @{R_IntO = [Int]} # TODO: "Cannot set Column 'R_IntO' to be null. Please use DBNull instead"
+                }
+                #RunScript   = {$PSCustomObjects[-1].IntO = 0}
             }
         ) -test {
             param (
@@ -301,8 +315,8 @@ Describe -Name 'Join-Object' -Fixture {
             $Params.Right = Get-Params -Param $Params.Right
 
             # Save Before Data Copy
-            $BeforeLeft = [System.Management.Automation.PSSerializer]::Deserialize([System.Management.Automation.PSSerializer]::Serialize($Params.Left))
-            $BeforeRight = [System.Management.Automation.PSSerializer]::Deserialize([System.Management.Automation.PSSerializer]::Serialize($Params.Right))
+            $BeforeLeft = [System.Management.Automation.PSSerializer]::Deserialize([System.Management.Automation.PSSerializer]::Serialize($Params.Left, 2))
+            $BeforeRight = [System.Management.Automation.PSSerializer]::Deserialize([System.Management.Automation.PSSerializer]::Serialize($Params.Right, 2))
 
             # Execute Cmdlet
             $JoindOutput = Join-Object @Params
@@ -323,25 +337,25 @@ Describe -Name 'Join-Object' -Fixture {
             #$CompareDataXml | Should -Be $JoindOutputXml
             if ($Description -like '*Error*')
             {
-                {Assert-Equivalent -Actual $JoindOutput -Expected $CompareDataNew -StrictOrder} | Should -Throw
+                {Assert-Equivalent -Actual $JoindOutput -Expected $CompareDataNew -StrictOrder -StrictType} | Should -Throw
             }
             else
             {
-                Assert-Equivalent -Actual $JoindOutput -Expected $CompareDataNew -StrictOrder
+                Assert-Equivalent -Actual $JoindOutput -Expected $CompareDataNew -StrictOrder -StrictType
             }
 
             if ($Params.PassThru)
             {
                 #[System.Management.Automation.PSSerializer]::Serialize($Params.Left) | Should -Be $CompareDataXml
-                Assert-Equivalent -Actual $Params.Left -Expected $CompareDataNew -StrictOrder
+                Assert-Equivalent -Actual $Params.Left -Expected $CompareDataNew -StrictOrder -StrictType
             }
             else
             {
                 #[System.Management.Automation.PSSerializer]::Serialize($Params.Left) | Should -Be $BeforeLeftXml
-                Assert-Equivalent -Actual $Params.Left -Expected $BeforeLeft -StrictOrder
+                Assert-Equivalent -Actual $Params.Left -Expected $BeforeLeft -StrictOrder -StrictType
             }
             #[System.Management.Automation.PSSerializer]::Serialize($Params.Right) | Should -Be $BeforeRightXml
-            Assert-Equivalent -Actual $Params.Right -Expected $BeforeRight -StrictOrder
+            Assert-Equivalent -Actual $Params.Right -Expected $BeforeRight -StrictOrder -StrictType
 
             if (!$Params.PassThru)
             {

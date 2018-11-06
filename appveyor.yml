@@ -13,7 +13,8 @@ install:
 - ps: . .\Tests\AppVeyor.ps1 -Initialize
 #- ps: choco install pester
 - ps: Install-Module -Name Pester -Force -SkipPublisherCheck
-- ps: Install-Module -Name Assert -Force
+#- ps: Install-Module -Name Assert -Force
+- ps: . .\Tests\Assert.ps1
 
 # to disable automatic builds
 build: off

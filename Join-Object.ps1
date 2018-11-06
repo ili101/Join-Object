@@ -197,7 +197,7 @@ function Join-Object
         PowerShell Language
 
     #>
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
     Param
     (
         [Parameter(Mandatory = $true, ValueFromPipeLine = $true)]
@@ -229,18 +229,25 @@ function Join-Object
         [string[]]$ExcludeLeftProperties,
         [string[]]$ExcludeRightProperties,
 
+        [switch]$KeepRightJoinProperty,
+
         [validateset('AllInLeft', 'OnlyIfInBoth', 'AllInBoth')]
         [Parameter(Mandatory = $false)]
         [string]$Type = 'AllInLeft',
 
         [string]$Prefix,
         [string]$Suffix,
+
+        [Parameter(Mandatory, ParameterSetName = 'PassThru')]
         [switch]$PassThru,
+        [Parameter(Mandatory, ParameterSetName = 'DataTable')]
         [switch]$DataTable,
+        [Parameter(ParameterSetName = 'PassThru')]
+        [Parameter(ParameterSetName = 'DataTable')]
         [hashtable]$DataTableTypes,
+
         [string]$RightAsGroup,
-        [switch]$MultiLeft,
-        [switch]$KeepRightJoinProperty
+        [switch]$MultiLeft
     )
     #region Set $SelectedLeftProperties and $SelectedRightProperties
     function Get-Properties
