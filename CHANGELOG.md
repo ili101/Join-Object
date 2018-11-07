@@ -1,3 +1,11 @@
+## 0.1.8 - 2018/11/07 (Beta branch)
+### Updated
+* MoreLinq updated to 3.0.0.
+### Fixed
+* Fix Multi JoinProperty comparing column name.
+* Fix JoinFunction scope to support JoinProperty.
+* Minor bug fixes and improvements.
+
 ## 0.1.7 - 2018/03/13 (Beta branch)
 ### Added
 * **-Type AllInBoth** option.
