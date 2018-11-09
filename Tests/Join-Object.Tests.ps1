@@ -1,4 +1,4 @@
-#Requires -Modules Pester
+﻿#Requires -Modules Pester
 #Requires -Modules @{ModuleName = 'Assert' ; ModuleVersion = '0.9.2.1'}
 
 $Verbose = @{Verbose = $false}
@@ -82,8 +82,10 @@ Describe -Name 'Join-Object' -Fixture {
     Context -Name $TestDataSetName -Fixture {
         It -name "Testing <TestName>" -TestCases @(
             Format-Test @{
-                Description = 'Default Error'
-                Params      = @{
+                Description          = 'Default Error'
+                ExpectedErrorOn      = 'Test'
+                ExpectedErrorMessage = "but some values were missing: 'PSObject{ID=3; R_IntT=; R_Name=X; Subscription=S3}"
+                Params               = @{
                     Left                   = 'PSCustomObjects'
                     Right                  = 'DataTable'
                     LeftJoinProperty       = 'ID'
@@ -94,8 +96,10 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'DataTable Error'
-                Params      = @{
+                Description          = 'DataTable Error'
+                ExpectedErrorOn      = 'Test'
+                ExpectedErrorMessage = "but some values were missing: 'psobject{IDD=3; IntT=; Junk=S3; Name=X; R_IntO=; R_Sub=S3}"
+                Params               = @{
                     Left                   = 'DataTable'
                     Right                  = 'PSCustomObjects'
                     LeftJoinProperty       = 'IDD'
@@ -131,7 +135,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'Default AllInBoth' # TODO: Replace LeftJoinProperty with MoreLinq Key?
+                Description = 'Default AllInBoth' # TODO: Enhancement. Replace LeftJoinProperty with MoreLinq Key?
                 Params      = @{
                     Left                   = 'PSCustomObjects'
                     Right                  = 'DataTable'
@@ -210,10 +214,11 @@ Describe -Name 'Join-Object' -Fixture {
                     PassThru              = $true
                 }
             }
-            <# TODO: "You cannot call a method on a null-valued expression"
             Format-Test @{
-                Description = 'PassThru AllInBoth'
-                Params      = @{
+                Description          = 'PassThru AllInBoth'
+                ExpectedErrorOn      = 'Run'
+                ExpectedErrorMessage = '"-PassThru" and "-Type AllInBoth" are not compatible'
+                Params               = @{
                     Left                   = 'PSCustomObjects'
                     Right                  = 'DataTable'
                     LeftJoinProperty       = 'ID'
@@ -226,8 +231,10 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'PassThru AllInBoth'
-                Params      = @{
+                Description          = 'PassThru AllInBoth'
+                ExpectedErrorOn      = 'Run'
+                ExpectedErrorMessage = '"-PassThru" and "-Type AllInBoth" are not compatible'
+                Params               = @{
                     Left                  = 'DataTable'
                     Right                 = 'PSCustomObjects'
                     LeftJoinProperty      = 'IDD'
@@ -240,7 +247,6 @@ Describe -Name 'Join-Object' -Fixture {
                     Type                  = 'AllInBoth'
                 }
             }
-            #>
             Format-Test @{
                 Description = 'PassThru OnlyIfInBoth'
                 Params      = @{
@@ -432,7 +438,19 @@ Describe -Name 'Join-Object' -Fixture {
                     DataTable              = $true
                     DataTableTypes         = @{R_IntO = [Int]}
                 }
-                RunScript   = {$PSCustomObjects[-1].IntO = 0} # TODO: "Cannot set Column 'R_IntO' to be null. Please use DBNull instead"
+            }
+            Format-Test @{
+                Description = 'PassThru DataTableTypes'
+                Params      = @{
+                    Left                   = 'DataTable'
+                    Right                  = 'PSCustomObjects'
+                    LeftJoinProperty       = 'IDD'
+                    RightJoinProperty      = 'ID'
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                    PassThru              = $true
+                    DataTableTypes         = @{R_IntO = [Int]}
+                }
             }
         ) -test {
             param (
@@ -440,7 +458,10 @@ Describe -Name 'Join-Object' -Fixture {
                 $TestDataSet,
                 $TestName,
                 $Description,
-                $RunScript
+                $RunScript,
+                $ExpectedErrorMessage,
+                [validateset('Test', 'Run')]
+                $ExpectedErrorOn
             )
             #if ($TestName -notlike '*Default Multi Join*') {Continue}
 
@@ -458,12 +479,20 @@ Describe -Name 'Join-Object' -Fixture {
             $BeforeRight = [System.Management.Automation.PSSerializer]::Deserialize([System.Management.Automation.PSSerializer]::Serialize($Params.Right, 2))
 
             # Execute Cmdlet
-            $JoindOutput = Join-Object @Params
-            Write-Verbose ('it returns:' + ($JoindOutput | Format-Table | Out-String)) @Verbose
+            if ($ExpectedErrorOn -eq 'Run')
+            {
+                {$JoinedOutput = Join-Object @Params} | Should -Throw -ExpectedMessage $ExpectedErrorMessage
+                Continue
+            }
+            else
+            {
+                $JoinedOutput = Join-Object @Params
+            }
+            Write-Verbose ('it returns:' + ($JoinedOutput | Format-Table | Out-String)) @Verbose
 
             <# Save CompareData (Xml)
-            Write-Host ($TestName + ($JoindOutput | Format-Table | Out-String))
-            Export-Clixml -LiteralPath "$ScriptRoot\CompareData\$TestName.xml" -InputObject $JoindOutput
+            Write-Host ($TestName + ($JoinedOutput | Format-Table | Out-String))
+            Export-Clixml -LiteralPath "$ScriptRoot\CompareData\$TestName.xml" -InputObject $JoinedOutput
             #>
 
             # Get CompareData
@@ -472,13 +501,13 @@ Describe -Name 'Join-Object' -Fixture {
             Write-Verbose ('it should return:' + ($CompareDataNew | Format-Table | Out-String)) @Verbose
 
             # Test
-            if ($Description -like '*Error*')
+            if ($ExpectedErrorOn -eq 'Test')
             {
-                {Assert-Equivalent -Actual $JoindOutput -Expected $CompareDataNew -StrictOrder -StrictType} | Should -Throw
+                {Assert-Equivalent -Actual $JoinedOutput -Expected $CompareDataNew -StrictOrder -StrictType} | Should -Throw -ExpectedMessage $ExpectedErrorMessage
             }
             else
             {
-                Assert-Equivalent -Actual $JoindOutput -Expected $CompareDataNew -StrictOrder -StrictType
+                Assert-Equivalent -Actual $JoinedOutput -Expected $CompareDataNew -StrictOrder -StrictType
             }
 
             if ($Params.PassThru)
@@ -495,20 +524,20 @@ Describe -Name 'Join-Object' -Fixture {
             {
                 if ($Params.DataTable)
                 {
-                    Should -BeOfType -ActualValue $JoindOutput -ExpectedType 'System.Data.DataTable'
-                    $JoindOutput | Should -BeOfType -ExpectedType 'System.Data.DataRow'
+                    Should -BeOfType -ActualValue $JoinedOutput -ExpectedType 'System.Data.DataTable'
+                    $JoinedOutput | Should -BeOfType -ExpectedType 'System.Data.DataRow'
                 }
                 else
                 {
-                    if ($JoindOutput.Count -gt 0)
+                    if ($JoinedOutput.Count -gt 0)
                     {
-                        Should -BeOfType -ActualValue $JoindOutput -ExpectedType 'System.Array'
+                        Should -BeOfType -ActualValue $JoinedOutput -ExpectedType 'System.Array'
                     }
                     else
                     {
-                        Should -BeOfType -ActualValue $JoindOutput -ExpectedType 'PSCustomObject'
+                        Should -BeOfType -ActualValue $JoinedOutput -ExpectedType 'PSCustomObject'
                     }
-                    $JoindOutput | Should -BeOfType -ExpectedType 'PSCustomObject'
+                    $JoinedOutput | Should -BeOfType -ExpectedType 'PSCustomObject'
                 }
             }
         }
