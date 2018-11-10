@@ -211,16 +211,14 @@ function Join-Object
 
         [Parameter(Mandatory = $true)]
         [string[]]$LeftJoinProperty,
-
         [Parameter(Mandatory = $true)]
         [string[]]$RightJoinProperty,
 
-        [ScriptBlock]$RightJoinScript,
         [ScriptBlock]$LeftJoinScript,
+        [ScriptBlock]$RightJoinScript,
 
         [ValidateScript( {$_ -is [Collections.Hashtable] -or $_ -is [string] -or $_ -is [Collections.Specialized.OrderedDictionary]})]
         $LeftProperties = '*',
-
         # Properties from $Right we want in the output.
         # Like LeftProperties, each can be a plain name, wildcard or hashtable. See the LeftProperties comments.
         [ValidateScript( {$_ -is [Collections.Hashtable] -or $_ -is [string] -or $_ -is [Collections.Specialized.OrderedDictionary]})]
@@ -246,12 +244,39 @@ function Join-Object
         [Parameter(ParameterSetName = 'DataTable')]
         [hashtable]$DataTableTypes,
 
-        [string]$RightAsGroup,
-        [switch]$MultiLeft
+        [validateset('SingleOnly', 'DuplicateLines', 'SubGroups')]
+        [string]$LeftMultiMode = 'SingleOnly',
+        [validateset('SingleOnly', 'DuplicateLines', 'SubGroups')]
+        [string]$RightMultiMode = 'SingleOnly'
     )
     if ($PassThru -and $Type -eq 'AllInBoth')
     {
         $PSCmdlet.ThrowTerminatingError('"-PassThru" and "-Type AllInBoth" are not compatible')
+    }
+
+    if ($Type -in 'AllInLeft', 'OnlyIfInBoth')
+    {
+        if ($PSBoundParameters['LeftMultiMode'] -ne 'DuplicateLines' -and $null -ne $PSBoundParameters['LeftMultiMode'])
+        {
+            $PSCmdlet.ThrowTerminatingError('"-Type AllInLeft" and "-Type OnlyIfInBoth" support only "-LeftMultiMode DuplicateLines"')
+        }
+        $Attributes = (Get-Variable 'LeftMultiMode').Attributes
+        $null = $Attributes.Remove($Attributes.Where( {$_.TypeId.Name -eq 'ValidateSetAttribute'})[0])
+        $ValidateSetAttribute = [System.Management.Automation.ValidateSetAttribute]::new('SingleOnly', 'DuplicateLines', 'SubGroups', $null)
+        $Attributes.Add($ValidateSetAttribute)
+        $LeftMultiMode = $null
+    }
+    if ($Type -in 'OnlyIfInBoth')
+    {
+        if ($PSBoundParameters['RightMultiMode'] -ne 'DuplicateLines' -and $null -ne $PSBoundParameters['RightMultiMode'])
+        {
+            $PSCmdlet.ThrowTerminatingError('"-Type OnlyIfInBoth" support only "-RightMultiMode DuplicateLines"')
+        }
+        $Attributes = (Get-Variable 'RightMultiMode').Attributes
+        $null = $Attributes.Remove($Attributes.Where( {$_.TypeId.Name -eq 'ValidateSetAttribute'})[0])
+        $ValidateSetAttribute = [System.Management.Automation.ValidateSetAttribute]::new('SingleOnly', 'DuplicateLines', 'SubGroups', $null)
+        $Attributes.Add($ValidateSetAttribute)
+        $RightMultiMode = $null
     }
     #region Set $SelectedLeftProperties and $SelectedRightProperties
     function Get-Properties
@@ -331,7 +356,7 @@ function Join-Object
     #region JoinScript
     if ($LeftJoinScript)
     {
-        [System.Func[System.Object, string]]$LeftJoinFunction = $LeftJoinScript.GetNewClosure()
+        [System.Func[System.Object, string]]$LeftJoinFunction = $LeftJoinScript#.GetNewClosure()
     }
     elseif ($LeftJoinProperty.Count -gt 1)
     {
@@ -350,7 +375,7 @@ function Join-Object
 
     if ($RightJoinScript)
     {
-        [System.Func[System.Object, string]]$RightJoinFunction = $RightJoinScript.GetNewClosure()
+        [System.Func[System.Object, string]]$RightJoinFunction = $RightJoinScript#.GetNewClosure()
     }
     elseif ($RightJoinProperty.Count -gt 1)
     {
@@ -544,30 +569,57 @@ function Join-Object
     #Build Scriptblock
     $QueryPartBase = {
         param(
+            #$Key,
             $LeftLine,
             $RightLine
         )
     }
-    $QueryPartBaseWithKey = {
-        param(
-            $Key,
-            $LeftLine,
-            $RightLine
-        )
+
+    if ($LeftMultiMode -eq 'SingleOnly')
+    {
+        $QueryPartLeftLineEnumerable = {$LeftLine = [System.Linq.Enumerable]::SingleOrDefault($LeftLine)}
     }
-    $QueryPartLeftLineEnumerable = {$LeftLine = [System.Linq.Enumerable]::SingleOrDefault($LeftLine)}
-    $QueryPartRightLineEnumerable = {$RightLine = [System.Linq.Enumerable]::SingleOrDefault($RightLine)}
+    elseif ($LeftMultiMode)
+    {
+        $QueryPartLeftLineEnumerable = {$LeftLines = [System.Linq.Enumerable]::DefaultIfEmpty($LeftLine)}
+        $QueryPartLeftMultiMode = {
+            foreach ($LeftLine in $LeftLines)
+            {
+                _QueryPartMain_
+            }
+        }
+        $QueryPartMain = "$QueryPartLeftMultiMode".Replace('_QueryPartMain_', $QueryPartMain)
+        #$QueryPartBase = "$QueryPartBase".Replace('LeftLine', 'LeftLines')
+    }
+    if ($RightMultiMode -eq 'SingleOnly')
+    {
+        $QueryPartRightLineEnumerable = {$RightLine = [System.Linq.Enumerable]::SingleOrDefault($RightLine)}
+    }
+    elseif ($RightMultiMode)
+    {
+        $QueryPartRightLineEnumerable = {$RightLines = [System.Linq.Enumerable]::DefaultIfEmpty($RightLine)}
+        $QueryPartRightMultiMode = {
+            foreach ($RightLine in $RightLines)
+            {
+                _QueryPartMain_
+            }
+        }
+        $QueryPartMain = "$QueryPartRightMultiMode".Replace('_QueryPartMain_', $QueryPartMain)
+        #$QueryPartBase = "$QueryPartBase".Replace('RightLine', 'RightLines')
+    }
+
     if ($Type -eq 'OnlyIfInBoth')
     {
         [System.Func[System.Object, System.Object, System.Object]]$Query = [Scriptblock]::Create("$QueryPartBase" + "$QueryPartMain")
     }
     elseif ($Type -eq 'AllInLeft')
     {
+
         [System.Func[System.Object, [Collections.Generic.IEnumerable[System.Object]], System.Object]]$Query = [Scriptblock]::Create("$QueryPartBase" + "$QueryPartRightLineEnumerable" + "$QueryPartMain")
     }
     elseif ($Type -eq 'AllInBoth')
     {
-        [System.Func[System.Object, [Collections.Generic.IEnumerable[System.Object]], [Collections.Generic.IEnumerable[System.Object]], System.Object]]$Query = [Scriptblock]::Create("$QueryPartBaseWithKey" + "$QueryPartLeftLineEnumerable" + "`n" + "$QueryPartRightLineEnumerable" + "$QueryPartMain")
+        [System.Func[System.Object, [Collections.Generic.IEnumerable[System.Object]], [Collections.Generic.IEnumerable[System.Object]], System.Object]]$Query = [Scriptblock]::Create("$QueryPartBase".Replace('#$Key', '$Key') + "$QueryPartLeftLineEnumerable" + "`n" + "$QueryPartRightLineEnumerable" + "$QueryPartMain")
     }
     #endregion Main
     if ($DataTable)
@@ -598,41 +650,6 @@ function Join-Object
         }
         if ($Type -eq 'AllInBoth')
         {
-            if ($MultiLeft)
-            {
-                [System.Func[System.Object, [Collections.Generic.IEnumerable[System.Object]], [Collections.Generic.IEnumerable[System.Object]], System.Object]]$query = {
-                    param(
-                        $A,
-                        $LeftLineEnumerable,
-                        $RightLineEnumerable
-                    )
-                    $LeftLines = $LeftLineEnumerable
-                    $RightLine = [System.Linq.Enumerable]::SingleOrDefault($RightLineEnumerable)
-                    $RowRight = $OutDataTable.NewRow()
-                    if ($RightLine)
-                    {
-                        foreach ($item in $SelectedRightProperties.GetEnumerator())
-                        {
-                            $RowRight.($item.Value) = $RightLine.($item.Key)
-                        }
-                    }
-                    if ($LeftLines)
-                    {
-                        foreach ($LeftLine in $LeftLines)
-                        {
-                            $Row = $OutDataTable.Rows.Add($RowRight.ItemArray)
-                            foreach ($item in $SelectedLeftProperties.GetEnumerator())
-                            {
-                                $Row.($item.Value) = $LeftLine.($item.Key)
-                            }
-                        }
-                    }
-                    else
-                    {
-                        $OutDataTable.Rows.Add($RowRight)
-                    }
-                }
-            }
         }
         else
         {

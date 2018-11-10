@@ -39,6 +39,26 @@ $TestDataSetSmall = {
 }
 #. $TestDataSetSmall
 
+$TestDataSetSmallMulti = {
+    $PSCustomObjects = @(
+        [PSCustomObject]@{ID = 1 ; Sub = 'S1' ; IntO = 6}
+        [PSCustomObject]@{ID = 1 ; Sub = 'S12' ; IntO = 62}
+        [PSCustomObject]@{ID = 2 ; Sub = 'S2' ; IntO = 7}
+        [PSCustomObject]@{ID = 2 ; Sub = 'S22' ; IntO = 72}
+    )
+
+    $DataTable = [Data.DataTable]::new('Test')
+    $null = $DataTable.Columns.Add('IDD', [System.Int32])
+    $null = $DataTable.Columns.Add('Name')
+    $null = $DataTable.Columns.Add('Junk')
+    $null = $DataTable.Columns.Add('IntT', [System.Int32])
+    $null = $DataTable.Rows.Add(1, 'A', 'AAA', 5)
+    $null = $DataTable.Rows.Add(1, 'A2', 'AAA2', 52)
+    $null = $DataTable.Rows.Add(3, 'C', 'S3', $null)
+    $null = $DataTable.Rows.Add(3, 'C2', 'S32', $null)
+}
+#. $TestDataSetSmallMulti
+
 function Format-Test
 {
     [CmdletBinding()]
@@ -80,7 +100,7 @@ function Get-Params
 Describe -Name 'Join-Object' -Fixture {
     $TestDataSetName = 'TestDataSetSmall'
     Context -Name $TestDataSetName -Fixture {
-        It -name "Testing <TestName>" -TestCases @(
+        $TestCases = @(
             Format-Test @{
                 Description          = 'Default Error'
                 ExpectedErrorOn      = 'Test'
@@ -215,7 +235,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description          = 'PassThru AllInBoth'
+                Description          = 'PassThru AllInBoth Error'
                 ExpectedErrorOn      = 'Run'
                 ExpectedErrorMessage = '"-PassThru" and "-Type AllInBoth" are not compatible'
                 Params               = @{
@@ -231,7 +251,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description          = 'PassThru AllInBoth'
+                Description          = 'PassThru AllInBoth Error'
                 ExpectedErrorOn      = 'Run'
                 ExpectedErrorMessage = '"-PassThru" and "-Type AllInBoth" are not compatible'
                 Params               = @{
@@ -422,8 +442,8 @@ Describe -Name 'Join-Object' -Fixture {
                     LeftProperties         = @{ID = 'ID' ; Sub = 'Subscription'}
                     ExcludeRightProperties = 'Junk'
                     Prefix                 = 'R_'
-                    LeftJoinScript         = {param ($Line) ($Line.$LeftJoinProperty).Replace('S', 'X')}
-                    RightJoinScript        = {param ($Line) 'X' + ($Line.$RightJoinProperty)}
+                    LeftJoinScript         = {param ($Line) ($Line.Sub).Replace('S', 'X')}
+                    RightJoinScript        = {param ($Line) 'X' + $Line.IDD}
                 }
             }
             Format-Test @{
@@ -448,11 +468,109 @@ Describe -Name 'Join-Object' -Fixture {
                     RightJoinProperty      = 'ID'
                     ExcludeRightProperties = 'Junk'
                     Prefix                 = 'R_'
-                    PassThru              = $true
+                    PassThru               = $true
                     DataTableTypes         = @{R_IntO = [Int]}
                 }
             }
-        ) -test {
+        )
+        $TestDataSetName = 'TestDataSetSmallMulti'
+        $TestCases += @(
+            Format-Test @{
+                Description          = 'DataTable AllInLeft SingleOnly not supported Error'
+                ExpectedErrorOn      = 'Run'
+                ExpectedErrorMessage = '"-Type AllInLeft" and "-Type OnlyIfInBoth" support only "-LeftMultiMode DuplicateLines"'
+                Params      = @{
+                    Left                   = 'PSCustomObjects'
+                    Right                  = 'DataTable'
+                    LeftJoinProperty       = 'ID'
+                    RightJoinProperty      = 'IDD'
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                    DataTable              = $true
+                    Type                   = 'AllInLeft'
+                    LeftMultiMode          = 'SingleOnly'
+                }
+            }
+            Format-Test @{
+                Description          = 'DataTable OnlyIfInBoth SingleOnly not supported Error'
+                ExpectedErrorOn      = 'Run'
+                ExpectedErrorMessage = '"-Type OnlyIfInBoth" support only "-RightMultiMode DuplicateLines"'
+                Params               = @{
+                    Left                   = 'DataTable'
+                    Right                  = 'PSCustomObjects'
+                    LeftJoinProperty       = 'IDD'
+                    RightJoinProperty      = 'ID'
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                    DataTable              = $true
+                    Type                   = 'OnlyIfInBoth'
+                    RightMultiMode         = 'SingleOnly'
+                }
+            }
+            Format-Test @{
+                Description          = 'DataTable AllInLeft SingleOnly Error'
+                ExpectedErrorOn      = 'Run'
+                ExpectedErrorMessage = 'Sequence contains more than one element'
+                Params               = @{
+                    Left                   = 'PSCustomObjects'
+                    Right                  = 'DataTable'
+                    LeftJoinProperty       = 'ID'
+                    RightJoinProperty      = 'IDD'
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                    DataTable              = $true
+                    Type                   = 'AllInLeft'
+                    RightMultiMode         = 'SingleOnly'
+                }
+            }
+            Format-Test @{
+                Description          = 'DataTable AllInBoth SingleOnly Error'
+                ExpectedErrorOn      = 'Run'
+                ExpectedErrorMessage = 'Sequence contains more than one element'
+                Params               = @{
+                    Left                   = 'PSCustomObjects'
+                    Right                  = 'DataTable'
+                    LeftJoinProperty       = 'ID'
+                    RightJoinProperty      = 'IDD'
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                    DataTable              = $true
+                    Type                   = 'AllInBoth'
+                    LeftMultiMode          = 'SingleOnly'
+                }
+            }
+            Format-Test @{
+                Description = 'DataTable AllInBoth'
+                Params      = @{
+                    Left                   = 'PSCustomObjects'
+                    Right                  = 'DataTable'
+                    LeftJoinProperty       = 'ID'
+                    RightJoinProperty      = 'IDD'
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                    DataTable              = $true
+                    Type                   = 'AllInBoth'
+                    LeftMultiMode          = 'DuplicateLines'
+                    RightMultiMode         = 'DuplicateLines'
+                }
+            }
+            Format-Test @{
+                Description = 'DataTable AllInBoth'
+                Params      = @{
+                    Left                   = 'DataTable'
+                    Right                  = 'PSCustomObjects'
+                    LeftJoinProperty       = 'IDD'
+                    RightJoinProperty      = 'ID'
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                    DataTable              = $true
+                    Type                   = 'AllInBoth'
+                    LeftMultiMode          = 'DuplicateLines'
+                    RightMultiMode         = 'DuplicateLines'
+                }
+            }
+        )
+        It -name "Testing <TestName>" -TestCases $TestCases -test {
             param (
                 $Params,
                 $TestDataSet,

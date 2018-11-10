@@ -1,3 +1,13 @@
+## 0.1.X - 2018/11/10 (Alpha branch)
+* Major rewrite of main code.
+### Fixed
+* Undo "Fix JoinFunction scope to support JoinProperty".
+### Added
+* **-LeftMultiMode** and **-RightMultiMode** with options ('SingleOnly', 'DuplicateLines', 'SubGroups')
+### Removed
+* **-MultiLeft** replaced by MultiMode
+* **-RightAsGroup** replaced by MultiMode
+
 ## 0.1.8 - 2018/11/07 (Beta branch)
 ### Updated
 * MoreLinq updated to 3.0.0.
