@@ -1,7 +1,9 @@
 ## 0.1.X - 2018/11/10 (Alpha branch)
-* Major rewrite of main code.
+### Improved
+* Major rewrite of the code, The main Scriptblock is now dynamically constructed.
+* Error handling with $PSCmdlet.ThrowTerminatingError.
 ### Fixed
-* Undo "Fix JoinFunction scope to support JoinProperty".
+* Undo "Fix JoinFunction scope to support JoinProperty" (Unnecessary feature).
 ### Added
 * **-LeftMultiMode** and **-RightMultiMode** with options ('SingleOnly', 'DuplicateLines', 'SubGroups')
 ### Removed
@@ -21,7 +23,7 @@
 * **-Type AllInBoth** option.
 * **-DataTableTypes [Hashtable]** allow Overwrite of DataTable columns types.
 * **-RightAsGroup [String]** Join the right side as sub table in column with the selected name.
-* **-MultiLeft** allow multyple rows on the left side.
+* **-MultiLeft** allow multiple rows on the left side.
 * **-KeepRightJoinProperty** don't remove the right join property.
 ### Fixed
 * Remove unused parameter option **-Type AllInRight**
