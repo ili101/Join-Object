@@ -245,7 +245,9 @@ function Join-Object
         [validateset('SingleOnly', 'DuplicateLines', 'SubGroups')]
         [string]$LeftMultiMode = 'SingleOnly',
         [validateset('SingleOnly', 'DuplicateLines', 'SubGroups')]
-        [string]$RightMultiMode = 'SingleOnly'
+        [string]$RightMultiMode = 'SingleOnly',
+
+        [switch]$AddKey
     )
     #region Validate Params
     if ($PassThru -and $Type -eq 'AllInBoth')
@@ -256,6 +258,18 @@ function Join-Object
                 'Incompatible Arguments',
                 [Management.Automation.ErrorCategory]::InvalidArgument,
                 $Type
+            )
+        )
+    }
+
+    if ($AddKey -and $Type -ne 'AllInBoth')
+    {
+        $PSCmdlet.ThrowTerminatingError(
+            [Management.Automation.ErrorRecord]::new(
+                [ArgumentException]::new('"-AddKey" support only "-Type AllInBoth"'),
+                'Incompatible Arguments',
+                [Management.Automation.ErrorCategory]::InvalidArgument,
+                $AddKey
             )
         )
     }
@@ -449,6 +463,10 @@ function Join-Object
     if ($DataTable)
     {
         $OutDataTable = [Data.DataTable]::new('Joined')
+        if ($AddKey)
+        {
+            $null = $OutDataTable.Columns.Add('Key')
+        }
         if ($LeftMultiMode -eq 'SubGroups')
         {
             $OutDataTableSubGroupTemplateLeft = [Data.DataTable]::new('LeftGroup')
@@ -602,8 +620,8 @@ function Join-Object
         if ($Left -is [Data.DataTable])
         {
             $QueryTemp = @{
-                Main = {_SidesScript_}
-                Left = {}
+                Main        = {_SidesScript_}
+                Left        = {}
                 Side        = {_DataTable_}
                 SideReplace = '_Row_', 'LeftLine'
             }
@@ -640,8 +658,8 @@ function Join-Object
                     }
                     _SidesScript_
                 }
-                Left  = {}
-                Side             = {_PSCustomObject_}
+                Left        = {}
+                Side        = {_PSCustomObject_}
                 SideReplace = '_Row_\.Add([^\r\n]*)', 'LeftLine.PSObject.Properties.Add([Management.Automation.PSNoteProperty]::new$1)'
             }
             if ($Right -is [Data.DataTable])
@@ -760,6 +778,15 @@ function Join-Object
     }
     Invoke-AssembledQuery -MultiMode $LeftMultiMode -Side 'Left' -Object $Left
     Invoke-AssembledQuery -MultiMode $RightMultiMode -Side 'Right' -Object $Right
+
+    if ($AddKey)
+    {
+        $KeyScript = {
+            $RowMain.Key = $Key
+            _SidesScript_
+        }.ToString()
+        $Query['Main'] = $Query['Main'].Replace('_SidesScript_', $KeyScript)
+    }
 
     $Query['Main'] = $Query['Main'].Replace('_SidesScript_', $Query['Left'] + $Query['Right'])
 

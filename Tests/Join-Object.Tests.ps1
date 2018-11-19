@@ -767,6 +767,55 @@ Describe -Name 'Join-Object' -Fixture {
                     PassThru               = $true
                 }
             }
+            Format-Test @{
+                Description = 'Default AllInBoth SubGroups Key'
+                Params      = @{
+                    Left                   = 'PSCustomObject'
+                    Right                  = 'DataTable'
+                    LeftJoinProperty       = 'ID'
+                    RightJoinProperty      = 'IDD'
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                    Type                   = 'AllInBoth'
+                    LeftMultiMode          = 'SubGroups'
+                    RightMultiMode         = 'SubGroups'
+                    AddKey                 = $true
+                }
+            }
+            Format-Test @{
+                Description          = 'Default SubGroups Key Error'
+                ExpectedErrorOn      = 'Run'
+                ExpectedErrorMessage = '"-AddKey" support only "-Type AllInBoth"'
+                Params      = @{
+                    Left                   = 'PSCustomObject'
+                    Right                  = 'DataTable'
+                    LeftJoinProperty       = 'ID'
+                    RightJoinProperty      = 'IDD'
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                    LeftMultiMode          = 'SubGroups'
+                    RightMultiMode         = 'SubGroups'
+                    AddKey                 = $true
+                }
+            }
+            Format-Test @{
+                Description = 'DataTable AllInBoth SubGroups Key'
+                Params      = @{
+                    Left                   = 'PSCustomObject'
+                    Right                  = 'DataTable'
+                    LeftJoinProperty       = 'ID'
+                    RightJoinProperty      = 'IDD'
+                    ExcludeRightProperties = 'Junk'
+                    ExcludeLeftProperties  = 'ID'
+                    Prefix                 = 'R_'
+                    Type                   = 'AllInBoth'
+                    LeftMultiMode          = 'DuplicateLines'
+                    RightMultiMode         = 'SubGroups'
+                    AddKey                 = $true
+                    DataTable              = $true
+                    KeepRightJoinProperty  = $true
+                }
+            }
         )
         It -name "Testing <TestName>" -TestCases $TestCases -test {
             param (

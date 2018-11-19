@@ -5,10 +5,11 @@
 ### Fixed
 * Undo "Fix JoinFunction scope to support JoinProperty" (Unnecessary feature).
 ### Added
-* **-LeftMultiMode** and **-RightMultiMode** with options ('SingleOnly', 'DuplicateLines', 'SubGroups')
+* **-LeftMultiMode** and **-RightMultiMode** with options ('SingleOnly', 'DuplicateLines', 'SubGroups').
+* **-AddKey** can be used with "-Type AllInBoth" to add a column named "Key" containing the joining key.
 ### Removed
-* **-MultiLeft** replaced by MultiMode
-* **-RightAsGroup** replaced by MultiMode
+* **-MultiLeft** replaced by MultiMode.
+* **-RightAsGroup** replaced by MultiMode.
 
 ## 0.1.8 - 2018/11/07 (Beta branch)
 ### Updated

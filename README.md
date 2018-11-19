@@ -1,6 +1,6 @@
-# Join-Object (Beta)
+# Join-Object
 Join-Object LINQ Edition.
-Aims to provide the exact functibility of https://github.com/RamblingCookieMonster/PowerShell/blob/master/Join-Object.ps1 with much better performance.
+Aims to provide the exact functionality of https://github.com/RamblingCookieMonster/PowerShell/blob/master/Join-Object.ps1 with much better performance.
 Initial testing shows at last 100 times faster.
 
 | Master | PowerShell Gallery | Beta | Alpha |
@@ -10,18 +10,21 @@ Initial testing shows at last 100 times faster.
 ## Explanation and usage Examples
 See RamblingCookieMonster guide http://ramblingcookiemonster.github.io/Join-Object/ and [Join-Object.Examples.ps1](https://github.com/ili101/Join-Object/blob/master/Examples/Join-Object.Examples.ps1)
 
-## Additional functoriality
+## Additional functionality
 * Supports DataTable object type.
 * Additional parameters **-ExcludeLeftProperties** and **-ExcludeRightProperties**.
 * Additional parameter **-PassThru**, If added changes the original Left Object
 * Converts DBNull to $null
 * **-RightJoinScript** and **-LeftJoinScript** parameters to support custom joining scripts.
-* -RightJoinProperty and -LeftJoinProperty supports multiple Properties (String Array) to join on multiple columns.
+* -RightJoinProperty and -LeftJoinProperty supports multiple Properties (String Array) to **join on multiple columns**.
 * **-DataTable** parameter to output as "DataTable".
+* **-AddKey** can be used with "-Type AllInBoth" to add a column named "Key" containing the joining key.
 
-## To do and missing functoriality
-* -Type Parameter supports for "AllInBoth" ~~and "AllInRight"~~.
-* Optimize performance
+## Missing functionality
+* -Type "AllInRight".
+
+## To do
+* Noting for now, You can open an Issues if something is needed.
 
 ## Install
 From repository
