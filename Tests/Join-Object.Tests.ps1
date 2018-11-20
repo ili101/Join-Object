@@ -245,7 +245,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'Default AllInBoth' # TODO: Enhancement. Replace LeftJoinProperty with MoreLinq Key?
+                Description = 'Default AllInBoth'
                 Params      = @{
                     Left                   = 'PSCustomObject'
                     Right                  = 'DataTable'

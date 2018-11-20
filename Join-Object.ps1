@@ -201,12 +201,10 @@ function Join-Object
     Param
     (
         [Parameter(Mandatory = $true, ValueFromPipeLine = $true)]
-        [ValidateScript( {$_ -is [PSCustomObject] -or $_ -is [Data.DataRow]})]
         $Left,
 
         # List to join with $Left
         [Parameter(Mandatory = $true)]
-        [ValidateScript( {$_ -is [PSCustomObject] -or $_ -is [Data.DataRow]})]
         $Right,
 
         [Parameter(Mandatory = $true)]
