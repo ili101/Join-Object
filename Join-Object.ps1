@@ -399,7 +399,8 @@ function Join-Object
         (
             $JoinScript,
             $JoinProperty,
-            $Side
+            $Side,
+            $Object
         )
         if ($JoinScript)
         {
@@ -416,16 +417,26 @@ function Join-Object
             }
             else
             {
+                if ($Object -is [Data.DataTable])
                 {
-                    param ($_Side_Line)
-                    $_Side_Line.$_Side_JoinProperty
+                    {
+                        param ($_Side_Line)
+                        $_Side_Line[$_Side_JoinProperty]
+                    }
+                }
+                else
+                {
+                    {
+                        param ($_Side_Line)
+                        $_Side_Line.$_Side_JoinProperty
+                    }
                 }
             }
             [Scriptblock]::Create($JoinScript.ToString().Replace('_Side_', $Side))
         }
     }
-    $LeftJoinScript = Get-JoinScript -JoinScript $LeftJoinScript -JoinProperty $LeftJoinProperty -Side 'Left'
-    $RightJoinScript = Get-JoinScript -JoinScript $RightJoinScript -JoinProperty $RightJoinProperty -Side 'Right'
+    $LeftJoinScript = Get-JoinScript -JoinScript $LeftJoinScript -JoinProperty $LeftJoinProperty -Side 'Left' -Object $Left
+    $RightJoinScript = Get-JoinScript -JoinScript $RightJoinScript -JoinProperty $RightJoinProperty -Side 'Right' -Object $Right
     #endregion Set $RightJoinScript and $LeftJoinScript
     #region Prepare Data
     function Set-OutDataTable
