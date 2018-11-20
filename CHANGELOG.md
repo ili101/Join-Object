@@ -1,4 +1,4 @@
-## 0.1.X - 2018/11/10 (Alpha branch)
+## 1.0.0 - 2018/11/20 (Stable)
 ### Improved
 * Major rewrite of the code, The main Scriptblock is now dynamically constructed.
 * Error handling with $PSCmdlet.ThrowTerminatingError.
@@ -10,6 +10,8 @@
 ### Removed
 * **-MultiLeft** replaced by MultiMode.
 * **-RightAsGroup** replaced by MultiMode.
+
+:warning: if you used the GitHub (Beta branch) version there are breaking changes.
 
 ## 0.1.8 - 2018/11/07 (Beta branch)
 ### Updated
