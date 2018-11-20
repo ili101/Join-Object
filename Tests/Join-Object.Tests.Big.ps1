@@ -65,6 +65,8 @@ Describe -Name 'Join-Object' -Fixture {
                     Right             = @{Table = 'posts' ; As = 'DataTable'}
                     LeftJoinProperty  = 'author_id'
                     RightJoinProperty = 'author_id'
+                    #DataTable         = $true
+                    #RightMultiMode    = 'SubGroups'
                 }
             }
         ) -test {

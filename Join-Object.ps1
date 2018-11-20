@@ -202,8 +202,6 @@ function Join-Object
     (
         [Parameter(Mandatory = $true, ValueFromPipeLine = $true)]
         $Left,
-
-        # List to join with $Left
         [Parameter(Mandatory = $true)]
         $Right,
 
@@ -544,21 +542,21 @@ function Join-Object
             {
                 if ($null -ne ($Value = $_Side_Line.($item.Key)))
                 {
-                    $_Row_.($item.Value) = $Value
+                    $_Row_[$item.Value] = $Value
                 }
             }
         }
         'DataTableFromDataTable'           = {
             foreach ($item in $Selected_Side_Properties.GetEnumerator())
             {
-                $_Row_.($item.Value) = $_Side_Line.($item.Key)
+                $_Row_[$item.Value] = $_Side_Line[$item.Key]
             }
         }
         'DataTableFromSubGroup'            = {
             if ($_Side_Lines)
             {
                 _SubGroup_
-                $_Row_._Side_Group = $OutSubGroup_Side_
+                $_Row_['_Side_Group'] = $OutSubGroup_Side_
             }
         }
         'SubGroupFromDataTable'            = {
