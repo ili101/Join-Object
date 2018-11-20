@@ -1,27 +1,42 @@
 # version format
-version: 0.1.{build}
+version: ({build})
 
 # Build worker image (VM template)
-image: WMF 5
+image: Visual Studio 2017
+
+# Fix CRLF
+init:
+- git config --global --unset core.autocrlf
 
 # scripts that run after cloning repository
 install:
-- ps: choco install pester
+- ps: . .\Tests\AppVeyor.ps1 -Initialize
+#- ps: choco install pester
+- ps: Install-Module -Name Pester -Force -SkipPublisherCheck
+#- ps: Install-Module -Name Assert -Force
+- ps: . .\Tests\Assert.ps1
 
 # to disable automatic builds
 build: off
 
 # to run your custom scripts instead of automatic tests
 test_script:
-- ps: $VerbosePreference = 'Continue' ; . .\Install.ps1 ; Invoke-Pester -EnableExit
+- ps: . .\Tests\AppVeyor.ps1
+
+# Finalize pass - collect and upload results
+- ps: . .\Tests\AppVeyor.ps1 -Finalize
+
+# Skipping commits with particular message or from specific user
+skip_commits:
+  message: /\[Skip\]/
 
 # Including commits with particular message or from specific user
-only_commits:
-  message: /\[build\]/                # Start a new build if message contains 'build'
+#only_commits:
+#  message: /\[build\]/                # Start a new build if message contains 'build'
 
 environment:
   NugetApiKey:
     secure: K+vkseiHQEbiNnvY20ZSYA+Jl0fSAbfyWc1/454xA3FgZRIRUw5vDPG2eyFFc5lj
 
 deploy_script:
-- ps: $null = Install-PackageProvider -Name NuGet -Force ; . .\Tests\Deploy.ps1
+- ps: $null = Install-PackageProvider -Name NuGet -Force ; . .\Tests\Deploy.ps1 -PowerShellGallery -AppVeyorZip

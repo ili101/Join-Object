@@ -1,4 +1,35 @@
-﻿## 0.1.6 - 2018/03/13 (Beta)
+## 0.1.X - 2018/11/10 (Alpha branch)
+### Improved
+* Major rewrite of the code, The main Scriptblock is now dynamically constructed.
+* Error handling with $PSCmdlet.ThrowTerminatingError.
+### Fixed
+* Undo "Fix JoinFunction scope to support JoinProperty" (Unnecessary feature).
+### Added
+* **-LeftMultiMode** and **-RightMultiMode** with options ('SingleOnly', 'DuplicateLines', 'SubGroups').
+* **-AddKey** can be used with "-Type AllInBoth" to add a column named "Key" containing the joining key.
+### Removed
+* **-MultiLeft** replaced by MultiMode.
+* **-RightAsGroup** replaced by MultiMode.
+
+## 0.1.8 - 2018/11/07 (Beta branch)
+### Updated
+* MoreLinq updated to 3.0.0.
+### Fixed
+* Fix Multi JoinProperty comparing column name.
+* Fix JoinFunction scope to support JoinProperty.
+* Minor bug fixes and improvements.
+
+## 0.1.7 - 2018/03/13 (Beta branch)
+### Added
+* **-Type AllInBoth** option.
+* **-DataTableTypes [Hashtable]** allow Overwrite of DataTable columns types.
+* **-RightAsGroup [String]** Join the right side as sub table in column with the selected name.
+* **-MultiLeft** allow multiple rows on the left side.
+* **-KeepRightJoinProperty** don't remove the right join property.
+### Fixed
+* Remove unused parameter option **-Type AllInRight**
+
+## 0.1.6 - 2018/03/13 (Beta)
 ### Fixed
 * Error "Cannot set Column 'foo' to be null. Please use DBNull instead." when using -DataTable and -AllInLeft and some Left lines don't have Right lines to join to.
 
