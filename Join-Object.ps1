@@ -243,7 +243,8 @@ function Join-Object
         [validateset('SingleOnly', 'DuplicateLines', 'SubGroups')]
         [string]$RightMultiMode = 'SingleOnly',
 
-        [switch]$AddKey
+        [switch]$AddKey,
+        [switch]$AllowColumnsMerging
     )
     #region Validate Params
     if ($PassThru -and $Type -eq 'AllInBoth')
@@ -307,6 +308,18 @@ function Join-Object
         $ValidateSetAttribute = [System.Management.Automation.ValidateSetAttribute]::new('SingleOnly', 'DuplicateLines', 'SubGroups', $null)
         $Attributes.Add($ValidateSetAttribute)
         $RightMultiMode = $null
+    }
+
+    if ($AllowColumnsMerging -and !$DataTable -and !($PassThru -and $Left -is [DataTable]))
+    {
+        $PSCmdlet.ThrowTerminatingError(
+            [Management.Automation.ErrorRecord]::new(
+                [ArgumentException]::new('"-AllowColumnsMerging" support only on DataTable output'),
+                'Incompatible Arguments',
+                [Management.Automation.ErrorCategory]::InvalidArgument,
+                $AllowColumnsMerging
+            )
+        )
     }
     #endregion Validate Params
     #region Set $SelectedLeftProperties and $SelectedRightProperties
@@ -445,24 +458,28 @@ function Join-Object
         (
             $OutDataTable,
             $Object,
-            $SelectedProperties
+            $SelectedProperties,
+            $AllowColumnsMerging
         )
         # Create Columns
         foreach ($item in $SelectedProperties.GetEnumerator())
         {
-            if ($Object -is [Data.DataTable])
+            if (!$AllowColumnsMerging -or !$OutDataTable.Columns.Item($item.Value))
             {
-                $null = $OutDataTable.Columns.Add($item.Value, $Object.Columns.Item($item.Name).DataType)
-            }
-            else
-            {
-                if ($null -ne $DataTableTypes.($item.Value))
+                if ($Object -is [Data.DataTable])
                 {
-                    $null = $OutDataTable.Columns.Add($item.Value, $DataTableTypes.($item.Value))
+                    $null = $OutDataTable.Columns.Add($item.Value, $Object.Columns.Item($item.Name).DataType)
                 }
                 else
                 {
-                    $null = $OutDataTable.Columns.Add($item.Value)
+                    if ($null -ne $DataTableTypes.($item.Value))
+                    {
+                        $null = $OutDataTable.Columns.Add($item.Value, $DataTableTypes.($item.Value))
+                    }
+                    else
+                    {
+                        $null = $OutDataTable.Columns.Add($item.Value)
+                    }
                 }
             }
         }
@@ -492,7 +509,7 @@ function Join-Object
         }
         else
         {
-            Set-OutDataTable -OutDataTable $OutDataTable -Object $Right -SelectedProperties $SelectedRightProperties
+            Set-OutDataTable -OutDataTable $OutDataTable -Object $Right -SelectedProperties $SelectedRightProperties -AllowColumnsMerging $AllowColumnsMerging
         }
     }
     elseif ($PassThru -and $Left -is [Data.DataTable])
@@ -522,13 +539,16 @@ function Join-Object
             # Add RightLine to LeftLine
             foreach ($item in $SelectedRightProperties.GetEnumerator())
             {
-                if ($null -ne $DataTableTypes.($item.Value))
+                if (!$AllowColumnsMerging -or !$Left.Columns.Item($item.Value))
                 {
-                    $null = $Left.Columns.Add($item.Value, $DataTableTypes.($item.Value))
-                }
-                else
-                {
-                    $null = $Left.Columns.Add($item.Value)
+                    if ($null -ne $DataTableTypes.($item.Value))
+                    {
+                        $null = $Left.Columns.Add($item.Value, $DataTableTypes.($item.Value))
+                    }
+                    else
+                    {
+                        $null = $Left.Columns.Add($item.Value)
+                    }
                 }
             }
         }
@@ -560,7 +580,10 @@ function Join-Object
         'DataTableFromDataTable'           = {
             foreach ($item in $Selected_Side_Properties.GetEnumerator())
             {
-                $_Row_[$item.Value] = $_Side_Line[$item.Key]
+                if (($Value = $_Side_Line[$item.Key]) -isnot [DBNull])
+                {
+                    $_Row_[$item.Value] = $Value
+                }
             }
         }
         'DataTableFromSubGroup'            = {
@@ -646,7 +669,7 @@ function Join-Object
         {
             $QueryTemp = @{
                 # Edit PSCustomObject
-                Main  = {
+                Main        = {
                     # Add to LeftLine (Rename)
                     foreach ($item in $SelectedLeftProperties.GetEnumerator())
                     {

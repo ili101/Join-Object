@@ -28,6 +28,12 @@ $TestDataSetSmall = {
         [PSCustomObject]@{ID = 3 ; Sub = 'S3' ; IntO = $null}
     )
 
+    $PSCustomObjectJunk = @(
+        [PSCustomObject]@{ID = 1 ; Sub = 'S1' ; IntO = 6     ; Junk = 'New1'}
+        [PSCustomObject]@{ID = 2 ; Sub = 'S2' ; IntO = 7     ; Junk = $null}
+        [PSCustomObject]@{ID = 3 ; Sub = 'S3' ; IntO = $null ; Junk = $null}
+    )
+
     $DataTable = [Data.DataTable]::new('Test')
     $null = $DataTable.Columns.Add('IDD', [System.Int32])
     $null = $DataTable.Columns.Add('Name')
@@ -562,6 +568,75 @@ Describe -Name 'Join-Object' -Fixture {
                     DataTableTypes         = @{R_IntO = [Int]}
                 }
             }
+            Format-Test @{
+                Description          = 'Default No AllowColumnsMerging'
+                ExpectedErrorOn      = 'Run'
+                ExpectedErrorMessage = "Item has already been added. Key in dictionary: 'Junk'"
+                Params               = @{
+                    Left              = 'DataTable'
+                    Right             = 'PSCustomObjectJunk'
+                    LeftJoinProperty  = 'IDD'
+                    RightJoinProperty = 'ID'
+                }
+            }
+            Format-Test @{
+                Description          = 'Default AllowColumnsMerging'
+                ExpectedErrorOn      = 'Run'
+                ExpectedErrorMessage = '"-AllowColumnsMerging" support only on DataTable output'
+                Params               = @{
+                    Left                = 'DataTable'
+                    Right               = 'PSCustomObjectJunk'
+                    LeftJoinProperty    = 'IDD'
+                    RightJoinProperty   = 'ID'
+                    AllowColumnsMerging = $true
+                }
+            }
+            Format-Test @{
+                Description = 'DataTable AllowColumnsMerging'
+                Params      = @{
+                    Left                = 'DataTable'
+                    Right               = 'PSCustomObjectJunk'
+                    LeftJoinProperty    = 'IDD'
+                    RightJoinProperty   = 'ID'
+                    AllowColumnsMerging = $true
+                    DataTable           = $true
+                }
+            }
+            Format-Test @{
+                Description = 'PassThru AllowColumnsMerging'
+                ExpectedErrorOn      = 'Run'
+                ExpectedErrorMessage = '"-AllowColumnsMerging" support only on DataTable output'
+                Params      = @{
+                    Left                = 'PSCustomObjectJunk'
+                    Right               = 'DataTable'
+                    LeftJoinProperty    = 'IDD'
+                    RightJoinProperty   = 'ID'
+                    AllowColumnsMerging = $true
+                    PassThru            = $true
+                }
+            }
+            Format-Test @{
+                Description = 'PassThru AllowColumnsMerging'
+                Params      = @{
+                    Left                = 'DataTable'
+                    Right               = 'PSCustomObjectJunk'
+                    LeftJoinProperty    = 'IDD'
+                    RightJoinProperty   = 'ID'
+                    AllowColumnsMerging = $true
+                    PassThru            = $true
+                }
+            }
+            Format-Test @{
+                Description = 'PassThru AllowColumnsMerging'
+                Params      = @{
+                    Left                = 'DataTable'
+                    Right               = '[DataTable]PSCustomObjectJunk'
+                    LeftJoinProperty    = 'IDD'
+                    RightJoinProperty   = 'ID'
+                    AllowColumnsMerging = $true
+                    PassThru            = $true
+                }
+            }
         )
         $TestDataSetName = 'TestDataSetSmallMulti'
         $TestCases += @(
@@ -569,7 +644,7 @@ Describe -Name 'Join-Object' -Fixture {
                 Description          = 'DataTable AllInLeft SingleOnly not supported Error'
                 ExpectedErrorOn      = 'Run'
                 ExpectedErrorMessage = '"-Type AllInLeft" and "-Type OnlyIfInBoth" support only "-LeftMultiMode DuplicateLines"'
-                Params      = @{
+                Params               = @{
                     Left                   = 'PSCustomObject'
                     Right                  = 'DataTable'
                     LeftJoinProperty       = 'ID'
@@ -586,14 +661,14 @@ Describe -Name 'Join-Object' -Fixture {
                 ExpectedErrorOn      = 'Run'
                 ExpectedErrorMessage = '"-Type OnlyIfInBoth" support only "-RightMultiMode DuplicateLines"'
                 Params               = @{
-                    Left                   = 'DataTable'
-                    Right                  = 'PSCustomObject'
-                    LeftJoinProperty       = 'IDD'
-                    RightJoinProperty      = 'ID'
-                    Prefix                 = 'R_'
-                    DataTable              = $true
-                    Type                   = 'OnlyIfInBoth'
-                    RightMultiMode         = 'SingleOnly'
+                    Left              = 'DataTable'
+                    Right             = 'PSCustomObject'
+                    LeftJoinProperty  = 'IDD'
+                    RightJoinProperty = 'ID'
+                    Prefix            = 'R_'
+                    DataTable         = $true
+                    Type              = 'OnlyIfInBoth'
+                    RightMultiMode    = 'SingleOnly'
                 }
             }
             Format-Test @{
@@ -646,15 +721,15 @@ Describe -Name 'Join-Object' -Fixture {
             Format-Test @{
                 Description = 'DataTable AllInBoth'
                 Params      = @{
-                    Left                   = 'DataTable'
-                    Right                  = 'PSCustomObject'
-                    LeftJoinProperty       = 'IDD'
-                    RightJoinProperty      = 'ID'
-                    Prefix                 = 'R_'
-                    DataTable              = $true
-                    Type                   = 'AllInBoth'
-                    LeftMultiMode          = 'DuplicateLines'
-                    RightMultiMode         = 'DuplicateLines'
+                    Left              = 'DataTable'
+                    Right             = 'PSCustomObject'
+                    LeftJoinProperty  = 'IDD'
+                    RightJoinProperty = 'ID'
+                    Prefix            = 'R_'
+                    DataTable         = $true
+                    Type              = 'AllInBoth'
+                    LeftMultiMode     = 'DuplicateLines'
+                    RightMultiMode    = 'DuplicateLines'
                 }
             }
             Format-Test @{
@@ -675,15 +750,15 @@ Describe -Name 'Join-Object' -Fixture {
             Format-Test @{
                 Description = 'DataTable AllInBoth SubGroups'
                 Params      = @{
-                    Left                   = 'DataTable'
-                    Right                  = 'PSCustomObject'
-                    LeftJoinProperty       = 'IDD'
-                    RightJoinProperty      = 'ID'
-                    Prefix                 = 'R_'
-                    DataTable              = $true
-                    Type                   = 'AllInBoth'
-                    LeftMultiMode          = 'SubGroups'
-                    RightMultiMode         = 'SubGroups'
+                    Left              = 'DataTable'
+                    Right             = 'PSCustomObject'
+                    LeftJoinProperty  = 'IDD'
+                    RightJoinProperty = 'ID'
+                    Prefix            = 'R_'
+                    DataTable         = $true
+                    Type              = 'AllInBoth'
+                    LeftMultiMode     = 'SubGroups'
+                    RightMultiMode    = 'SubGroups'
                 }
             }
             Format-Test @{
@@ -703,14 +778,14 @@ Describe -Name 'Join-Object' -Fixture {
             Format-Test @{
                 Description = 'Default AllInBoth SubGroups'
                 Params      = @{
-                    Left                   = 'DataTable'
-                    Right                  = 'PSCustomObject'
-                    LeftJoinProperty       = 'IDD'
-                    RightJoinProperty      = 'ID'
-                    Prefix                 = 'R_'
-                    Type                   = 'AllInBoth'
-                    LeftMultiMode          = 'SubGroups'
-                    RightMultiMode         = 'SubGroups'
+                    Left              = 'DataTable'
+                    Right             = 'PSCustomObject'
+                    LeftJoinProperty  = 'IDD'
+                    RightJoinProperty = 'ID'
+                    Prefix            = 'R_'
+                    Type              = 'AllInBoth'
+                    LeftMultiMode     = 'SubGroups'
+                    RightMultiMode    = 'SubGroups'
                 }
             }
             Format-Test @{
@@ -744,27 +819,27 @@ Describe -Name 'Join-Object' -Fixture {
             Format-Test @{
                 Description = 'PassThru AllInLeft SubGroups'
                 Params      = @{
-                    Left                   = 'DataTable'
-                    Right                  = 'PSCustomObject'
-                    LeftJoinProperty       = 'IDD'
-                    RightJoinProperty      = 'ID'
-                    Prefix                 = 'R_'
-                    Type                   = 'AllInLeft'
-                    RightMultiMode         = 'SubGroups'
-                    PassThru               = $true
+                    Left              = 'DataTable'
+                    Right             = 'PSCustomObject'
+                    LeftJoinProperty  = 'IDD'
+                    RightJoinProperty = 'ID'
+                    Prefix            = 'R_'
+                    Type              = 'AllInLeft'
+                    RightMultiMode    = 'SubGroups'
+                    PassThru          = $true
                 }
             }
             Format-Test @{
                 Description = 'PassThru AllInLeft SubGroups'
                 Params      = @{
-                    Left                   = 'DataTable'
-                    Right                  = '[DataTable]PSCustomObject'
-                    LeftJoinProperty       = 'IDD'
-                    RightJoinProperty      = 'ID'
-                    Prefix                 = 'R_'
-                    Type                   = 'AllInLeft'
-                    RightMultiMode         = 'SubGroups'
-                    PassThru               = $true
+                    Left              = 'DataTable'
+                    Right             = '[DataTable]PSCustomObject'
+                    LeftJoinProperty  = 'IDD'
+                    RightJoinProperty = 'ID'
+                    Prefix            = 'R_'
+                    Type              = 'AllInLeft'
+                    RightMultiMode    = 'SubGroups'
+                    PassThru          = $true
                 }
             }
             Format-Test @{
@@ -786,7 +861,7 @@ Describe -Name 'Join-Object' -Fixture {
                 Description          = 'Default SubGroups Key Error'
                 ExpectedErrorOn      = 'Run'
                 ExpectedErrorMessage = '"-AddKey" support only "-Type AllInBoth"'
-                Params      = @{
+                Params               = @{
                     Left                   = 'PSCustomObject'
                     Right                  = 'DataTable'
                     LeftJoinProperty       = 'ID'
