@@ -49,6 +49,7 @@ Join-Object -Left $PSCustomObject -Right $DataTable -LeftJoinProperty 'ID' -Righ
 * -RightJoinProperty and -LeftJoinProperty supports multiple Properties (String Array) to **join on multiple columns**.
 * **-DataTable** parameter to output as "DataTable".
 * **-AddKey** can be used with "-Type AllInBoth" to add a column named "Key" containing the joining key.
+* **-AllowColumnsMerging** Allow duplicate columns in the Left and Right Objects, will overwrite the conflicting Left data with the Right data (Ignoring Nulls), Supported only on DataTable output for now.
 
 ## Missing functionality
 * -Type "AllInRight".

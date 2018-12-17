@@ -1,3 +1,7 @@
+## 1.0.1 - 2018/12/17 (Stable)
+### Added
+* **-AllowColumnsMerging** Allow duplicate columns in the Left and Right Objects, will overwrite the conflicting Left data with the Right data (Ignoring Nulls), Supported only on DataTable output for now.
+
 ## 1.0.0 - 2018/11/20 (Stable)
 ### Improved
 * Major rewrite of the code, The main Scriptblock is now dynamically constructed.
