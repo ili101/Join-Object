@@ -27,17 +27,17 @@ skip_commits:
 install:
   - ps: 'Install-Module -Name Pester -Force -SkipPublisherCheck'
   #- ps: 'Install-Module -Name Assert -Force'
-  - ps: '& .\Tests\Assert.ps1'
+  #- ps: '& .\Tests\Assert.ps1'
   # PowerShell Core
   - ps: '& .\Tests\InstallPowerShell.ps1 -Version "7.0.0-preview.2"' # Install other PowerShell Core version (Optional)
   - pwsh: 'Install-Module -Name Pester -Force'
   #- pwsh: 'Install-Module -Name Assert -Force'
-  - pwsh: '& .\Tests\Assert.ps1'
+  #- pwsh: '& .\Tests\Assert.ps1'
 
 # To run your custom scripts instead of automatic tests
 test_script:
-  - ps: '& .\Tests\CI.ps1 -Test'
-  - pwsh: '& .\Tests\CI.ps1 -Test'
+  - ps: '& .\Tests\Assert.ps1 ; & .\Tests\CI.ps1 -Test'
+  - pwsh: '& .\Tests\Assert.ps1 ; & .\Tests\CI.ps1 -Test'
   - ps: '& .\Tests\CI.ps1 -Finalize' # Collect and upload results
 
 # Deploy
@@ -60,10 +60,10 @@ for:
       - pwsh: '& .\Tests\CI.ps1 -Initialize' # Set AppVeyor build version
       - pwsh: 'Install-Module -Name Pester -Force'
       #- pwsh: 'Install-Module -Name Assert -Force'
-      - pwsh: '& .\Tests\Assert.ps1'
+      #- pwsh: '& .\Tests\Assert.ps1'
     # To run your custom scripts instead of automatic tests
     test_script:
-      - pwsh: '& .\Tests\CI.ps1 -Test'
+      - pwsh: '& .\Tests\Assert.ps1 ; & .\Tests\CI.ps1 -Test'
       - pwsh: '& .\Tests\CI.ps1 -Finalize' # Collect and upload results
     # Skip Deploy
     deploy_script:
