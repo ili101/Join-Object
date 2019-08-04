@@ -1,5 +1,5 @@
 #Requires -Modules Pester
-#Requires -Modules @{ModuleName = 'Assert' ; ModuleVersion = '0.9.2'}
+#Requires -Modules @{ModuleName = 'Assert' ; ModuleVersion = '999.9.2'}
 #Requires -Modules PSSQLite
 
 $Verbose = @{Verbose = $false}
