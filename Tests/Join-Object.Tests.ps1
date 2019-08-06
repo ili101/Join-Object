@@ -1,5 +1,5 @@
 ﻿#Requires -Modules Pester
-#Requires -Modules @{ModuleName = 'Assert' ; ModuleVersion = '0.9.2.1'}
+#Requires -Modules @{ModuleName = 'Assert' ; ModuleVersion = '999.9.2'}
 
 $Verbose = @{Verbose = $false}
 #$Verbose = @{Verbose = $true}
