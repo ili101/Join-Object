@@ -769,7 +769,7 @@ function Join-Object
         }
         if ($MultiMode -eq 'SubGroups')
         {
-            $Query[$Side + 'Enumerable'] = {$_Side_Lines = $_Side_Line}
+            $Query[$Side + 'Enumerable'] = {$_Side_Lines = if ($_Side_Line.Count) {$_Side_Line}}
             $Query[$Side] = if ($Object -is [Data.DataTable])
             {
                 $Query['SideSubGroup'].Replace('_DataTable_', $QueryParts['DataTableFromDataTable']).Replace('_PSCustomObject_', $QueryParts['PSCustomObjectFromAny'])

@@ -200,7 +200,7 @@ Describe -Name 'Join-Object' -Fixture {
             Format-Test @{
                 Description          = 'Default Error'
                 ExpectedErrorOn      = 'Test'
-                ExpectedErrorMessage = "but some values were missing: 'PSObject{ID=3; R_IntT=; R_Name=X; Subscription=S3}"
+                ExpectedErrorMessage = "Object{ID=3; R_IntT=; R_Name=X; Subscription=S3}'."
                 Params               = @{
                     Left                   = 'PSCustomObject'
                     Right                  = 'DataTable'
@@ -969,7 +969,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
                 else
                 {
-                    if ($JoinedOutput.Count -gt 0)
+                    if ($JoinedOutput.Count -gt 1)
                     {
                         Should -BeOfType -ActualValue $JoinedOutput -ExpectedType 'System.Array'
                     }
