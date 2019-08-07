@@ -1,40 +1,34 @@
 #Requires -Modules Pester
-#Requires -Modules @{ModuleName = 'Assert' ; ModuleVersion = '999.9.2'}
+#Requires -Modules @{ ModuleName = 'Assert' ; ModuleVersion = '999.9.2' }
 #Requires -Modules PSSQLite
 
-$Verbose = @{Verbose = $false}
-#$Verbose = @{Verbose = $true}
+$Verbose = @{ Verbose = $false }
+#$Verbose = @{ Verbose = $true }
 
-if ($PSScriptRoot)
-{
+if ($PSScriptRoot) {
     $ScriptRoot = $PSScriptRoot
 }
-elseif ($psISE.CurrentFile.IsUntitled -eq $false)
-{
+elseif ($psISE.CurrentFile.IsUntitled -eq $false) {
     $ScriptRoot = Split-Path -Path $psISE.CurrentFile.FullPath
 }
-elseif ($null -ne $psEditor.GetEditorContext().CurrentFile.Path -and $psEditor.GetEditorContext().CurrentFile.Path -notlike 'untitled:*')
-{
+elseif ($null -ne $psEditor.GetEditorContext().CurrentFile.Path -and $psEditor.GetEditorContext().CurrentFile.Path -notlike 'untitled:*') {
     $ScriptRoot = Split-Path -Path $psEditor.GetEditorContext().CurrentFile.Path
 }
-else
-{
+else {
     $ScriptRoot = '.'
 }
 
 $TestDataSetBig10k = "$ScriptRoot\TestDataSetBig10k.db"
 $TestDataSetBig100k = "$ScriptRoot\TestDataSetBig100k.db"
 
-function Format-Test
-{
+function Format-Test {
     [CmdletBinding()]
     param
     (
         [Parameter(Mandatory)]
         [HashTable]$Test
     )
-    if ($TestDataSetName, $Test.Params.Left, $Test.Params.Right, $Test.Description -contains $null)
-    {
+    if ($TestDataSetName, $Test.Params.Left, $Test.Params.Right, $Test.Description -contains $null) {
         Throw 'Missing param'
     }
 
@@ -42,8 +36,7 @@ function Format-Test
     $Test
 }
 
-function Get-Params
-{
+function Get-Params {
     [CmdletBinding()]
     param
     (
@@ -61,8 +54,8 @@ Describe -Name 'Join-Object' -Fixture {
             Format-Test @{
                 Description = 'Basic'
                 Params      = @{
-                    Left              = @{Table = 'authors' ; As = 'DataTable'}
-                    Right             = @{Table = 'posts' ; As = 'DataTable'}
+                    Left              = @{ Table = 'authors' ; As = 'DataTable' }
+                    Right             = @{ Table = 'posts' ; As = 'DataTable' }
                     LeftJoinProperty  = 'author_id'
                     RightJoinProperty = 'author_id'
                     #DataTable         = $true
@@ -77,11 +70,10 @@ Describe -Name 'Join-Object' -Fixture {
                 $Description,
                 $RunScript
             )
-            #if ($TestName -ne 'Small: PSCustomObjects - DataTable, DataTable') {Continue}
+            #if ($TestName -ne 'Small: PSCustomObjects - DataTable, DataTable') { Continue }
 
             # Load Data
-            if ($RunScript)
-            {
+            if ($RunScript) {
                 . $RunScript
             }
             $Params.Left = Get-Params -Param $Params.Left

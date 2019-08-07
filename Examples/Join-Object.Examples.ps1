@@ -21,24 +21,24 @@ static System.Collections.Generic.IEnumerable[TResult]
 #>
 
 $TestData1 = {
-    $PSCustomObjects= @(
-        [PSCustomObject]@{ID = 1 ; Sub = 'S1'}
-        [PSCustomObject]@{ID = 2 ; Sub = 'S2'}
-        [PSCustomObject]@{ID = 3 ; Sub = 'S3'}
+    $PSCustomObjects = @(
+        [PSCustomObject]@{ ID = 1 ; Sub = 'S1' }
+        [PSCustomObject]@{ ID = 2 ; Sub = 'S2' }
+        [PSCustomObject]@{ ID = 3 ; Sub = 'S3' }
     )
 
     $DataTable = [Data.DataTable]::new('Test')
     $null = $DataTable.Columns.Add('IDD')
     $null = $DataTable.Columns.Add('Name')
     $null = $DataTable.Columns.Add('Junk')
-    $null = $DataTable.Rows.Add(1,'A','AAA')
-    $null = $DataTable.Rows.Add(3,'C',$null)
+    $null = $DataTable.Rows.Add(1, 'A', 'AAA')
+    $null = $DataTable.Rows.Add(3, 'C', $null)
 }
 . $TestData1
 
-Join-Object -Left $PSCustomObjects -Right $DataTable -LeftJoinProperty ID -RightJoinProperty IDD -LeftProperties @{ID= 'ID' ; Sub = 'Subscription'} -ExcludeRightProperties Junk -Prefix 'R_' | Format-Table
-Join-Object -Left $DataTable -Right $PSCustomObjects -LeftJoinProperty IDD -RightJoinProperty ID -RightProperties  @{ID= 'ID' ; Sub = 'Subscription'} -ExcludeLeftProperties Junk -Suffix '_R' | Format-Table
-Join-Object -Left $PSCustomObjects -Right $DataTable -LeftJoinProperty ID -RightJoinProperty IDD -LeftProperties ([ordered]@{Sub = 'Subscription' ; ID= 'ID'}) -ExcludeRightProperties Junk -Prefix 'R_' | Format-Table
+Join-Object -Left $PSCustomObjects -Right $DataTable -LeftJoinProperty ID -RightJoinProperty IDD -LeftProperties @{ ID = 'ID' ; Sub = 'Subscription' } -ExcludeRightProperties Junk -Prefix 'R_' | Format-Table
+Join-Object -Left $DataTable -Right $PSCustomObjects -LeftJoinProperty IDD -RightJoinProperty ID -RightProperties  @{ ID = 'ID' ; Sub = 'Subscription' } -ExcludeLeftProperties Junk -Suffix '_R' | Format-Table
+Join-Object -Left $PSCustomObjects -Right $DataTable -LeftJoinProperty ID -RightJoinProperty IDD -LeftProperties ([ordered]@{ Sub = 'Subscription' ; ID = 'ID' }) -ExcludeRightProperties Junk -Prefix 'R_' | Format-Table
 <# Output
 ID Subscription R_Name
 -- ------------ ------
@@ -59,7 +59,7 @@ S3            3 C
 #>
 
 . $TestData1
-$null = Join-Object -Left $PSCustomObjects -Right $DataTable -LeftJoinProperty ID -RightJoinProperty IDD -LeftProperties @{ID= 'ID' ; Sub = 'Subscription'} -ExcludeRightProperties Junk -Prefix 'R_' -PassThru
+$null = Join-Object -Left $PSCustomObjects -Right $DataTable -LeftJoinProperty ID -RightJoinProperty IDD -LeftProperties @{ ID = 'ID' ; Sub = 'Subscription' } -ExcludeRightProperties Junk -Prefix 'R_' -PassThru
 $PSCustomObjects
 <# $PSCustomObjects changed to:
 ID Subscription R_Name
@@ -70,7 +70,7 @@ ID Subscription R_Name
 #>
 
 . $TestData1
-$null = Join-Object -Left $DataTable -Right $PSCustomObjects -LeftJoinProperty IDD -RightJoinProperty ID -LeftProperties @{IDD = 'IDD' ; Name = 'NewName'}-RightProperties  @{ID= 'ID' ; Sub = 'Subscription'} -ExcludeLeftProperties Junk -Suffix '_R' -PassThru
+$null = Join-Object -Left $DataTable -Right $PSCustomObjects -LeftJoinProperty IDD -RightJoinProperty ID -LeftProperties @{ IDD = 'IDD' ; Name = 'NewName' }-RightProperties  @{ ID = 'ID' ; Sub = 'Subscription' } -ExcludeLeftProperties Junk -Suffix '_R' -PassThru
 $DataTable
 <# $DataTable changed to:
 IDD NewName Subscription_R
@@ -81,10 +81,10 @@ IDD NewName Subscription_R
 
 'DBNull to $null test'
 . $TestData1
-Join-Object -Left $PSCustomObjects -Right $DataTable -LeftJoinProperty ID -RightJoinProperty IDD | Where-Object {$_.Junk} | Format-Table
+Join-Object -Left $PSCustomObjects -Right $DataTable -LeftJoinProperty ID -RightJoinProperty IDD | Where-Object { $_.Junk } | Format-Table
 . $TestData1
 $null = Join-Object -Left $PSCustomObjects -Right $DataTable -LeftJoinProperty ID -RightJoinProperty IDD -PassThru
-$PSCustomObjects | Where-Object {$_.Junk} | Format-Table
+$PSCustomObjects | Where-Object { $_.Junk } | Format-Table
 <# Output
 ID Sub Name Junk
 -- --- ---- ----
