@@ -27,6 +27,223 @@
             This operator executes immediately.
             </remarks>
         </member>
+        <member name="M:MoreLinq.MoreEnumerable.Aggregate``4(System.Collections.Generic.IEnumerable{``0},``1,System.Func{``1,``0,``1},``2,System.Func{``2,``0,``2},System.Func{``1,``2,``3})">
+            <summary>
+            Applies two accumulators sequentially in a single pass over a
+            sequence.
+            </summary>
+            <typeparam name="T">The type of elements in <paramref name="source"/>.</typeparam>
+            <typeparam name="TAccumulate1">The type of first accumulator value.</typeparam>
+            <typeparam name="TAccumulate2">The type of second accumulator value.</typeparam>
+            <typeparam name="TResult">The type of the accumulated result.</typeparam>
+            <param name="source">The source sequence</param>
+            <param name="seed1">The seed value for the first accumulator.</param>
+            <param name="accumulator1">The first accumulator.</param>
+            <param name="seed2">The seed value for the second accumulator.</param>
+            <param name="accumulator2">The second accumulator.</param>
+            <param name="resultSelector">
+            A function that projects a single result given the result of each
+            accumulator.</param>
+            <returns>The value returned by <paramref name="resultSelector"/>.</returns>
+            <remarks>
+            This operator executes immediately.
+            </remarks>
+        </member>
+        <member name="M:MoreLinq.MoreEnumerable.Aggregate``5(System.Collections.Generic.IEnumerable{``0},``1,System.Func{``1,``0,``1},``2,System.Func{``2,``0,``2},``3,System.Func{``3,``0,``3},System.Func{``1,``2,``3,``4})">
+            <summary>
+            Applies three accumulators sequentially in a single pass over a
+            sequence.
+            </summary>
+            <typeparam name="T">The type of elements in <paramref name="source"/>.</typeparam>
+            <typeparam name="TAccumulate1">The type of first accumulator value.</typeparam>
+            <typeparam name="TAccumulate2">The type of second accumulator value.</typeparam>
+            <typeparam name="TAccumulate3">The type of third accumulator value.</typeparam>
+            <typeparam name="TResult">The type of the accumulated result.</typeparam>
+            <param name="source">The source sequence</param>
+            <param name="seed1">The seed value for the first accumulator.</param>
+            <param name="accumulator1">The first accumulator.</param>
+            <param name="seed2">The seed value for the second accumulator.</param>
+            <param name="accumulator2">The second accumulator.</param>
+            <param name="seed3">The seed value for the third accumulator.</param>
+            <param name="accumulator3">The third accumulator.</param>
+            <param name="resultSelector">
+            A function that projects a single result given the result of each
+            accumulator.</param>
+            <returns>The value returned by <paramref name="resultSelector"/>.</returns>
+            <remarks>
+            This operator executes immediately.
+            </remarks>
+        </member>
+        <member name="M:MoreLinq.MoreEnumerable.Aggregate``6(System.Collections.Generic.IEnumerable{``0},``1,System.Func{``1,``0,``1},``2,System.Func{``2,``0,``2},``3,System.Func{``3,``0,``3},``4,System.Func{``4,``0,``4},System.Func{``1,``2,``3,``4,``5})">
+            <summary>
+            Applies four accumulators sequentially in a single pass over a
+            sequence.
+            </summary>
+            <typeparam name="T">The type of elements in <paramref name="source"/>.</typeparam>
+            <typeparam name="TAccumulate1">The type of first accumulator value.</typeparam>
+            <typeparam name="TAccumulate2">The type of second accumulator value.</typeparam>
+            <typeparam name="TAccumulate3">The type of third accumulator value.</typeparam>
+            <typeparam name="TAccumulate4">The type of fourth accumulator value.</typeparam>
+            <typeparam name="TResult">The type of the accumulated result.</typeparam>
+            <param name="source">The source sequence</param>
+            <param name="seed1">The seed value for the first accumulator.</param>
+            <param name="accumulator1">The first accumulator.</param>
+            <param name="seed2">The seed value for the second accumulator.</param>
+            <param name="accumulator2">The second accumulator.</param>
+            <param name="seed3">The seed value for the third accumulator.</param>
+            <param name="accumulator3">The third accumulator.</param>
+            <param name="seed4">The seed value for the fourth accumulator.</param>
+            <param name="accumulator4">The fourth accumulator.</param>
+            <param name="resultSelector">
+            A function that projects a single result given the result of each
+            accumulator.</param>
+            <returns>The value returned by <paramref name="resultSelector"/>.</returns>
+            <remarks>
+            This operator executes immediately.
+            </remarks>
+        </member>
+        <member name="M:MoreLinq.MoreEnumerable.Aggregate``7(System.Collections.Generic.IEnumerable{``0},``1,System.Func{``1,``0,``1},``2,System.Func{``2,``0,``2},``3,System.Func{``3,``0,``3},``4,System.Func{``4,``0,``4},``5,System.Func{``5,``0,``5},System.Func{``1,``2,``3,``4,``5,``6})">
+            <summary>
+            Applies five accumulators sequentially in a single pass over a
+            sequence.
+            </summary>
+            <typeparam name="T">The type of elements in <paramref name="source"/>.</typeparam>
+            <typeparam name="TAccumulate1">The type of first accumulator value.</typeparam>
+            <typeparam name="TAccumulate2">The type of second accumulator value.</typeparam>
+            <typeparam name="TAccumulate3">The type of third accumulator value.</typeparam>
+            <typeparam name="TAccumulate4">The type of fourth accumulator value.</typeparam>
+            <typeparam name="TAccumulate5">The type of fifth accumulator value.</typeparam>
+            <typeparam name="TResult">The type of the accumulated result.</typeparam>
+            <param name="source">The source sequence</param>
+            <param name="seed1">The seed value for the first accumulator.</param>
+            <param name="accumulator1">The first accumulator.</param>
+            <param name="seed2">The seed value for the second accumulator.</param>
+            <param name="accumulator2">The second accumulator.</param>
+            <param name="seed3">The seed value for the third accumulator.</param>
+            <param name="accumulator3">The third accumulator.</param>
+            <param name="seed4">The seed value for the fourth accumulator.</param>
+            <param name="accumulator4">The fourth accumulator.</param>
+            <param name="seed5">The seed value for the fifth accumulator.</param>
+            <param name="accumulator5">The fifth accumulator.</param>
+            <param name="resultSelector">
+            A function that projects a single result given the result of each
+            accumulator.</param>
+            <returns>The value returned by <paramref name="resultSelector"/>.</returns>
+            <remarks>
+            This operator executes immediately.
+            </remarks>
+        </member>
+        <member name="M:MoreLinq.MoreEnumerable.Aggregate``8(System.Collections.Generic.IEnumerable{``0},``1,System.Func{``1,``0,``1},``2,System.Func{``2,``0,``2},``3,System.Func{``3,``0,``3},``4,System.Func{``4,``0,``4},``5,System.Func{``5,``0,``5},``6,System.Func{``6,``0,``6},System.Func{``1,``2,``3,``4,``5,``6,``7})">
+            <summary>
+            Applies six accumulators sequentially in a single pass over a
+            sequence.
+            </summary>
+            <typeparam name="T">The type of elements in <paramref name="source"/>.</typeparam>
+            <typeparam name="TAccumulate1">The type of first accumulator value.</typeparam>
+            <typeparam name="TAccumulate2">The type of second accumulator value.</typeparam>
+            <typeparam name="TAccumulate3">The type of third accumulator value.</typeparam>
+            <typeparam name="TAccumulate4">The type of fourth accumulator value.</typeparam>
+            <typeparam name="TAccumulate5">The type of fifth accumulator value.</typeparam>
+            <typeparam name="TAccumulate6">The type of sixth accumulator value.</typeparam>
+            <typeparam name="TResult">The type of the accumulated result.</typeparam>
+            <param name="source">The source sequence</param>
+            <param name="seed1">The seed value for the first accumulator.</param>
+            <param name="accumulator1">The first accumulator.</param>
+            <param name="seed2">The seed value for the second accumulator.</param>
+            <param name="accumulator2">The second accumulator.</param>
+            <param name="seed3">The seed value for the third accumulator.</param>
+            <param name="accumulator3">The third accumulator.</param>
+            <param name="seed4">The seed value for the fourth accumulator.</param>
+            <param name="accumulator4">The fourth accumulator.</param>
+            <param name="seed5">The seed value for the fifth accumulator.</param>
+            <param name="accumulator5">The fifth accumulator.</param>
+            <param name="seed6">The seed value for the sixth accumulator.</param>
+            <param name="accumulator6">The sixth accumulator.</param>
+            <param name="resultSelector">
+            A function that projects a single result given the result of each
+            accumulator.</param>
+            <returns>The value returned by <paramref name="resultSelector"/>.</returns>
+            <remarks>
+            This operator executes immediately.
+            </remarks>
+        </member>
+        <member name="M:MoreLinq.MoreEnumerable.Aggregate``9(System.Collections.Generic.IEnumerable{``0},``1,System.Func{``1,``0,``1},``2,System.Func{``2,``0,``2},``3,System.Func{``3,``0,``3},``4,System.Func{``4,``0,``4},``5,System.Func{``5,``0,``5},``6,System.Func{``6,``0,``6},``7,System.Func{``7,``0,``7},System.Func{``1,``2,``3,``4,``5,``6,``7,``8})">
+            <summary>
+            Applies seven accumulators sequentially in a single pass over a
+            sequence.
+            </summary>
+            <typeparam name="T">The type of elements in <paramref name="source"/>.</typeparam>
+            <typeparam name="TAccumulate1">The type of first accumulator value.</typeparam>
+            <typeparam name="TAccumulate2">The type of second accumulator value.</typeparam>
+            <typeparam name="TAccumulate3">The type of third accumulator value.</typeparam>
+            <typeparam name="TAccumulate4">The type of fourth accumulator value.</typeparam>
+            <typeparam name="TAccumulate5">The type of fifth accumulator value.</typeparam>
+            <typeparam name="TAccumulate6">The type of sixth accumulator value.</typeparam>
+            <typeparam name="TAccumulate7">The type of seventh accumulator value.</typeparam>
+            <typeparam name="TResult">The type of the accumulated result.</typeparam>
+            <param name="source">The source sequence</param>
+            <param name="seed1">The seed value for the first accumulator.</param>
+            <param name="accumulator1">The first accumulator.</param>
+            <param name="seed2">The seed value for the second accumulator.</param>
+            <param name="accumulator2">The second accumulator.</param>
+            <param name="seed3">The seed value for the third accumulator.</param>
+            <param name="accumulator3">The third accumulator.</param>
+            <param name="seed4">The seed value for the fourth accumulator.</param>
+            <param name="accumulator4">The fourth accumulator.</param>
+            <param name="seed5">The seed value for the fifth accumulator.</param>
+            <param name="accumulator5">The fifth accumulator.</param>
+            <param name="seed6">The seed value for the sixth accumulator.</param>
+            <param name="accumulator6">The sixth accumulator.</param>
+            <param name="seed7">The seed value for the seventh accumulator.</param>
+            <param name="accumulator7">The seventh accumulator.</param>
+            <param name="resultSelector">
+            A function that projects a single result given the result of each
+            accumulator.</param>
+            <returns>The value returned by <paramref name="resultSelector"/>.</returns>
+            <remarks>
+            This operator executes immediately.
+            </remarks>
+        </member>
+        <member name="M:MoreLinq.MoreEnumerable.Aggregate``10(System.Collections.Generic.IEnumerable{``0},``1,System.Func{``1,``0,``1},``2,System.Func{``2,``0,``2},``3,System.Func{``3,``0,``3},``4,System.Func{``4,``0,``4},``5,System.Func{``5,``0,``5},``6,System.Func{``6,``0,``6},``7,System.Func{``7,``0,``7},``8,System.Func{``8,``0,``8},System.Func{``1,``2,``3,``4,``5,``6,``7,``8,``9})">
+            <summary>
+            Applies eight accumulators sequentially in a single pass over a
+            sequence.
+            </summary>
+            <typeparam name="T">The type of elements in <paramref name="source"/>.</typeparam>
+            <typeparam name="TAccumulate1">The type of first accumulator value.</typeparam>
+            <typeparam name="TAccumulate2">The type of second accumulator value.</typeparam>
+            <typeparam name="TAccumulate3">The type of third accumulator value.</typeparam>
+            <typeparam name="TAccumulate4">The type of fourth accumulator value.</typeparam>
+            <typeparam name="TAccumulate5">The type of fifth accumulator value.</typeparam>
+            <typeparam name="TAccumulate6">The type of sixth accumulator value.</typeparam>
+            <typeparam name="TAccumulate7">The type of seventh accumulator value.</typeparam>
+            <typeparam name="TAccumulate8">The type of eighth accumulator value.</typeparam>
+            <typeparam name="TResult">The type of the accumulated result.</typeparam>
+            <param name="source">The source sequence</param>
+            <param name="seed1">The seed value for the first accumulator.</param>
+            <param name="accumulator1">The first accumulator.</param>
+            <param name="seed2">The seed value for the second accumulator.</param>
+            <param name="accumulator2">The second accumulator.</param>
+            <param name="seed3">The seed value for the third accumulator.</param>
+            <param name="accumulator3">The third accumulator.</param>
+            <param name="seed4">The seed value for the fourth accumulator.</param>
+            <param name="accumulator4">The fourth accumulator.</param>
+            <param name="seed5">The seed value for the fifth accumulator.</param>
+            <param name="accumulator5">The fifth accumulator.</param>
+            <param name="seed6">The seed value for the sixth accumulator.</param>
+            <param name="accumulator6">The sixth accumulator.</param>
+            <param name="seed7">The seed value for the seventh accumulator.</param>
+            <param name="accumulator7">The seventh accumulator.</param>
+            <param name="seed8">The seed value for the eighth accumulator.</param>
+            <param name="accumulator8">The eighth accumulator.</param>
+            <param name="resultSelector">
+            A function that projects a single result given the result of each
+            accumulator.</param>
+            <returns>The value returned by <paramref name="resultSelector"/>.</returns>
+            <remarks>
+            This operator executes immediately.
+            </remarks>
+        </member>
         <member name="M:MoreLinq.MoreEnumerable.AggregateRight``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``0,``0})">
             <summary>
             Applies a right-associative accumulator function over a sequence.
@@ -176,7 +393,12 @@
             <typeparam name="TSource">Type of elements in <paramref name="source"/> sequence.</typeparam>
             <param name="source">Source sequence.</param>
             <param name="count">Count to assert.</param>
-            <param name="errorSelector">Function that returns the <see cref="T:System.Exception"/> object to throw.</param>
+            <param name="errorSelector">
+            Function that receives a comparison (a negative integer if actual
+            count is less than <paramref name="count"/> and a positive integer
+            if actual count is greater than <paramref name="count"/>) and
+            <paramref name="count"/> as arguments and which returns the
+            <see cref="T:System.Exception"/> object to throw.</param>
             <returns>
             Returns the original sequence as long it is contains the
             number of elements specified by <paramref name="count"/>.
@@ -783,7 +1005,8 @@
         <member name="M:MoreLinq.MoreEnumerable.EquiZip``3(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Func{``0,``1,``2})">
             <summary>
             Returns a projection of tuples, where each tuple contains the N-th
-            element from each of the argument sequences.
+            element from each of the argument sequences. An exception is thrown
+            if the input sequences are of different lengths.
             </summary>
             <typeparam name="TFirst">Type of elements in first sequence.</typeparam>
             <typeparam name="TSecond">Type of elements in second sequence.</typeparam>
@@ -796,6 +1019,9 @@
             A sequence that contains elements of the two input sequences,
             combined by <paramref name="resultSelector"/>.
             </returns>
+            <exception cref="T:System.InvalidOperationException">
+            The input sequences are of different lengths.
+            </exception>
             <example>
             <code><![CDATA[
             var numbers = new[] { 1, 2, 3, 4 };
@@ -806,17 +1032,14 @@
             "2B", "3C", "4D" in turn.
             </example>
             <remarks>
-            <para>
-            If the two input sequences are of different lengths then
-            <see cref="T:System.InvalidOperationException"/> is thrown.</para>
-            <para>
-            This operator uses deferred execution and streams its results.</para>
+            This operator uses deferred execution and streams its results.
             </remarks>
         </member>
         <member name="M:MoreLinq.MoreEnumerable.EquiZip``4(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Collections.Generic.IEnumerable{``2},System.Func{``0,``1,``2,``3})">
             <summary>
             Returns a projection of tuples, where each tuple contains the N-th
-            element from each of the argument sequences.
+            element from each of the argument sequences. An exception is thrown
+            if the input sequences are of different lengths.
             </summary>
             <typeparam name="T1">Type of elements in first sequence.</typeparam>
             <typeparam name="T2">Type of elements in second sequence.</typeparam>
@@ -831,6 +1054,9 @@
             A sequence that contains elements of the three input sequences,
             combined by <paramref name="resultSelector"/>.
             </returns>
+            <exception cref="T:System.InvalidOperationException">
+            The input sequences are of different lengths.
+            </exception>
             <example>
             <code><![CDATA[
             var numbers = new[] { 1, 2, 3, 4 };
@@ -842,16 +1068,14 @@
             "2Bb", "3Cc", "4Dd" in turn.
             </example>
             <remarks>
-            <para>If the three input sequences are of different lengths then
-            <see cref="T:System.InvalidOperationException"/> is thrown.</para>
-            <para>
-            This operator uses deferred execution and streams its results.</para>
+            This operator uses deferred execution and streams its results.
             </remarks>
         </member>
         <member name="M:MoreLinq.MoreEnumerable.EquiZip``5(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Collections.Generic.IEnumerable{``2},System.Collections.Generic.IEnumerable{``3},System.Func{``0,``1,``2,``3,``4})">
             <summary>
             Returns a projection of tuples, where each tuple contains the N-th
-            element from each of the argument sequences.
+            element from each of the argument sequences. An exception is thrown
+            if the input sequences are of different lengths.
             </summary>
             <typeparam name="T1">Type of elements in first sequence</typeparam>
             <typeparam name="T2">Type of elements in second sequence</typeparam>
@@ -868,6 +1092,9 @@
             A sequence that contains elements of the four input sequences,
             combined by <paramref name="resultSelector"/>.
             </returns>
+            <exception cref="T:System.InvalidOperationException">
+            The input sequences are of different lengths.
+            </exception>
             <example>
             <code><![CDATA[
             var numbers = new[] { 1, 2, 3, 4 };
@@ -880,11 +1107,7 @@
             "2BbFalse", "3CcTrue", "4DdFalse" in turn.
             </example>
             <remarks>
-            <para>
-            If the four input sequences are of different lengths then
-            <see cref="T:System.InvalidOperationException"/> is thrown.</para>
-            <para>
-            This operator uses deferred execution and streams its results.</para>
+            This operator uses deferred execution and streams its results.
             </remarks>
         </member>
         <member name="M:MoreLinq.MoreEnumerable.Evaluate``1(System.Collections.Generic.IEnumerable{System.Func{``0}})">
@@ -1213,8 +1436,33 @@
             and all nested sequences for which the predicate function
             returned <c>true</c>.
             </returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="predicate"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="source"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="predicate"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:MoreLinq.MoreEnumerable.Flatten(System.Collections.IEnumerable,System.Func{System.Object,System.Collections.IEnumerable})">
+            <summary>
+            Flattens a sequence containing arbitrarily-nested sequences. An
+            additional parameter specifies a function that projects an inner
+            sequence via a property of an object.
+            </summary>
+            <param name="source">The sequence that will be flattened.</param>
+            <param name="selector">
+            A function that receives each element of the sequence as an object
+            and projects an inner sequence to be flattened. If the function
+            returns <c>null</c> then the object argument is considered a leaf
+            of the flattening process.
+            </param>
+            <returns>
+            A sequence that contains the elements of <paramref name="source"/>
+            and all nested sequences projected via the
+            <paramref name="selector"/> function.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="source"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="selector"/> is <c>null</c>.</exception>
         </member>
         <member name="M:MoreLinq.MoreEnumerable.Fold``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})">
             <summary>
@@ -2042,6 +2290,44 @@
             <returns>A sequence of <see cref="T:System.Collections.Generic.KeyValuePair`2"/>.</returns>
             <remarks>This operator uses deferred execution and streams its
             results.</remarks>
+        </member>
+        <member name="M:MoreLinq.MoreEnumerable.IndexBy``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})">
+            <summary>
+            Applies a key-generating function to each element of a sequence and
+            returns a sequence that contains the elements of the original
+            sequence as well its key and index inside the group of its key.
+            </summary>
+            <typeparam name="TSource">Type of the source sequence elements.</typeparam>
+            <typeparam name="TKey">Type of the projected key.</typeparam>
+            <param name="source">Source sequence.</param>
+            <param name="keySelector">
+            Function that projects the key given an element in the source sequence.</param>
+            <returns>
+            A sequence of elements paired with their index within the key-group.
+            The index is the key and the element is the value of the pair.
+            </returns>
+        </member>
+        <member name="M:MoreLinq.MoreEnumerable.IndexBy``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1},System.Collections.Generic.IEqualityComparer{``1})">
+            <summary>
+            Applies a key-generating function to each element of a sequence and
+            returns a sequence that contains the elements of the original
+            sequence as well its key and index inside the group of its key.
+            An additional parameter specifies a comparer to use for testing the
+            equivalence of keys.
+            </summary>
+            <typeparam name="TSource">Type of the source sequence elements.</typeparam>
+            <typeparam name="TKey">Type of the projected key.</typeparam>
+            <param name="source">Source sequence.</param>
+            <param name="keySelector">
+            Function that projects the key given an element in the source sequence.</param>
+            <param name="comparer">
+            The equality comparer to use to determine whether or not keys are
+            equal. If <c>null</c>, the default equality comparer for
+            <typeparamref name="TSource"/> is used.</param>
+            <returns>
+            A sequence of elements paired with their index within the key-group.
+            The index is the key and the element is the value of the pair.
+            </returns>
         </member>
         <member name="M:MoreLinq.MoreEnumerable.Insert``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0},System.Int32)">
             <summary>
@@ -2883,7 +3169,9 @@
             <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
             <param name="source">The sequence to pad.</param>
             <param name="width">The width/length below which to pad.</param>
-            <param name="paddingSelector">Function to calculate padding.</param>
+            <param name="paddingSelector">
+            Function to calculate padding given the index of the missing element.
+            </param>
             <returns>
             Returns a sequence that is at least as wide/long as the width/length
             specified by the <paramref name="width"/> parameter.
@@ -2919,11 +3207,11 @@
             </remarks>
             <example>
             <code><![CDATA[
-            int[] numbers = { 123, 456, 789 };
-            var result = numbers.Pairwise((a, b) => a + b);
+            var source = new[] { "a", "b", "c", "d" };
+            var result = source.Pairwise((a, b) => a + b);
             ]]></code>
             The <c>result</c> variable, when iterated over, will yield
-            579 and 1245, in turn.
+            "ab", "bc" and "cd", in turn.
             </example>
         </member>
         <member name="M:MoreLinq.MoreEnumerable.PartialSort``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
@@ -3780,7 +4068,7 @@
         </member>
         <member name="M:MoreLinq.MoreEnumerable.Scan``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``0,``0})">
             <summary>
-            Peforms a scan (inclusive prefix sum) on a sequence of elements.
+            Performs a scan (inclusive prefix sum) on a sequence of elements.
             </summary>
             <remarks>
             An inclusive prefix sum returns an equal-length sequence where the
@@ -3827,6 +4115,50 @@
             <param name="seed">Initial state to seed</param>
             <param name="transformation">Transformation operation</param>
             <returns>The scanned sequence</returns>
+        </member>
+        <member name="M:MoreLinq.MoreEnumerable.ScanBy``3(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1},System.Func{``1,``2},System.Func{``2,``1,``0,``2})">
+            <summary>
+            Applies an accumulator function over sequence element keys,
+            returning the keys along with intermediate accumulator states.
+            </summary>
+            <typeparam name="TSource">Type of the elements of the source sequence.</typeparam>
+            <typeparam name="TKey">The type of the key.</typeparam>
+            <typeparam name="TState">Type of the state.</typeparam>
+            <param name="source">The source sequence.</param>
+            <param name="keySelector">
+            A function that returns the key given an element.</param>
+            <param name="seedSelector">
+            A function to determine the initial value for the accumulator that is
+            invoked once per key encountered.</param>
+            <param name="accumulator">
+            An accumulator function invoked for each element.</param>
+            <returns>
+            A sequence of keys paired with intermediate accumulator states.
+            </returns>
+        </member>
+        <member name="M:MoreLinq.MoreEnumerable.ScanBy``3(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1},System.Func{``1,``2},System.Func{``2,``1,``0,``2},System.Collections.Generic.IEqualityComparer{``1})">
+            <summary>
+            Applies an accumulator function over sequence element keys,
+            returning the keys along with intermediate accumulator states. An
+            additional parameter specifies the comparer to use to compare keys.
+            </summary>
+            <typeparam name="TSource">Type of the elements of the source sequence.</typeparam>
+            <typeparam name="TKey">The type of the key.</typeparam>
+            <typeparam name="TState">Type of the state.</typeparam>
+            <param name="source">The source sequence.</param>
+            <param name="keySelector">
+            A function that returns the key given an element.</param>
+            <param name="seedSelector">
+            A function to determine the initial value for the accumulator that is
+            invoked once per key encountered.</param>
+            <param name="accumulator">
+            An accumulator function invoked for each element.</param>
+            <param name="comparer">The equality comparer to use to determine
+            whether or not keys are equal. If <c>null</c>, the default equality
+            comparer for <typeparamref name="TSource"/> is used.</param>
+            <returns>
+            A sequence of keys paired with intermediate accumulator states.
+            </returns>
         </member>
         <member name="M:MoreLinq.MoreEnumerable.ScanRight``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``0,``0})">
             <summary>
@@ -4634,6 +4966,66 @@
             resulting array.
             </remarks>
         </member>
+        <member name="M:MoreLinq.MoreEnumerable.ToDataTable``2(System.Collections.Generic.IEnumerable{``0},``1)">
+            <summary>
+            Appends elements in the sequence as rows of a given <see cref="T:System.Data.DataTable"/> object.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <typeparam name="TTable"></typeparam>
+            <param name="source">The source.</param>
+            <param name="table"></param>
+            <returns>
+            A <see cref="T:System.Data.DataTable"/> or subclass representing the source.
+            </returns>
+            <remarks>This operator uses immediate execution.</remarks>
+        </member>
+        <member name="M:MoreLinq.MoreEnumerable.ToDataTable``1(System.Collections.Generic.IEnumerable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Object}}[])">
+            <summary>
+            Appends elements in the sequence as rows of a given <see cref="T:System.Data.DataTable"/>
+            object with a set of lambda expressions specifying which members (property
+            or field) of each element in the sequence will supply the column values.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">The source.</param>
+            <param name="expressions">Expressions providing access to element members.</param>
+            <returns>
+            A <see cref="T:System.Data.DataTable"/> representing the source.
+            </returns>
+            <remarks>This operator uses immediate execution.</remarks>
+        </member>
+        <member name="M:MoreLinq.MoreEnumerable.ToDataTable``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Converts a sequence to a <see cref="T:System.Data.DataTable"/> object.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">The source.</param>
+            <returns>
+            A <see cref="T:System.Data.DataTable"/> representing the source.
+            </returns>
+            <remarks>This operator uses immediate execution.</remarks>
+        </member>
+        <member name="M:MoreLinq.MoreEnumerable.ToDataTable``2(System.Collections.Generic.IEnumerable{``0},``1,System.Linq.Expressions.Expression{System.Func{``0,System.Object}}[])">
+            <summary>
+            Appends elements in the sequence as rows of a given <see cref="T:System.Data.DataTable"/>
+            object with a set of lambda expressions specifying which members (property
+            or field) of each element in the sequence will supply the column values.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <typeparam name="TTable">The type of the input and resulting <see cref="T:System.Data.DataTable"/> object.</typeparam>
+            <param name="source">The source.</param>
+            <param name="table">The <see cref="T:System.Data.DataTable"/> type of object where to add rows</param>
+            <param name="expressions">Expressions providing access to element members.</param>
+            <returns>
+            A <see cref="T:System.Data.DataTable"/> or subclass representing the source.
+            </returns>
+            <remarks>This operator uses immediate execution.</remarks>
+        </member>
+        <member name="M:MoreLinq.MoreEnumerable.BuildOrBindSchema(System.Data.DataTable,System.Reflection.MemberInfo[])">
+            <remarks>
+            The resulting array may contain null entries and those represent
+            columns for which there is no source member supplying a value.
+            </remarks>
+        </member>
         <member name="M:MoreLinq.MoreEnumerable.ToDelimitedString``1(System.Collections.Generic.IEnumerable{``0},System.String)">
             <summary>
             Creates a delimited string from a sequence of values and
@@ -5334,7 +5726,10 @@
         <member name="M:MoreLinq.MoreEnumerable.ZipLongest``3(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Func{``0,``1,``2})">
             <summary>
             Returns a projection of tuples, where each tuple contains the N-th
-            element from each of the argument sequences.
+            element from each of the argument sequences. The resulting sequence
+            will always be as long as the longest of input sequences where the
+            default value of each of the shorter sequence element types is used
+            for padding.
             </summary>
             <typeparam name="TFirst">Type of elements in first sequence.</typeparam>
             <typeparam name="TSecond">Type of elements in second sequence.</typeparam>
@@ -5357,19 +5752,16 @@
             "2B", "3C", "0D" in turn.
             </example>
             <remarks>
-            <para>
-            If the two input sequences are of different lengths then the result
-            sequence will always be as long as the longer of the two input
-            sequences. The default value of the shorter sequence element type
-            is used for padding.</para>
-            <para>
-            This operator uses deferred execution and streams its results.</para>
+            This operator uses deferred execution and streams its results.
             </remarks>
         </member>
         <member name="M:MoreLinq.MoreEnumerable.ZipLongest``4(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Collections.Generic.IEnumerable{``2},System.Func{``0,``1,``2,``3})">
             <summary>
-            Returns a projection of tuples, where each tuple contains the N-th element
-            from each of the argument sequences.
+            Returns a projection of tuples, where each tuple contains the N-th
+            element from each of the argument sequences. The resulting sequence
+            will always be as long as the longest of input sequences where the
+            default value of each of the shorter sequence element types is used
+            for padding.
             </summary>
             <typeparam name="T1">Type of elements in first sequence.</typeparam>
             <typeparam name="T2">Type of elements in second sequence.</typeparam>
@@ -5395,20 +5787,16 @@
             "2Bb", "3Cc", "0Dd", "0e" in turn.
             </example>
             <remarks>
-            <para>
-            If the input sequences are of different lengths then the result
-            sequence will always be as long as the longest of input sequences.
-            The default value of the each shorter sequence element type is used
-            for padding. This operator uses deferred execution and streams its
-            results.</para>
-            <para>
-            This operator uses deferred execution and streams its results.</para>
+            This operator uses deferred execution and streams its results.
             </remarks>
         </member>
         <member name="M:MoreLinq.MoreEnumerable.ZipLongest``5(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Collections.Generic.IEnumerable{``2},System.Collections.Generic.IEnumerable{``3},System.Func{``0,``1,``2,``3,``4})">
             <summary>
-            Returns a projection of tuples, where each tuple contains the N-th element
-            from each of the argument sequences.
+            Returns a projection of tuples, where each tuple contains the N-th
+            element from each of the argument sequences. The resulting sequence
+            will always be as long as the longest of input sequences where the
+            default value of each of the shorter sequence element types is used
+            for padding.
             </summary>
             <typeparam name="T1">Type of elements in first sequence</typeparam>
             <typeparam name="T2">Type of elements in second sequence</typeparam>
@@ -5437,19 +5825,14 @@
             "2BbFalse", "3CcTrue", "0DdFalse", "0eTrue", "0\0False" in turn.
             </example>
             <remarks>
-            <para>
-            If the input sequences are of different lengths then the result
-            sequence will always be as long as the longest of input sequences.
-            The default value of the each shorter sequence element type is used
-            for padding.</para>
-            <para>
-            This operator uses deferred execution and streams its results.</para>
+            This operator uses deferred execution and streams its results.
             </remarks>
         </member>
         <member name="M:MoreLinq.MoreEnumerable.ZipShortest``3(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Func{``0,``1,``2})">
             <summary>
-            Returns a projection of tuples, where each tuple contains the N-th element
-            from each of the argument sequences.
+            Returns a projection of tuples, where each tuple contains the N-th
+            element from each of the argument sequences. The resulting sequence
+            is as short as the shortest input sequence.
             </summary>
             <typeparam name="TFirst">Type of elements in first sequence.</typeparam>
             <typeparam name="TSecond">Type of elements in second sequence.</typeparam>
@@ -5471,9 +5854,10 @@
             </example>
             <remarks>
             <para>
-            If the two input sequences are of different lengths, the result
-            sequence is terminated as soon as the shortest input sequence is
-            exhausted.</para>
+            If the input sequences are of different lengths, the result sequence
+            is terminated as soon as the shortest input sequence is exhausted
+            and remainder elements from the longer sequences are never consumed.
+            </para>
             <para>
             This operator uses deferred execution and streams its results.</para>
             </remarks>
@@ -5481,7 +5865,8 @@
         <member name="M:MoreLinq.MoreEnumerable.ZipShortest``4(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Collections.Generic.IEnumerable{``2},System.Func{``0,``1,``2,``3})">
             <summary>
             Returns a projection of tuples, where each tuple contains the N-th
-            element  from each of the argument sequences.
+            element from each of the argument sequences. The resulting sequence
+            is as short as the shortest input sequence.
             </summary>
             <typeparam name="T1">Type of elements in first sequence.</typeparam>
             <typeparam name="T2">Type of elements in second sequence.</typeparam>
@@ -5508,7 +5893,8 @@
             <remarks>
             <para>
             If the input sequences are of different lengths, the result sequence
-            is terminated as soon as the shortest input sequence is exhausted.
+            is terminated as soon as the shortest input sequence is exhausted
+            and remainder elements from the longer sequences are never consumed.
             </para>
             <para>
             This operator uses deferred execution and streams its results.</para>
@@ -5517,7 +5903,8 @@
         <member name="M:MoreLinq.MoreEnumerable.ZipShortest``5(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Collections.Generic.IEnumerable{``2},System.Collections.Generic.IEnumerable{``3},System.Func{``0,``1,``2,``3,``4})">
             <summary>
             Returns a projection of tuples, where each tuple contains the N-th
-            element from each of the argument sequences.
+            element from each of the argument sequences. The resulting sequence
+            is as short as the shortest input sequence.
             </summary>
             <typeparam name="T1">Type of elements in first sequence.</typeparam>
             <typeparam name="T2">Type of elements in second sequence.</typeparam>
@@ -5547,7 +5934,8 @@
             <remarks>
             <para>
             If the input sequences are of different lengths, the result sequence
-            is terminated as soon as the shortest input sequence is exhausted.
+            is terminated as soon as the shortest input sequence is exhausted
+            and remainder elements from the longer sequences are never consumed.
             </para>
             <para>
             This operator uses deferred execution and streams its results.</para>
@@ -5565,6 +5953,513 @@
             PUBLISHED FOR FIELD EXPERIMENTATION TO SOLICIT FEEDBACK ON THEIR
             UTILITY AND DESIGN/IMPLEMENTATION DEFECTS.</strong></para>
             </summary>
+        </member>
+        <member name="M:MoreLinq.Experimental.ExperimentalEnumerable.Aggregate``4(System.Collections.Generic.IEnumerable{``0},System.Func{System.IObservable{``0},System.IObservable{``1}},System.Func{System.IObservable{``0},System.IObservable{``2}},System.Func{``1,``2,``3})">
+            <summary>
+            Applies two accumulator queries sequentially in a single
+            pass over a sequence.
+            </summary>
+            <typeparam name="T">The type of elements in <paramref name="source"/>.</typeparam>
+            <typeparam name="TResult1">The type of the result of the first accumulator.</typeparam>
+            <typeparam name="TResult2">The type of the result of the second accumulator.</typeparam>
+            <typeparam name="TResult">The type of the accumulated result.</typeparam>
+            <param name="source">The source sequence</param>
+            <param name="accumulator1">The first accumulator.</param>
+            <param name="accumulator2">The second accumulator.</param>
+            <param name="resultSelector">
+            A function that projects a single result given the result of each
+            accumulator.</param>
+            <returns>The value returned by <paramref name="resultSelector"/>.</returns>
+            <exception cref="T:System.InvalidOperationException">
+            An <see cref="T:System.IObservable`1"/> returned by an accumulator function
+            produced zero or more than a single aggregate result.
+            </exception>
+            <remarks>
+            <para>This operator executes immediately.</para>
+            <para>
+            Each accumulator argument is a function that receives an
+            <see cref="T:System.IObservable`1"/>, which when subscribed to, produces the
+            items in the <paramref name="source"/> sequence and in original
+            order; the function must then return an <see cref="T:System.IObservable`1"/>
+            that produces a single aggregate on completion (when
+            <see cref="M:System.IObserver`1.OnCompleted"/> is called. An error is raised
+            at run-time if the <see cref="T:System.IObserver`1"/> returned by an
+            accumulator function produces no result or produces more than a
+            single result.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:MoreLinq.Experimental.ExperimentalEnumerable.Aggregate``5(System.Collections.Generic.IEnumerable{``0},System.Func{System.IObservable{``0},System.IObservable{``1}},System.Func{System.IObservable{``0},System.IObservable{``2}},System.Func{System.IObservable{``0},System.IObservable{``3}},System.Func{``1,``2,``3,``4})">
+            <summary>
+            Applies three accumulator queries sequentially in a single
+            pass over a sequence.
+            </summary>
+            <typeparam name="T">The type of elements in <paramref name="source"/>.</typeparam>
+            <typeparam name="TResult1">The type of the result of the first accumulator.</typeparam>
+            <typeparam name="TResult2">The type of the result of the second accumulator.</typeparam>
+            <typeparam name="TResult3">The type of the result of the third accumulator.</typeparam>
+            <typeparam name="TResult">The type of the accumulated result.</typeparam>
+            <param name="source">The source sequence</param>
+            <param name="accumulator1">The first accumulator.</param>
+            <param name="accumulator2">The second accumulator.</param>
+            <param name="accumulator3">The third accumulator.</param>
+            <param name="resultSelector">
+            A function that projects a single result given the result of each
+            accumulator.</param>
+            <returns>The value returned by <paramref name="resultSelector"/>.</returns>
+            <exception cref="T:System.InvalidOperationException">
+            An <see cref="T:System.IObservable`1"/> returned by an accumulator function
+            produced zero or more than a single aggregate result.
+            </exception>
+            <remarks>
+            <para>This operator executes immediately.</para>
+            <para>
+            Each accumulator argument is a function that receives an
+            <see cref="T:System.IObservable`1"/>, which when subscribed to, produces the
+            items in the <paramref name="source"/> sequence and in original
+            order; the function must then return an <see cref="T:System.IObservable`1"/>
+            that produces a single aggregate on completion (when
+            <see cref="M:System.IObserver`1.OnCompleted"/> is called. An error is raised
+            at run-time if the <see cref="T:System.IObserver`1"/> returned by an
+            accumulator function produces no result or produces more than a
+            single result.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:MoreLinq.Experimental.ExperimentalEnumerable.Aggregate``6(System.Collections.Generic.IEnumerable{``0},System.Func{System.IObservable{``0},System.IObservable{``1}},System.Func{System.IObservable{``0},System.IObservable{``2}},System.Func{System.IObservable{``0},System.IObservable{``3}},System.Func{System.IObservable{``0},System.IObservable{``4}},System.Func{``1,``2,``3,``4,``5})">
+            <summary>
+            Applies four accumulator queries sequentially in a single
+            pass over a sequence.
+            </summary>
+            <typeparam name="T">The type of elements in <paramref name="source"/>.</typeparam>
+            <typeparam name="TResult1">The type of the result of the first accumulator.</typeparam>
+            <typeparam name="TResult2">The type of the result of the second accumulator.</typeparam>
+            <typeparam name="TResult3">The type of the result of the third accumulator.</typeparam>
+            <typeparam name="TResult4">The type of the result of the fourth accumulator.</typeparam>
+            <typeparam name="TResult">The type of the accumulated result.</typeparam>
+            <param name="source">The source sequence</param>
+            <param name="accumulator1">The first accumulator.</param>
+            <param name="accumulator2">The second accumulator.</param>
+            <param name="accumulator3">The third accumulator.</param>
+            <param name="accumulator4">The fourth accumulator.</param>
+            <param name="resultSelector">
+            A function that projects a single result given the result of each
+            accumulator.</param>
+            <returns>The value returned by <paramref name="resultSelector"/>.</returns>
+            <exception cref="T:System.InvalidOperationException">
+            An <see cref="T:System.IObservable`1"/> returned by an accumulator function
+            produced zero or more than a single aggregate result.
+            </exception>
+            <remarks>
+            <para>This operator executes immediately.</para>
+            <para>
+            Each accumulator argument is a function that receives an
+            <see cref="T:System.IObservable`1"/>, which when subscribed to, produces the
+            items in the <paramref name="source"/> sequence and in original
+            order; the function must then return an <see cref="T:System.IObservable`1"/>
+            that produces a single aggregate on completion (when
+            <see cref="M:System.IObserver`1.OnCompleted"/> is called. An error is raised
+            at run-time if the <see cref="T:System.IObserver`1"/> returned by an
+            accumulator function produces no result or produces more than a
+            single result.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:MoreLinq.Experimental.ExperimentalEnumerable.Aggregate``7(System.Collections.Generic.IEnumerable{``0},System.Func{System.IObservable{``0},System.IObservable{``1}},System.Func{System.IObservable{``0},System.IObservable{``2}},System.Func{System.IObservable{``0},System.IObservable{``3}},System.Func{System.IObservable{``0},System.IObservable{``4}},System.Func{System.IObservable{``0},System.IObservable{``5}},System.Func{``1,``2,``3,``4,``5,``6})">
+            <summary>
+            Applies five accumulator queries sequentially in a single
+            pass over a sequence.
+            </summary>
+            <typeparam name="T">The type of elements in <paramref name="source"/>.</typeparam>
+            <typeparam name="TResult1">The type of the result of the first accumulator.</typeparam>
+            <typeparam name="TResult2">The type of the result of the second accumulator.</typeparam>
+            <typeparam name="TResult3">The type of the result of the third accumulator.</typeparam>
+            <typeparam name="TResult4">The type of the result of the fourth accumulator.</typeparam>
+            <typeparam name="TResult5">The type of the result of the fifth accumulator.</typeparam>
+            <typeparam name="TResult">The type of the accumulated result.</typeparam>
+            <param name="source">The source sequence</param>
+            <param name="accumulator1">The first accumulator.</param>
+            <param name="accumulator2">The second accumulator.</param>
+            <param name="accumulator3">The third accumulator.</param>
+            <param name="accumulator4">The fourth accumulator.</param>
+            <param name="accumulator5">The fifth accumulator.</param>
+            <param name="resultSelector">
+            A function that projects a single result given the result of each
+            accumulator.</param>
+            <returns>The value returned by <paramref name="resultSelector"/>.</returns>
+            <exception cref="T:System.InvalidOperationException">
+            An <see cref="T:System.IObservable`1"/> returned by an accumulator function
+            produced zero or more than a single aggregate result.
+            </exception>
+            <remarks>
+            <para>This operator executes immediately.</para>
+            <para>
+            Each accumulator argument is a function that receives an
+            <see cref="T:System.IObservable`1"/>, which when subscribed to, produces the
+            items in the <paramref name="source"/> sequence and in original
+            order; the function must then return an <see cref="T:System.IObservable`1"/>
+            that produces a single aggregate on completion (when
+            <see cref="M:System.IObserver`1.OnCompleted"/> is called. An error is raised
+            at run-time if the <see cref="T:System.IObserver`1"/> returned by an
+            accumulator function produces no result or produces more than a
+            single result.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:MoreLinq.Experimental.ExperimentalEnumerable.Aggregate``8(System.Collections.Generic.IEnumerable{``0},System.Func{System.IObservable{``0},System.IObservable{``1}},System.Func{System.IObservable{``0},System.IObservable{``2}},System.Func{System.IObservable{``0},System.IObservable{``3}},System.Func{System.IObservable{``0},System.IObservable{``4}},System.Func{System.IObservable{``0},System.IObservable{``5}},System.Func{System.IObservable{``0},System.IObservable{``6}},System.Func{``1,``2,``3,``4,``5,``6,``7})">
+            <summary>
+            Applies six accumulator queries sequentially in a single
+            pass over a sequence.
+            </summary>
+            <typeparam name="T">The type of elements in <paramref name="source"/>.</typeparam>
+            <typeparam name="TResult1">The type of the result of the first accumulator.</typeparam>
+            <typeparam name="TResult2">The type of the result of the second accumulator.</typeparam>
+            <typeparam name="TResult3">The type of the result of the third accumulator.</typeparam>
+            <typeparam name="TResult4">The type of the result of the fourth accumulator.</typeparam>
+            <typeparam name="TResult5">The type of the result of the fifth accumulator.</typeparam>
+            <typeparam name="TResult6">The type of the result of the sixth accumulator.</typeparam>
+            <typeparam name="TResult">The type of the accumulated result.</typeparam>
+            <param name="source">The source sequence</param>
+            <param name="accumulator1">The first accumulator.</param>
+            <param name="accumulator2">The second accumulator.</param>
+            <param name="accumulator3">The third accumulator.</param>
+            <param name="accumulator4">The fourth accumulator.</param>
+            <param name="accumulator5">The fifth accumulator.</param>
+            <param name="accumulator6">The sixth accumulator.</param>
+            <param name="resultSelector">
+            A function that projects a single result given the result of each
+            accumulator.</param>
+            <returns>The value returned by <paramref name="resultSelector"/>.</returns>
+            <exception cref="T:System.InvalidOperationException">
+            An <see cref="T:System.IObservable`1"/> returned by an accumulator function
+            produced zero or more than a single aggregate result.
+            </exception>
+            <remarks>
+            <para>This operator executes immediately.</para>
+            <para>
+            Each accumulator argument is a function that receives an
+            <see cref="T:System.IObservable`1"/>, which when subscribed to, produces the
+            items in the <paramref name="source"/> sequence and in original
+            order; the function must then return an <see cref="T:System.IObservable`1"/>
+            that produces a single aggregate on completion (when
+            <see cref="M:System.IObserver`1.OnCompleted"/> is called. An error is raised
+            at run-time if the <see cref="T:System.IObserver`1"/> returned by an
+            accumulator function produces no result or produces more than a
+            single result.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:MoreLinq.Experimental.ExperimentalEnumerable.Aggregate``9(System.Collections.Generic.IEnumerable{``0},System.Func{System.IObservable{``0},System.IObservable{``1}},System.Func{System.IObservable{``0},System.IObservable{``2}},System.Func{System.IObservable{``0},System.IObservable{``3}},System.Func{System.IObservable{``0},System.IObservable{``4}},System.Func{System.IObservable{``0},System.IObservable{``5}},System.Func{System.IObservable{``0},System.IObservable{``6}},System.Func{System.IObservable{``0},System.IObservable{``7}},System.Func{``1,``2,``3,``4,``5,``6,``7,``8})">
+            <summary>
+            Applies seven accumulator queries sequentially in a single
+            pass over a sequence.
+            </summary>
+            <typeparam name="T">The type of elements in <paramref name="source"/>.</typeparam>
+            <typeparam name="TResult1">The type of the result of the first accumulator.</typeparam>
+            <typeparam name="TResult2">The type of the result of the second accumulator.</typeparam>
+            <typeparam name="TResult3">The type of the result of the third accumulator.</typeparam>
+            <typeparam name="TResult4">The type of the result of the fourth accumulator.</typeparam>
+            <typeparam name="TResult5">The type of the result of the fifth accumulator.</typeparam>
+            <typeparam name="TResult6">The type of the result of the sixth accumulator.</typeparam>
+            <typeparam name="TResult7">The type of the result of the seventh accumulator.</typeparam>
+            <typeparam name="TResult">The type of the accumulated result.</typeparam>
+            <param name="source">The source sequence</param>
+            <param name="accumulator1">The first accumulator.</param>
+            <param name="accumulator2">The second accumulator.</param>
+            <param name="accumulator3">The third accumulator.</param>
+            <param name="accumulator4">The fourth accumulator.</param>
+            <param name="accumulator5">The fifth accumulator.</param>
+            <param name="accumulator6">The sixth accumulator.</param>
+            <param name="accumulator7">The seventh accumulator.</param>
+            <param name="resultSelector">
+            A function that projects a single result given the result of each
+            accumulator.</param>
+            <returns>The value returned by <paramref name="resultSelector"/>.</returns>
+            <exception cref="T:System.InvalidOperationException">
+            An <see cref="T:System.IObservable`1"/> returned by an accumulator function
+            produced zero or more than a single aggregate result.
+            </exception>
+            <remarks>
+            <para>This operator executes immediately.</para>
+            <para>
+            Each accumulator argument is a function that receives an
+            <see cref="T:System.IObservable`1"/>, which when subscribed to, produces the
+            items in the <paramref name="source"/> sequence and in original
+            order; the function must then return an <see cref="T:System.IObservable`1"/>
+            that produces a single aggregate on completion (when
+            <see cref="M:System.IObserver`1.OnCompleted"/> is called. An error is raised
+            at run-time if the <see cref="T:System.IObserver`1"/> returned by an
+            accumulator function produces no result or produces more than a
+            single result.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:MoreLinq.Experimental.ExperimentalEnumerable.Aggregate``10(System.Collections.Generic.IEnumerable{``0},System.Func{System.IObservable{``0},System.IObservable{``1}},System.Func{System.IObservable{``0},System.IObservable{``2}},System.Func{System.IObservable{``0},System.IObservable{``3}},System.Func{System.IObservable{``0},System.IObservable{``4}},System.Func{System.IObservable{``0},System.IObservable{``5}},System.Func{System.IObservable{``0},System.IObservable{``6}},System.Func{System.IObservable{``0},System.IObservable{``7}},System.Func{System.IObservable{``0},System.IObservable{``8}},System.Func{``1,``2,``3,``4,``5,``6,``7,``8,``9})">
+            <summary>
+            Applies eight accumulator queries sequentially in a single
+            pass over a sequence.
+            </summary>
+            <typeparam name="T">The type of elements in <paramref name="source"/>.</typeparam>
+            <typeparam name="TResult1">The type of the result of the first accumulator.</typeparam>
+            <typeparam name="TResult2">The type of the result of the second accumulator.</typeparam>
+            <typeparam name="TResult3">The type of the result of the third accumulator.</typeparam>
+            <typeparam name="TResult4">The type of the result of the fourth accumulator.</typeparam>
+            <typeparam name="TResult5">The type of the result of the fifth accumulator.</typeparam>
+            <typeparam name="TResult6">The type of the result of the sixth accumulator.</typeparam>
+            <typeparam name="TResult7">The type of the result of the seventh accumulator.</typeparam>
+            <typeparam name="TResult8">The type of the result of the eighth accumulator.</typeparam>
+            <typeparam name="TResult">The type of the accumulated result.</typeparam>
+            <param name="source">The source sequence</param>
+            <param name="accumulator1">The first accumulator.</param>
+            <param name="accumulator2">The second accumulator.</param>
+            <param name="accumulator3">The third accumulator.</param>
+            <param name="accumulator4">The fourth accumulator.</param>
+            <param name="accumulator5">The fifth accumulator.</param>
+            <param name="accumulator6">The sixth accumulator.</param>
+            <param name="accumulator7">The seventh accumulator.</param>
+            <param name="accumulator8">The eighth accumulator.</param>
+            <param name="resultSelector">
+            A function that projects a single result given the result of each
+            accumulator.</param>
+            <returns>The value returned by <paramref name="resultSelector"/>.</returns>
+            <exception cref="T:System.InvalidOperationException">
+            An <see cref="T:System.IObservable`1"/> returned by an accumulator function
+            produced zero or more than a single aggregate result.
+            </exception>
+            <remarks>
+            <para>This operator executes immediately.</para>
+            <para>
+            Each accumulator argument is a function that receives an
+            <see cref="T:System.IObservable`1"/>, which when subscribed to, produces the
+            items in the <paramref name="source"/> sequence and in original
+            order; the function must then return an <see cref="T:System.IObservable`1"/>
+            that produces a single aggregate on completion (when
+            <see cref="M:System.IObserver`1.OnCompleted"/> is called. An error is raised
+            at run-time if the <see cref="T:System.IObserver`1"/> returned by an
+            accumulator function produces no result or produces more than a
+            single result.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:MoreLinq.Experimental.ExperimentalEnumerable.AsSequential``1(MoreLinq.Experimental.IAwaitQuery{``0})">
+            <summary>
+            Converts a query whose results evaluate asynchronously to use
+            sequential instead of concurrent evaluation.
+            </summary>
+            <typeparam name="T">The type of the source elements.</typeparam>
+            <param name="source">The source sequence.</param>
+            <returns>The converted sequence.</returns>
+        </member>
+        <member name="M:MoreLinq.Experimental.ExperimentalEnumerable.MaxConcurrency``1(MoreLinq.Experimental.IAwaitQuery{``0},System.Int32)">
+            <summary>
+            Returns a query whose results evaluate asynchronously to use a
+            concurrency limit.
+            </summary>
+            <typeparam name="T">The type of the source elements.</typeparam>
+            <param name="source">The source sequence.</param>
+            <param name="value"></param>
+            <returns>
+            A query whose results evaluate asynchronously using the given
+            concurrency limit.</returns>
+        </member>
+        <member name="M:MoreLinq.Experimental.ExperimentalEnumerable.UnboundedConcurrency``1(MoreLinq.Experimental.IAwaitQuery{``0})">
+            <summary>
+            Returns a query whose results evaluate asynchronously and
+            concurrently with no defined limitation on concurrency.
+            </summary>
+            <typeparam name="T">The type of the source elements.</typeparam>
+            <param name="source">The source sequence.</param>
+            <returns>
+            A query whose results evaluate asynchronously using no defined
+            limitation on concurrency.</returns>
+        </member>
+        <member name="M:MoreLinq.Experimental.ExperimentalEnumerable.Scheduler``1(MoreLinq.Experimental.IAwaitQuery{``0},System.Threading.Tasks.TaskScheduler)">
+            <summary>
+            Returns a query whose results evaluate asynchronously and uses the
+            given scheduler for the workhorse task.
+            </summary>
+            <typeparam name="T">The type of the source elements.</typeparam>
+            <param name="source">The source sequence.</param>
+            <param name="value">The scheduler to use.</param>
+            <returns>
+            A query whose results evaluate asynchronously and uses the
+            given scheduler for the workhorse task.</returns>
+        </member>
+        <member name="M:MoreLinq.Experimental.ExperimentalEnumerable.AsOrdered``1(MoreLinq.Experimental.IAwaitQuery{``0})">
+            <summary>
+            Returns a query whose results evaluate asynchronously but which
+            are returned in the order of the source.
+            </summary>
+            <typeparam name="T">The type of the source elements.</typeparam>
+            <param name="source">The source sequence.</param>
+            <returns>
+            A query whose results evaluate asynchronously but which
+            are returned in the order of the source.</returns>
+            <remarks>
+            Internally, the asynchronous operations will be done concurrently
+            but the results will be yielded in order.
+            </remarks>
+        </member>
+        <member name="M:MoreLinq.Experimental.ExperimentalEnumerable.AsUnordered``1(MoreLinq.Experimental.IAwaitQuery{``0})">
+            <summary>
+            Returns a query whose results evaluate asynchronously but which
+            are returned without guarantee of the source order.
+            </summary>
+            <typeparam name="T">The type of the source elements.</typeparam>
+            <param name="source">The source sequence.</param>
+            <returns>
+            A query whose results evaluate asynchronously but which
+            are returned without guarantee of the source order.</returns>
+        </member>
+        <member name="M:MoreLinq.Experimental.ExperimentalEnumerable.PreserveOrder``1(MoreLinq.Experimental.IAwaitQuery{``0},System.Boolean)">
+            <summary>
+            Returns a query whose results evaluate asynchronously and a Boolean
+            argument indicating whether the source order of the results is
+            preserved.
+            </summary>
+            <typeparam name="T">The type of the source elements.</typeparam>
+            <param name="source">The source sequence.</param>
+            <param name="value">
+            A Boolean where <c>true</c> means results are in source order and
+            <c>false</c> means that results can be delivered in order of
+            efficiency.</param>
+            <returns>
+            A query whose results evaluate asynchronously and returns the
+            results ordered or unordered based on <paramref name="value"/>.
+            </returns>
+        </member>
+        <member name="M:MoreLinq.Experimental.ExperimentalEnumerable.Await``1(System.Collections.Generic.IEnumerable{System.Threading.Tasks.Task{``0}})">
+            <summary>
+            Creates a sequence query that streams the result of each task in
+            the source sequence as it completes asynchronously.
+            </summary>
+            <typeparam name="T">
+            The type of each task's result as well as the type of the elements
+            of the resulting sequence.</typeparam>
+            <param name="source">The source sequence of tasks.</param>
+            <returns>
+            A sequence query that streams the result of each task in
+            <paramref name="source"/> as it completes asynchronously.
+            </returns>
+            <remarks>
+            <para>
+            This method uses deferred execution semantics. The results are
+            yielded as each asynchronous task completes and, by default,
+            not guaranteed to be based on the source sequence order. If order
+            is important, compose further with
+            <see cref="M:MoreLinq.Experimental.ExperimentalEnumerable.AsOrdered``1(MoreLinq.Experimental.IAwaitQuery{``0})"/>.</para>
+            <para>
+            This method starts a new task where the tasks are awaited. If the
+            resulting sequence is partially consumed then there's a good chance
+            that some tasks will be wasted, those that are in flight.</para>
+            <para>
+            The tasks in <paramref name="source"/> are already assumed to be in
+            flight therefore changing concurrency options via
+            <see cref="M:MoreLinq.Experimental.ExperimentalEnumerable.AsSequential``1(MoreLinq.Experimental.IAwaitQuery{``0})"/>, <see cref="M:MoreLinq.Experimental.ExperimentalEnumerable.MaxConcurrency``1(MoreLinq.Experimental.IAwaitQuery{``0},System.Int32)"/> or
+            <see cref="M:MoreLinq.Experimental.ExperimentalEnumerable.UnboundedConcurrency``1(MoreLinq.Experimental.IAwaitQuery{``0})"/> will only change how many
+            tasks are awaited at any given moment, not how many will be
+            kept in flight. For the latter effect, use the other overload.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:MoreLinq.Experimental.ExperimentalEnumerable.Await``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Threading.CancellationToken,System.Threading.Tasks.Task{``1}})">
+            <summary>
+            Creates a sequence query that streams the result of each task in
+            the source sequence as it completes asynchronously. A
+            <see cref="T:System.Threading.CancellationToken"/> is passed for each asynchronous
+            evaluation to abort any asynchronous operations in flight if the
+            sequence is not fully iterated.
+            </summary>
+            <typeparam name="T">The type of the source elements.</typeparam>
+            <typeparam name="TResult">The type of the result elements.</typeparam>
+            <param name="source">The source sequence.</param>
+            <param name="evaluator">A function to begin the asynchronous
+            evaluation of each element, the second parameter of which is a
+            <see cref="T:System.Threading.CancellationToken"/> that can be used to abort
+            asynchronous operations.</param>
+            <returns>
+            A sequence query that stream its results as they are
+            evaluated asynchronously.
+            </returns>
+            <remarks>
+            <para>
+            This method uses deferred execution semantics. The results are
+            yielded as each asynchronous evaluation completes and, by default,
+            not guaranteed to be based on the source sequence order. If order
+            is important, compose further with
+            <see cref="M:MoreLinq.Experimental.ExperimentalEnumerable.AsOrdered``1(MoreLinq.Experimental.IAwaitQuery{``0})"/>.</para>
+            <para>
+            This method starts a new task where the asynchronous evaluations
+            take place and awaited. If the resulting sequence is partially
+            consumed then there's a good chance that some projection work will
+            be wasted and a cooperative effort is done that depends on the
+            <paramref name="evaluator"/> function (via a
+            <see cref="T:System.Threading.CancellationToken"/> as its second argument) to cancel
+            those in flight.</para>
+            <para>
+            The <paramref name="evaluator"/> function should be designed to be
+            thread-agnostic.</para>
+            <para>
+            The task returned by <paramref name="evaluator"/> should be started
+            when the function is called (and not just a mere projection)
+            otherwise changing concurrency options via
+            <see cref="M:MoreLinq.Experimental.ExperimentalEnumerable.AsSequential``1(MoreLinq.Experimental.IAwaitQuery{``0})"/>, <see cref="M:MoreLinq.Experimental.ExperimentalEnumerable.MaxConcurrency``1(MoreLinq.Experimental.IAwaitQuery{``0},System.Int32)"/> or
+            <see cref="M:MoreLinq.Experimental.ExperimentalEnumerable.UnboundedConcurrency``1(MoreLinq.Experimental.IAwaitQuery{``0})"/> will only change how many
+            tasks are awaited at any given moment, not how many will be
+            kept in flight.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:MoreLinq.Experimental.ExperimentalEnumerable.AwaitCompletion``3(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Threading.CancellationToken,System.Threading.Tasks.Task{``1}},System.Func{``0,System.Threading.Tasks.Task{``1},``2})">
+            <summary>
+            Awaits completion of all asynchronous evaluations irrespective of
+            whether they succeed or fail. An additional argument specifies a
+            function that projects the final result given the source item and
+            completed task.
+            </summary>
+            <typeparam name="T">The type of the source elements.</typeparam>
+            <typeparam name="TTaskResult"> The type of the tasks's result.</typeparam>
+            <typeparam name="TResult">The type of the result elements.</typeparam>
+            <param name="source">The source sequence.</param>
+            <param name="evaluator">A function to begin the asynchronous
+            evaluation of each element, the second parameter of which is a
+            <see cref="T:System.Threading.CancellationToken"/> that can be used to abort
+            asynchronous operations.</param>
+            <param name="resultSelector">A fucntion that projects the final
+            result given the source item and its asynchronous completion
+            result.</param>
+            <returns>
+            A sequence query that stream its results as they are
+            evaluated asynchronously.
+            </returns>
+            <remarks>
+            <para>
+            This method uses deferred execution semantics. The results are
+            yielded as each asynchronous evaluation completes and, by default,
+            not guaranteed to be based on the source sequence order. If order
+            is important, compose further with
+            <see cref="M:MoreLinq.Experimental.ExperimentalEnumerable.AsOrdered``1(MoreLinq.Experimental.IAwaitQuery{``0})"/>.</para>
+            <para>
+            This method starts a new task where the asynchronous evaluations
+            take place and awaited. If the resulting sequence is partially
+            consumed then there's a good chance that some projection work will
+            be wasted and a cooperative effort is done that depends on the
+            <paramref name="evaluator"/> function (via a
+            <see cref="T:System.Threading.CancellationToken"/> as its second argument) to cancel
+            those in flight.</para>
+            <para>
+            The <paramref name="evaluator"/> function should be designed to be
+            thread-agnostic.</para>
+            <para>
+            The task returned by <paramref name="evaluator"/> should be started
+            when the function is called (and not just a mere projection)
+            otherwise changing concurrency options via
+            <see cref="M:MoreLinq.Experimental.ExperimentalEnumerable.AsSequential``1(MoreLinq.Experimental.IAwaitQuery{``0})"/>, <see cref="M:MoreLinq.Experimental.ExperimentalEnumerable.MaxConcurrency``1(MoreLinq.Experimental.IAwaitQuery{``0},System.Int32)"/> or
+            <see cref="M:MoreLinq.Experimental.ExperimentalEnumerable.UnboundedConcurrency``1(MoreLinq.Experimental.IAwaitQuery{``0})"/> will only change how many
+            tasks are awaited at any given moment, not how many will be
+            kept in flight.
+            </para>
+            </remarks>
         </member>
         <member name="M:MoreLinq.Experimental.ExperimentalEnumerable.Memoize``1(System.Collections.Generic.IEnumerable{``0})">
             <summary>
@@ -5590,6 +6485,85 @@
             (though never simultaneously) may iterate over the sequence.
             </remarks>
         </member>
+        <member name="T:MoreLinq.Experimental.AwaitQueryOptions">
+            <summary>
+            Represents options for a query whose results evaluate asynchronously.
+            </summary>
+        </member>
+        <member name="F:MoreLinq.Experimental.AwaitQueryOptions.Default">
+            <summary>
+            The default options used for a query whose results evaluate
+            asynchronously.
+            </summary>
+        </member>
+        <member name="P:MoreLinq.Experimental.AwaitQueryOptions.MaxConcurrency">
+            <summary>
+            Gets a positive (non-zero) integer that specifies the maximum
+            number of asynchronous operations to have in-flight concurrently
+            or <c>null</c> to mean unlimited concurrency.
+            </summary>
+        </member>
+        <member name="P:MoreLinq.Experimental.AwaitQueryOptions.Scheduler">
+            <summary>
+            Get the scheduler to be used for any workhorse task.
+            </summary>
+        </member>
+        <member name="P:MoreLinq.Experimental.AwaitQueryOptions.PreserveOrder">
+            <summary>
+            Get a Boolean that determines whether results should be ordered
+            the same as the source.
+            </summary>
+        </member>
+        <member name="M:MoreLinq.Experimental.AwaitQueryOptions.WithMaxConcurrency(System.Nullable{System.Int32})">
+            <summary>
+            Returns new options with the given concurrency limit.
+            </summary>
+            <param name="value">
+            The maximum concurrent asynchronous operation to keep in flight.
+            Use <c>null</c> to mean unbounded concurrency.</param>
+            <returns>Options with the new setting.</returns>
+        </member>
+        <member name="M:MoreLinq.Experimental.AwaitQueryOptions.WithScheduler(System.Threading.Tasks.TaskScheduler)">
+            <summary>
+            Returns new options with the given scheduler.
+            </summary>
+            <param name="value">
+            The scheduler to use to for the workhorse task.</param>
+            <returns>Options with the new setting.</returns>
+        </member>
+        <member name="M:MoreLinq.Experimental.AwaitQueryOptions.WithPreserveOrder(System.Boolean)">
+            <summary>
+            Returns new options with the given Boolean indicating whether or
+            not the results should be returned in the order of the source.
+            </summary>
+            <param name="value">
+            A Boolean where <c>true</c> means results are in source order and
+            <c>false</c> means that results can be delivered in order of
+            efficiency.</param>
+            <returns>Options with the new setting.</returns>
+        </member>
+        <member name="T:MoreLinq.Experimental.IAwaitQuery`1">
+            <summary>
+            Represents a sequence whose elements or results evaluate asynchronously.
+            </summary>
+            <inheritdoc />
+            <typeparam name="T">The type of the source elements.</typeparam>
+        </member>
+        <member name="P:MoreLinq.Experimental.IAwaitQuery`1.Options">
+            <summary>
+            The options that determine how the sequence evaluation behaves when
+            it is iterated.
+            </summary>
+        </member>
+        <member name="M:MoreLinq.Experimental.IAwaitQuery`1.WithOptions(MoreLinq.Experimental.AwaitQueryOptions)">
+            <summary>
+            Returns a new query that will use the given options.
+            </summary>
+            <param name="options">The new options to use.</param>
+            <returns>
+            Returns a new query using the supplied options.
+            </returns>
+        </member>
         <member name="T:MoreLinq.Extensions.AcquireExtension">
             <summary><c>Acquire</c> extension.</summary>
         </member>
@@ -5606,6 +6580,226 @@
             Returns an array of all the acquired <see cref="T:System.IDisposable"/>
             objects in source order.
             </returns>
+            <remarks>
+            This operator executes immediately.
+            </remarks>
+        </member>
+        <member name="T:MoreLinq.Extensions.AggregateExtension">
+            <summary><c>Aggregate</c> extension.</summary>
+        </member>
+        <member name="M:MoreLinq.Extensions.AggregateExtension.Aggregate``4(System.Collections.Generic.IEnumerable{``0},``1,System.Func{``1,``0,``1},``2,System.Func{``2,``0,``2},System.Func{``1,``2,``3})">
+            <summary>
+            Applies two accumulators sequentially in a single pass over a
+            sequence.
+            </summary>
+            <typeparam name="T">The type of elements in <paramref name="source"/>.</typeparam>
+            <typeparam name="TAccumulate1">The type of first accumulator value.</typeparam>
+            <typeparam name="TAccumulate2">The type of second accumulator value.</typeparam>
+            <typeparam name="TResult">The type of the accumulated result.</typeparam>
+            <param name="source">The source sequence</param>
+            <param name="seed1">The seed value for the first accumulator.</param>
+            <param name="accumulator1">The first accumulator.</param>
+            <param name="seed2">The seed value for the second accumulator.</param>
+            <param name="accumulator2">The second accumulator.</param>
+            <param name="resultSelector">
+            A function that projects a single result given the result of each
+            accumulator.</param>
+            <returns>The value returned by <paramref name="resultSelector"/>.</returns>
+            <remarks>
+            This operator executes immediately.
+            </remarks>
+        </member>
+        <member name="M:MoreLinq.Extensions.AggregateExtension.Aggregate``5(System.Collections.Generic.IEnumerable{``0},``1,System.Func{``1,``0,``1},``2,System.Func{``2,``0,``2},``3,System.Func{``3,``0,``3},System.Func{``1,``2,``3,``4})">
+            <summary>
+            Applies three accumulators sequentially in a single pass over a
+            sequence.
+            </summary>
+            <typeparam name="T">The type of elements in <paramref name="source"/>.</typeparam>
+            <typeparam name="TAccumulate1">The type of first accumulator value.</typeparam>
+            <typeparam name="TAccumulate2">The type of second accumulator value.</typeparam>
+            <typeparam name="TAccumulate3">The type of third accumulator value.</typeparam>
+            <typeparam name="TResult">The type of the accumulated result.</typeparam>
+            <param name="source">The source sequence</param>
+            <param name="seed1">The seed value for the first accumulator.</param>
+            <param name="accumulator1">The first accumulator.</param>
+            <param name="seed2">The seed value for the second accumulator.</param>
+            <param name="accumulator2">The second accumulator.</param>
+            <param name="seed3">The seed value for the third accumulator.</param>
+            <param name="accumulator3">The third accumulator.</param>
+            <param name="resultSelector">
+            A function that projects a single result given the result of each
+            accumulator.</param>
+            <returns>The value returned by <paramref name="resultSelector"/>.</returns>
+            <remarks>
+            This operator executes immediately.
+            </remarks>
+        </member>
+        <member name="M:MoreLinq.Extensions.AggregateExtension.Aggregate``6(System.Collections.Generic.IEnumerable{``0},``1,System.Func{``1,``0,``1},``2,System.Func{``2,``0,``2},``3,System.Func{``3,``0,``3},``4,System.Func{``4,``0,``4},System.Func{``1,``2,``3,``4,``5})">
+            <summary>
+            Applies four accumulators sequentially in a single pass over a
+            sequence.
+            </summary>
+            <typeparam name="T">The type of elements in <paramref name="source"/>.</typeparam>
+            <typeparam name="TAccumulate1">The type of first accumulator value.</typeparam>
+            <typeparam name="TAccumulate2">The type of second accumulator value.</typeparam>
+            <typeparam name="TAccumulate3">The type of third accumulator value.</typeparam>
+            <typeparam name="TAccumulate4">The type of fourth accumulator value.</typeparam>
+            <typeparam name="TResult">The type of the accumulated result.</typeparam>
+            <param name="source">The source sequence</param>
+            <param name="seed1">The seed value for the first accumulator.</param>
+            <param name="accumulator1">The first accumulator.</param>
+            <param name="seed2">The seed value for the second accumulator.</param>
+            <param name="accumulator2">The second accumulator.</param>
+            <param name="seed3">The seed value for the third accumulator.</param>
+            <param name="accumulator3">The third accumulator.</param>
+            <param name="seed4">The seed value for the fourth accumulator.</param>
+            <param name="accumulator4">The fourth accumulator.</param>
+            <param name="resultSelector">
+            A function that projects a single result given the result of each
+            accumulator.</param>
+            <returns>The value returned by <paramref name="resultSelector"/>.</returns>
+            <remarks>
+            This operator executes immediately.
+            </remarks>
+        </member>
+        <member name="M:MoreLinq.Extensions.AggregateExtension.Aggregate``7(System.Collections.Generic.IEnumerable{``0},``1,System.Func{``1,``0,``1},``2,System.Func{``2,``0,``2},``3,System.Func{``3,``0,``3},``4,System.Func{``4,``0,``4},``5,System.Func{``5,``0,``5},System.Func{``1,``2,``3,``4,``5,``6})">
+            <summary>
+            Applies five accumulators sequentially in a single pass over a
+            sequence.
+            </summary>
+            <typeparam name="T">The type of elements in <paramref name="source"/>.</typeparam>
+            <typeparam name="TAccumulate1">The type of first accumulator value.</typeparam>
+            <typeparam name="TAccumulate2">The type of second accumulator value.</typeparam>
+            <typeparam name="TAccumulate3">The type of third accumulator value.</typeparam>
+            <typeparam name="TAccumulate4">The type of fourth accumulator value.</typeparam>
+            <typeparam name="TAccumulate5">The type of fifth accumulator value.</typeparam>
+            <typeparam name="TResult">The type of the accumulated result.</typeparam>
+            <param name="source">The source sequence</param>
+            <param name="seed1">The seed value for the first accumulator.</param>
+            <param name="accumulator1">The first accumulator.</param>
+            <param name="seed2">The seed value for the second accumulator.</param>
+            <param name="accumulator2">The second accumulator.</param>
+            <param name="seed3">The seed value for the third accumulator.</param>
+            <param name="accumulator3">The third accumulator.</param>
+            <param name="seed4">The seed value for the fourth accumulator.</param>
+            <param name="accumulator4">The fourth accumulator.</param>
+            <param name="seed5">The seed value for the fifth accumulator.</param>
+            <param name="accumulator5">The fifth accumulator.</param>
+            <param name="resultSelector">
+            A function that projects a single result given the result of each
+            accumulator.</param>
+            <returns>The value returned by <paramref name="resultSelector"/>.</returns>
+            <remarks>
+            This operator executes immediately.
+            </remarks>
+        </member>
+        <member name="M:MoreLinq.Extensions.AggregateExtension.Aggregate``8(System.Collections.Generic.IEnumerable{``0},``1,System.Func{``1,``0,``1},``2,System.Func{``2,``0,``2},``3,System.Func{``3,``0,``3},``4,System.Func{``4,``0,``4},``5,System.Func{``5,``0,``5},``6,System.Func{``6,``0,``6},System.Func{``1,``2,``3,``4,``5,``6,``7})">
+            <summary>
+            Applies six accumulators sequentially in a single pass over a
+            sequence.
+            </summary>
+            <typeparam name="T">The type of elements in <paramref name="source"/>.</typeparam>
+            <typeparam name="TAccumulate1">The type of first accumulator value.</typeparam>
+            <typeparam name="TAccumulate2">The type of second accumulator value.</typeparam>
+            <typeparam name="TAccumulate3">The type of third accumulator value.</typeparam>
+            <typeparam name="TAccumulate4">The type of fourth accumulator value.</typeparam>
+            <typeparam name="TAccumulate5">The type of fifth accumulator value.</typeparam>
+            <typeparam name="TAccumulate6">The type of sixth accumulator value.</typeparam>
+            <typeparam name="TResult">The type of the accumulated result.</typeparam>
+            <param name="source">The source sequence</param>
+            <param name="seed1">The seed value for the first accumulator.</param>
+            <param name="accumulator1">The first accumulator.</param>
+            <param name="seed2">The seed value for the second accumulator.</param>
+            <param name="accumulator2">The second accumulator.</param>
+            <param name="seed3">The seed value for the third accumulator.</param>
+            <param name="accumulator3">The third accumulator.</param>
+            <param name="seed4">The seed value for the fourth accumulator.</param>
+            <param name="accumulator4">The fourth accumulator.</param>
+            <param name="seed5">The seed value for the fifth accumulator.</param>
+            <param name="accumulator5">The fifth accumulator.</param>
+            <param name="seed6">The seed value for the sixth accumulator.</param>
+            <param name="accumulator6">The sixth accumulator.</param>
+            <param name="resultSelector">
+            A function that projects a single result given the result of each
+            accumulator.</param>
+            <returns>The value returned by <paramref name="resultSelector"/>.</returns>
+            <remarks>
+            This operator executes immediately.
+            </remarks>
+        </member>
+        <member name="M:MoreLinq.Extensions.AggregateExtension.Aggregate``9(System.Collections.Generic.IEnumerable{``0},``1,System.Func{``1,``0,``1},``2,System.Func{``2,``0,``2},``3,System.Func{``3,``0,``3},``4,System.Func{``4,``0,``4},``5,System.Func{``5,``0,``5},``6,System.Func{``6,``0,``6},``7,System.Func{``7,``0,``7},System.Func{``1,``2,``3,``4,``5,``6,``7,``8})">
+            <summary>
+            Applies seven accumulators sequentially in a single pass over a
+            sequence.
+            </summary>
+            <typeparam name="T">The type of elements in <paramref name="source"/>.</typeparam>
+            <typeparam name="TAccumulate1">The type of first accumulator value.</typeparam>
+            <typeparam name="TAccumulate2">The type of second accumulator value.</typeparam>
+            <typeparam name="TAccumulate3">The type of third accumulator value.</typeparam>
+            <typeparam name="TAccumulate4">The type of fourth accumulator value.</typeparam>
+            <typeparam name="TAccumulate5">The type of fifth accumulator value.</typeparam>
+            <typeparam name="TAccumulate6">The type of sixth accumulator value.</typeparam>
+            <typeparam name="TAccumulate7">The type of seventh accumulator value.</typeparam>
+            <typeparam name="TResult">The type of the accumulated result.</typeparam>
+            <param name="source">The source sequence</param>
+            <param name="seed1">The seed value for the first accumulator.</param>
+            <param name="accumulator1">The first accumulator.</param>
+            <param name="seed2">The seed value for the second accumulator.</param>
+            <param name="accumulator2">The second accumulator.</param>
+            <param name="seed3">The seed value for the third accumulator.</param>
+            <param name="accumulator3">The third accumulator.</param>
+            <param name="seed4">The seed value for the fourth accumulator.</param>
+            <param name="accumulator4">The fourth accumulator.</param>
+            <param name="seed5">The seed value for the fifth accumulator.</param>
+            <param name="accumulator5">The fifth accumulator.</param>
+            <param name="seed6">The seed value for the sixth accumulator.</param>
+            <param name="accumulator6">The sixth accumulator.</param>
+            <param name="seed7">The seed value for the seventh accumulator.</param>
+            <param name="accumulator7">The seventh accumulator.</param>
+            <param name="resultSelector">
+            A function that projects a single result given the result of each
+            accumulator.</param>
+            <returns>The value returned by <paramref name="resultSelector"/>.</returns>
+            <remarks>
+            This operator executes immediately.
+            </remarks>
+        </member>
+        <member name="M:MoreLinq.Extensions.AggregateExtension.Aggregate``10(System.Collections.Generic.IEnumerable{``0},``1,System.Func{``1,``0,``1},``2,System.Func{``2,``0,``2},``3,System.Func{``3,``0,``3},``4,System.Func{``4,``0,``4},``5,System.Func{``5,``0,``5},``6,System.Func{``6,``0,``6},``7,System.Func{``7,``0,``7},``8,System.Func{``8,``0,``8},System.Func{``1,``2,``3,``4,``5,``6,``7,``8,``9})">
+            <summary>
+            Applies eight accumulators sequentially in a single pass over a
+            sequence.
+            </summary>
+            <typeparam name="T">The type of elements in <paramref name="source"/>.</typeparam>
+            <typeparam name="TAccumulate1">The type of first accumulator value.</typeparam>
+            <typeparam name="TAccumulate2">The type of second accumulator value.</typeparam>
+            <typeparam name="TAccumulate3">The type of third accumulator value.</typeparam>
+            <typeparam name="TAccumulate4">The type of fourth accumulator value.</typeparam>
+            <typeparam name="TAccumulate5">The type of fifth accumulator value.</typeparam>
+            <typeparam name="TAccumulate6">The type of sixth accumulator value.</typeparam>
+            <typeparam name="TAccumulate7">The type of seventh accumulator value.</typeparam>
+            <typeparam name="TAccumulate8">The type of eighth accumulator value.</typeparam>
+            <typeparam name="TResult">The type of the accumulated result.</typeparam>
+            <param name="source">The source sequence</param>
+            <param name="seed1">The seed value for the first accumulator.</param>
+            <param name="accumulator1">The first accumulator.</param>
+            <param name="seed2">The seed value for the second accumulator.</param>
+            <param name="accumulator2">The second accumulator.</param>
+            <param name="seed3">The seed value for the third accumulator.</param>
+            <param name="accumulator3">The third accumulator.</param>
+            <param name="seed4">The seed value for the fourth accumulator.</param>
+            <param name="accumulator4">The fourth accumulator.</param>
+            <param name="seed5">The seed value for the fifth accumulator.</param>
+            <param name="accumulator5">The fifth accumulator.</param>
+            <param name="seed6">The seed value for the sixth accumulator.</param>
+            <param name="accumulator6">The sixth accumulator.</param>
+            <param name="seed7">The seed value for the seventh accumulator.</param>
+            <param name="accumulator7">The seventh accumulator.</param>
+            <param name="seed8">The seed value for the eighth accumulator.</param>
+            <param name="accumulator8">The eighth accumulator.</param>
+            <param name="resultSelector">
+            A function that projects a single result given the result of each
+            accumulator.</param>
+            <returns>The value returned by <paramref name="resultSelector"/>.</returns>
             <remarks>
             This operator executes immediately.
             </remarks>
@@ -5761,7 +6955,12 @@
             <typeparam name="TSource">Type of elements in <paramref name="source"/> sequence.</typeparam>
             <param name="source">Source sequence.</param>
             <param name="count">Count to assert.</param>
-            <param name="errorSelector">Function that returns the <see cref="T:System.Exception"/> object to throw.</param>
+            <param name="errorSelector">
+            Function that receives a comparison (a negative integer if actual
+            count is less than <paramref name="count"/> and a positive integer
+            if actual count is greater than <paramref name="count"/>) and
+            <paramref name="count"/> as arguments and which returns the
+            <see cref="T:System.Exception"/> object to throw.</param>
             <returns>
             Returns the original sequence as long it is contains the
             number of elements specified by <paramref name="count"/>.
@@ -6390,7 +7589,8 @@
         <member name="M:MoreLinq.Extensions.EquiZipExtension.EquiZip``3(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Func{``0,``1,``2})">
             <summary>
             Returns a projection of tuples, where each tuple contains the N-th
-            element from each of the argument sequences.
+            element from each of the argument sequences. An exception is thrown
+            if the input sequences are of different lengths.
             </summary>
             <typeparam name="TFirst">Type of elements in first sequence.</typeparam>
             <typeparam name="TSecond">Type of elements in second sequence.</typeparam>
@@ -6403,6 +7603,9 @@
             A sequence that contains elements of the two input sequences,
             combined by <paramref name="resultSelector"/>.
             </returns>
+            <exception cref="T:System.InvalidOperationException">
+            The input sequences are of different lengths.
+            </exception>
             <example>
             <code><![CDATA[
             var numbers = new[] { 1, 2, 3, 4 };
@@ -6413,17 +7616,14 @@
             "2B", "3C", "4D" in turn.
             </example>
             <remarks>
-            <para>
-            If the two input sequences are of different lengths then
-            <see cref="T:System.InvalidOperationException"/> is thrown.</para>
-            <para>
-            This operator uses deferred execution and streams its results.</para>
+            This operator uses deferred execution and streams its results.
             </remarks>
         </member>
         <member name="M:MoreLinq.Extensions.EquiZipExtension.EquiZip``4(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Collections.Generic.IEnumerable{``2},System.Func{``0,``1,``2,``3})">
             <summary>
             Returns a projection of tuples, where each tuple contains the N-th
-            element from each of the argument sequences.
+            element from each of the argument sequences. An exception is thrown
+            if the input sequences are of different lengths.
             </summary>
             <typeparam name="T1">Type of elements in first sequence.</typeparam>
             <typeparam name="T2">Type of elements in second sequence.</typeparam>
@@ -6438,6 +7638,9 @@
             A sequence that contains elements of the three input sequences,
             combined by <paramref name="resultSelector"/>.
             </returns>
+            <exception cref="T:System.InvalidOperationException">
+            The input sequences are of different lengths.
+            </exception>
             <example>
             <code><![CDATA[
             var numbers = new[] { 1, 2, 3, 4 };
@@ -6449,16 +7652,14 @@
             "2Bb", "3Cc", "4Dd" in turn.
             </example>
             <remarks>
-            <para>If the three input sequences are of different lengths then
-            <see cref="T:System.InvalidOperationException"/> is thrown.</para>
-            <para>
-            This operator uses deferred execution and streams its results.</para>
+            This operator uses deferred execution and streams its results.
             </remarks>
         </member>
         <member name="M:MoreLinq.Extensions.EquiZipExtension.EquiZip``5(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Collections.Generic.IEnumerable{``2},System.Collections.Generic.IEnumerable{``3},System.Func{``0,``1,``2,``3,``4})">
             <summary>
             Returns a projection of tuples, where each tuple contains the N-th
-            element from each of the argument sequences.
+            element from each of the argument sequences. An exception is thrown
+            if the input sequences are of different lengths.
             </summary>
             <typeparam name="T1">Type of elements in first sequence</typeparam>
             <typeparam name="T2">Type of elements in second sequence</typeparam>
@@ -6475,6 +7676,9 @@
             A sequence that contains elements of the four input sequences,
             combined by <paramref name="resultSelector"/>.
             </returns>
+            <exception cref="T:System.InvalidOperationException">
+            The input sequences are of different lengths.
+            </exception>
             <example>
             <code><![CDATA[
             var numbers = new[] { 1, 2, 3, 4 };
@@ -6487,11 +7691,7 @@
             "2BbFalse", "3CcTrue", "4DdFalse" in turn.
             </example>
             <remarks>
-            <para>
-            If the four input sequences are of different lengths then
-            <see cref="T:System.InvalidOperationException"/> is thrown.</para>
-            <para>
-            This operator uses deferred execution and streams its results.</para>
+            This operator uses deferred execution and streams its results.
             </remarks>
         </member>
         <member name="T:MoreLinq.Extensions.EvaluateExtension">
@@ -6896,8 +8096,33 @@
             and all nested sequences for which the predicate function
             returned <c>true</c>.
             </returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> is null.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="predicate"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="source"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="predicate"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:MoreLinq.Extensions.FlattenExtension.Flatten(System.Collections.IEnumerable,System.Func{System.Object,System.Collections.IEnumerable})">
+            <summary>
+            Flattens a sequence containing arbitrarily-nested sequences. An
+            additional parameter specifies a function that projects an inner
+            sequence via a property of an object.
+            </summary>
+            <param name="source">The sequence that will be flattened.</param>
+            <param name="selector">
+            A function that receives each element of the sequence as an object
+            and projects an inner sequence to be flattened. If the function
+            returns <c>null</c> then the object argument is considered a leaf
+            of the flattening process.
+            </param>
+            <returns>
+            A sequence that contains the elements of <paramref name="source"/>
+            and all nested sequences projected via the
+            <paramref name="selector"/> function.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="source"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="selector"/> is <c>null</c>.</exception>
         </member>
         <member name="T:MoreLinq.Extensions.FoldExtension">
             <summary><c>Fold</c> extension.</summary>
@@ -7649,6 +8874,47 @@
             <returns>A sequence of <see cref="T:System.Collections.Generic.KeyValuePair`2"/>.</returns>
             <remarks>This operator uses deferred execution and streams its
             results.</remarks>
+        </member>
+        <member name="T:MoreLinq.Extensions.IndexByExtension">
+            <summary><c>IndexBy</c> extension.</summary>
+        </member>
+        <member name="M:MoreLinq.Extensions.IndexByExtension.IndexBy``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})">
+            <summary>
+            Applies a key-generating function to each element of a sequence and
+            returns a sequence that contains the elements of the original
+            sequence as well its key and index inside the group of its key.
+            </summary>
+            <typeparam name="TSource">Type of the source sequence elements.</typeparam>
+            <typeparam name="TKey">Type of the projected key.</typeparam>
+            <param name="source">Source sequence.</param>
+            <param name="keySelector">
+            Function that projects the key given an element in the source sequence.</param>
+            <returns>
+            A sequence of elements paired with their index within the key-group.
+            The index is the key and the element is the value of the pair.
+            </returns>
+        </member>
+        <member name="M:MoreLinq.Extensions.IndexByExtension.IndexBy``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1},System.Collections.Generic.IEqualityComparer{``1})">
+            <summary>
+            Applies a key-generating function to each element of a sequence and
+            returns a sequence that contains the elements of the original
+            sequence as well its key and index inside the group of its key.
+            An additional parameter specifies a comparer to use for testing the
+            equivalence of keys.
+            </summary>
+            <typeparam name="TSource">Type of the source sequence elements.</typeparam>
+            <typeparam name="TKey">Type of the projected key.</typeparam>
+            <param name="source">Source sequence.</param>
+            <param name="keySelector">
+            Function that projects the key given an element in the source sequence.</param>
+            <param name="comparer">
+            The equality comparer to use to determine whether or not keys are
+            equal. If <c>null</c>, the default equality comparer for
+            <typeparamref name="TSource"/> is used.</param>
+            <returns>
+            A sequence of elements paired with their index within the key-group.
+            The index is the key and the element is the value of the pair.
+            </returns>
         </member>
         <member name="T:MoreLinq.Extensions.InsertExtension">
             <summary><c>Insert</c> extension.</summary>
@@ -8403,7 +9669,9 @@
             <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
             <param name="source">The sequence to pad.</param>
             <param name="width">The width/length below which to pad.</param>
-            <param name="paddingSelector">Function to calculate padding.</param>
+            <param name="paddingSelector">
+            Function to calculate padding given the index of the missing element.
+            </param>
             <returns>
             Returns a sequence that is at least as wide/long as the width/length
             specified by the <paramref name="width"/> parameter.
@@ -8442,11 +9710,11 @@
             </remarks>
             <example>
             <code><![CDATA[
-            int[] numbers = { 123, 456, 789 };
-            var result = numbers.Pairwise((a, b) => a + b);
+            var source = new[] { "a", "b", "c", "d" };
+            var result = source.Pairwise((a, b) => a + b);
             ]]></code>
             The <c>result</c> variable, when iterated over, will yield
-            579 and 1245, in turn.
+            "ab", "bc" and "cd", in turn.
             </example>
         </member>
         <member name="T:MoreLinq.Extensions.PartialSortExtension">
@@ -9170,7 +10438,7 @@
         </member>
         <member name="M:MoreLinq.Extensions.ScanExtension.Scan``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``0,``0})">
             <summary>
-            Peforms a scan (inclusive prefix sum) on a sequence of elements.
+            Performs a scan (inclusive prefix sum) on a sequence of elements.
             </summary>
             <remarks>
             An inclusive prefix sum returns an equal-length sequence where the
@@ -9217,6 +10485,53 @@
             <param name="seed">Initial state to seed</param>
             <param name="transformation">Transformation operation</param>
             <returns>The scanned sequence</returns>
+        </member>
+        <member name="T:MoreLinq.Extensions.ScanByExtension">
+            <summary><c>ScanBy</c> extension.</summary>
+        </member>
+        <member name="M:MoreLinq.Extensions.ScanByExtension.ScanBy``3(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1},System.Func{``1,``2},System.Func{``2,``1,``0,``2})">
+            <summary>
+            Applies an accumulator function over sequence element keys,
+            returning the keys along with intermediate accumulator states.
+            </summary>
+            <typeparam name="TSource">Type of the elements of the source sequence.</typeparam>
+            <typeparam name="TKey">The type of the key.</typeparam>
+            <typeparam name="TState">Type of the state.</typeparam>
+            <param name="source">The source sequence.</param>
+            <param name="keySelector">
+            A function that returns the key given an element.</param>
+            <param name="seedSelector">
+            A function to determine the initial value for the accumulator that is
+            invoked once per key encountered.</param>
+            <param name="accumulator">
+            An accumulator function invoked for each element.</param>
+            <returns>
+            A sequence of keys paired with intermediate accumulator states.
+            </returns>
+        </member>
+        <member name="M:MoreLinq.Extensions.ScanByExtension.ScanBy``3(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1},System.Func{``1,``2},System.Func{``2,``1,``0,``2},System.Collections.Generic.IEqualityComparer{``1})">
+            <summary>
+            Applies an accumulator function over sequence element keys,
+            returning the keys along with intermediate accumulator states. An
+            additional parameter specifies the comparer to use to compare keys.
+            </summary>
+            <typeparam name="TSource">Type of the elements of the source sequence.</typeparam>
+            <typeparam name="TKey">The type of the key.</typeparam>
+            <typeparam name="TState">Type of the state.</typeparam>
+            <param name="source">The source sequence.</param>
+            <param name="keySelector">
+            A function that returns the key given an element.</param>
+            <param name="seedSelector">
+            A function to determine the initial value for the accumulator that is
+            invoked once per key encountered.</param>
+            <param name="accumulator">
+            An accumulator function invoked for each element.</param>
+            <param name="comparer">The equality comparer to use to determine
+            whether or not keys are equal. If <c>null</c>, the default equality
+            comparer for <typeparamref name="TSource"/> is used.</param>
+            <returns>
+            A sequence of keys paired with intermediate accumulator states.
+            </returns>
         </member>
         <member name="T:MoreLinq.Extensions.ScanRightExtension">
             <summary><c>ScanRight</c> extension.</summary>
@@ -10703,7 +12018,10 @@
         <member name="M:MoreLinq.Extensions.ZipLongestExtension.ZipLongest``3(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Func{``0,``1,``2})">
             <summary>
             Returns a projection of tuples, where each tuple contains the N-th
-            element from each of the argument sequences.
+            element from each of the argument sequences. The resulting sequence
+            will always be as long as the longest of input sequences where the
+            default value of each of the shorter sequence element types is used
+            for padding.
             </summary>
             <typeparam name="TFirst">Type of elements in first sequence.</typeparam>
             <typeparam name="TSecond">Type of elements in second sequence.</typeparam>
@@ -10726,19 +12044,16 @@
             "2B", "3C", "0D" in turn.
             </example>
             <remarks>
-            <para>
-            If the two input sequences are of different lengths then the result
-            sequence will always be as long as the longer of the two input
-            sequences. The default value of the shorter sequence element type
-            is used for padding.</para>
-            <para>
-            This operator uses deferred execution and streams its results.</para>
+            This operator uses deferred execution and streams its results.
             </remarks>
         </member>
         <member name="M:MoreLinq.Extensions.ZipLongestExtension.ZipLongest``4(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Collections.Generic.IEnumerable{``2},System.Func{``0,``1,``2,``3})">
             <summary>
-            Returns a projection of tuples, where each tuple contains the N-th element
-            from each of the argument sequences.
+            Returns a projection of tuples, where each tuple contains the N-th
+            element from each of the argument sequences. The resulting sequence
+            will always be as long as the longest of input sequences where the
+            default value of each of the shorter sequence element types is used
+            for padding.
             </summary>
             <typeparam name="T1">Type of elements in first sequence.</typeparam>
             <typeparam name="T2">Type of elements in second sequence.</typeparam>
@@ -10764,20 +12079,16 @@
             "2Bb", "3Cc", "0Dd", "0e" in turn.
             </example>
             <remarks>
-            <para>
-            If the input sequences are of different lengths then the result
-            sequence will always be as long as the longest of input sequences.
-            The default value of the each shorter sequence element type is used
-            for padding. This operator uses deferred execution and streams its
-            results.</para>
-            <para>
-            This operator uses deferred execution and streams its results.</para>
+            This operator uses deferred execution and streams its results.
             </remarks>
         </member>
         <member name="M:MoreLinq.Extensions.ZipLongestExtension.ZipLongest``5(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Collections.Generic.IEnumerable{``2},System.Collections.Generic.IEnumerable{``3},System.Func{``0,``1,``2,``3,``4})">
             <summary>
-            Returns a projection of tuples, where each tuple contains the N-th element
-            from each of the argument sequences.
+            Returns a projection of tuples, where each tuple contains the N-th
+            element from each of the argument sequences. The resulting sequence
+            will always be as long as the longest of input sequences where the
+            default value of each of the shorter sequence element types is used
+            for padding.
             </summary>
             <typeparam name="T1">Type of elements in first sequence</typeparam>
             <typeparam name="T2">Type of elements in second sequence</typeparam>
@@ -10806,13 +12117,7 @@
             "2BbFalse", "3CcTrue", "0DdFalse", "0eTrue", "0\0False" in turn.
             </example>
             <remarks>
-            <para>
-            If the input sequences are of different lengths then the result
-            sequence will always be as long as the longest of input sequences.
-            The default value of the each shorter sequence element type is used
-            for padding.</para>
-            <para>
-            This operator uses deferred execution and streams its results.</para>
+            This operator uses deferred execution and streams its results.
             </remarks>
         </member>
         <member name="T:MoreLinq.Extensions.ZipShortestExtension">
@@ -10820,8 +12125,9 @@
         </member>
         <member name="M:MoreLinq.Extensions.ZipShortestExtension.ZipShortest``3(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Func{``0,``1,``2})">
             <summary>
-            Returns a projection of tuples, where each tuple contains the N-th element
-            from each of the argument sequences.
+            Returns a projection of tuples, where each tuple contains the N-th
+            element from each of the argument sequences. The resulting sequence
+            is as short as the shortest input sequence.
             </summary>
             <typeparam name="TFirst">Type of elements in first sequence.</typeparam>
             <typeparam name="TSecond">Type of elements in second sequence.</typeparam>
@@ -10843,9 +12149,10 @@
             </example>
             <remarks>
             <para>
-            If the two input sequences are of different lengths, the result
-            sequence is terminated as soon as the shortest input sequence is
-            exhausted.</para>
+            If the input sequences are of different lengths, the result sequence
+            is terminated as soon as the shortest input sequence is exhausted
+            and remainder elements from the longer sequences are never consumed.
+            </para>
             <para>
             This operator uses deferred execution and streams its results.</para>
             </remarks>
@@ -10853,7 +12160,8 @@
         <member name="M:MoreLinq.Extensions.ZipShortestExtension.ZipShortest``4(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Collections.Generic.IEnumerable{``2},System.Func{``0,``1,``2,``3})">
             <summary>
             Returns a projection of tuples, where each tuple contains the N-th
-            element  from each of the argument sequences.
+            element from each of the argument sequences. The resulting sequence
+            is as short as the shortest input sequence.
             </summary>
             <typeparam name="T1">Type of elements in first sequence.</typeparam>
             <typeparam name="T2">Type of elements in second sequence.</typeparam>
@@ -10880,7 +12188,8 @@
             <remarks>
             <para>
             If the input sequences are of different lengths, the result sequence
-            is terminated as soon as the shortest input sequence is exhausted.
+            is terminated as soon as the shortest input sequence is exhausted
+            and remainder elements from the longer sequences are never consumed.
             </para>
             <para>
             This operator uses deferred execution and streams its results.</para>
@@ -10889,7 +12198,8 @@
         <member name="M:MoreLinq.Extensions.ZipShortestExtension.ZipShortest``5(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Collections.Generic.IEnumerable{``2},System.Collections.Generic.IEnumerable{``3},System.Func{``0,``1,``2,``3,``4})">
             <summary>
             Returns a projection of tuples, where each tuple contains the N-th
-            element from each of the argument sequences.
+            element from each of the argument sequences. The resulting sequence
+            is as short as the shortest input sequence.
             </summary>
             <typeparam name="T1">Type of elements in first sequence.</typeparam>
             <typeparam name="T2">Type of elements in second sequence.</typeparam>
@@ -10919,11 +12229,69 @@
             <remarks>
             <para>
             If the input sequences are of different lengths, the result sequence
-            is terminated as soon as the shortest input sequence is exhausted.
+            is terminated as soon as the shortest input sequence is exhausted
+            and remainder elements from the longer sequences are never consumed.
             </para>
             <para>
             This operator uses deferred execution and streams its results.</para>
             </remarks>
+        </member>
+        <member name="T:MoreLinq.Extensions.ToDataTableExtension">
+            <summary><c>ToDataTable</c> extension.</summary>
+        </member>
+        <member name="M:MoreLinq.Extensions.ToDataTableExtension.ToDataTable``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Converts a sequence to a <see cref="T:System.Data.DataTable"/> object.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">The source.</param>
+            <returns>
+            A <see cref="T:System.Data.DataTable"/> representing the source.
+            </returns>
+            <remarks>This operator uses immediate execution.</remarks>
+        </member>
+        <member name="M:MoreLinq.Extensions.ToDataTableExtension.ToDataTable``1(System.Collections.Generic.IEnumerable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Object}}[])">
+            <summary>
+            Appends elements in the sequence as rows of a given <see cref="T:System.Data.DataTable"/>
+            object with a set of lambda expressions specifying which members (property
+            or field) of each element in the sequence will supply the column values.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">The source.</param>
+            <param name="expressions">Expressions providing access to element members.</param>
+            <returns>
+            A <see cref="T:System.Data.DataTable"/> representing the source.
+            </returns>
+            <remarks>This operator uses immediate execution.</remarks>
+        </member>
+        <member name="M:MoreLinq.Extensions.ToDataTableExtension.ToDataTable``2(System.Collections.Generic.IEnumerable{``0},``1)">
+            <summary>
+            Appends elements in the sequence as rows of a given <see cref="T:System.Data.DataTable"/> object.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <typeparam name="TTable"></typeparam>
+            <param name="source">The source.</param>
+            <param name="table"></param>
+            <returns>
+            A <see cref="T:System.Data.DataTable"/> or subclass representing the source.
+            </returns>
+            <remarks>This operator uses immediate execution.</remarks>
+        </member>
+        <member name="M:MoreLinq.Extensions.ToDataTableExtension.ToDataTable``2(System.Collections.Generic.IEnumerable{``0},``1,System.Linq.Expressions.Expression{System.Func{``0,System.Object}}[])">
+            <summary>
+            Appends elements in the sequence as rows of a given <see cref="T:System.Data.DataTable"/>
+            object with a set of lambda expressions specifying which members (property
+            or field) of each element in the sequence will supply the column values.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <typeparam name="TTable">The type of the input and resulting <see cref="T:System.Data.DataTable"/> object.</typeparam>
+            <param name="source">The source.</param>
+            <param name="table">The <see cref="T:System.Data.DataTable"/> type of object where to add rows</param>
+            <param name="expressions">Expressions providing access to element members.</param>
+            <returns>
+            A <see cref="T:System.Data.DataTable"/> or subclass representing the source.
+            </returns>
+            <remarks>This operator uses immediate execution.</remarks>
         </member>
         <member name="T:MoreLinq.IListLike`1">
             <summary>
@@ -10993,6 +12361,28 @@
             of an item to prepend, an item to append and the source.
             </summary>
         </member>
+        <member name="T:MoreLinq.Reactive.Observable">
+            <summary>
+            Provides a set of static methods for writing in-memory queries over observable sequences.
+            </summary>
+        </member>
+        <member name="M:MoreLinq.Reactive.Observable.Subscribe``1(System.IObservable{``0},System.Action{``0},System.Action{System.Exception},System.Action)">
+            <summary>
+            Subscribes an element handler and a completion handler to an
+            observable sequence.
+            </summary>
+            <typeparam name="T">Type of elements in <paramref name="source"/>.</typeparam>
+            <param name="source">Observable sequence to subscribe to.</param>
+            <param name="onNext">
+            Action to invoke for each element in <paramref name="source"/>.</param>
+            <param name="onError">
+            Action to invoke upon exceptional termination of the
+            <paramref name="source"/>.</param>
+            <param name="onCompleted">
+            Action to invoke upon graceful termination of <paramref name="source"/>.</param>
+            <returns>The subscription, which when disposed, will unsubscribe
+            from <paramref name="source"/>.</returns>
+        </member>
         <member name="T:MoreLinq.SequenceException">
             <summary>
             The exception that is thrown for a sequence that fails a condition.
@@ -11018,6 +12408,14 @@
             </summary>
             <param name="message">A message that describes the error.</param>
             <param name="innerException">The exception that is the cause of the current exception.</param>
+        </member>
+        <member name="M:MoreLinq.SequenceException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MoreLinq.SequenceException"/> class
+            with serialized data.
+            </summary>
+            <param name="info">The object that holds the serialized object data.</param>
+            <param name="context">The contextual information about the source or destination.</param>
         </member>
     </members>
 </doc>

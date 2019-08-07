@@ -366,7 +366,7 @@ function Join-Object {
                 $ScriptRoot = '.'
             }
             if (!('MoreLinq.MoreEnumerable' -as [type])) {
-                Add-Type -Path (Resolve-Path -Path "$ScriptRoot\morelinq.*\lib\net451\MoreLinq.dll")
+                Add-Type -Path (Resolve-Path -Path "$ScriptRoot\morelinq.*\lib\netstandard2.0\MoreLinq.dll")
             }
         }
         catch {
