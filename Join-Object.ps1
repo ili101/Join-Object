@@ -209,8 +209,8 @@ function Join-Object {
         [Parameter(Mandatory = $true)]
         [string[]]$RightJoinProperty,
 
-        [System.Func[System.Object, string]]$LeftJoinScript,
-        [System.Func[System.Object, string]]$RightJoinScript,
+        $LeftJoinScript,
+        $RightJoinScript,
 
         [ValidateScript( { $_ -is [Collections.Hashtable] -or $_ -is [string] -or $_ -is [Collections.Specialized.OrderedDictionary] } )]
         $LeftProperties = '*',
@@ -243,7 +243,8 @@ function Join-Object {
         [string]$RightMultiMode = 'SingleOnly',
 
         [switch]$AddKey,
-        [switch]$AllowColumnsMerging
+        [switch]$AllowColumnsMerging,
+        [Collections.Generic.IEqualityComparer[Object]]$Comparer
     )
     #region Validate Params
     if ($PassThru -and $Type -eq 'AllInBoth') {
@@ -392,7 +393,12 @@ function Join-Object {
             $Object
         )
         if ($JoinScript) {
-            $JoinScript #.GetNewClosure()
+            if ($JoinScript.GetType().Name -eq 'Func`2') {
+                $JoinScript #.GetNewClosure()
+            }
+            else {
+                [System.Func[Object, String]]$JoinScript
+            }
         }
         else {
             $JoinScript = if ($JoinProperty.Count -gt 1) {
@@ -415,7 +421,7 @@ function Join-Object {
                     }
                 }
             }
-            [Scriptblock]::Create($JoinScript.ToString().Replace('_Side_', $Side))
+            [System.Func[Object, String]][Scriptblock]::Create($JoinScript.ToString().Replace('_Side_', $Side))
         }
     }
     $LeftJoinScript = Get-JoinScript -JoinScript $LeftJoinScript -JoinProperty $LeftJoinProperty -Side 'Left' -Object $Left
@@ -758,17 +764,17 @@ function Join-Object {
     try {
         $Result = if ($Type -eq 'OnlyIfInBoth') {
             [System.Linq.Enumerable]::ToArray(
-                [System.Linq.Enumerable]::Join($LeftNew, $RightNew, $LeftJoinScript, $RightJoinScript, $query)
+                [System.Linq.Enumerable]::Join($LeftNew, $RightNew, $LeftJoinScript, $RightJoinScript, $query, $Comparer)
             )
         }
         elseif ($Type -eq 'AllInBoth') {
             [System.Linq.Enumerable]::ToArray(
-                [MoreLinq.MoreEnumerable]::FullGroupJoin($LeftNew, $RightNew, $LeftJoinScript, $RightJoinScript, $query)
+                [MoreLinq.MoreEnumerable]::FullGroupJoin($LeftNew, $RightNew, $LeftJoinScript, $RightJoinScript, $query, $Comparer)
             )
         }
         else {
             [System.Linq.Enumerable]::ToArray(
-                [System.Linq.Enumerable]::GroupJoin($LeftNew, $RightNew, $LeftJoinScript, $RightJoinScript, $query)
+                [System.Linq.Enumerable]::GroupJoin($LeftNew, $RightNew, $LeftJoinScript, $RightJoinScript, $query, $Comparer)
             )
         }
 

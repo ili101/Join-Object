@@ -30,6 +30,11 @@ $TestDataSetSmall = {
         [PSCustomObject]@{ ID = 3 ; Sub = 'S3' ; IntO = $null ; Junk = $null }
     )
 
+    $PSCustomObjectKeyArray = @(
+        [PSCustomObject]@{ID = 1, 2, 3 ; Sub = 'S1' ; IntO = 6 }
+        [PSCustomObject]@{ID = 4 ; Sub = 'S4' ; IntO = $null }
+    )
+
     $DataTable = [Data.DataTable]::new('Test')
     $null = $DataTable.Columns.Add('IDD', [System.Int32])
     $null = $DataTable.Columns.Add('Name')
@@ -167,6 +172,19 @@ function Get-Params {
 Describe -Name 'Join-Object' -Fixture {
     $TestDataSetName = 'TestDataSetSmall'
     Context -Name $TestDataSetName -Fixture {
+        Class EqualityComparerMy : Collections.Generic.EqualityComparer[object] {
+            [bool] Equals([object]$Object1 , [object]$Object2) {
+                if ($Object1 -contains $Object2 -or $Object1 -in $Object2) {
+                    return $true
+                }
+                else {
+                    return $false
+                }
+            }
+            [int] GetHashCode([object]$Object) {
+                return 1
+            }
+        }
         $TestCases = @(
             Format-Test @{
                 Description          = 'Default Error'
@@ -514,6 +532,19 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
+                Description = 'Default JoinScript2'
+                Params      = @{
+                    Left                   = 'PSCustomObject'
+                    Right                  = 'DataTable'
+                    LeftJoinProperty       = 'Sub'
+                    RightJoinProperty      = 'IDD'
+                    LeftProperties         = @{ ID = 'ID' ; Sub = 'Subscription' }
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                    LeftJoinScript         = { param ($Line) ($Line.Sub).Replace('S', '') }
+                }
+            }
+            Format-Test @{
                 Description = 'DataTable DataTableTypes'
                 Params      = @{
                     Left                   = 'DataTable'
@@ -606,6 +637,19 @@ Describe -Name 'Join-Object' -Fixture {
                     RightJoinProperty   = 'ID'
                     AllowColumnsMerging = $true
                     PassThru            = $true
+                }
+            }
+            Format-Test @{
+                Description = 'Default Comparer'
+                Params      = @{
+                    Left                   = 'DataTable'
+                    Right                  = 'PSCustomObjectKeyArray'
+                    LeftJoinProperty       = 'IDD'
+                    RightJoinProperty      = 'ID'
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                    RightJoinScript        = [System.Func[Object, Object]] { param ($Line) $Line.ID }
+                    Comparer               = [EqualityComparerMy]::new()
                 }
             }
         )

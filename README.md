@@ -58,11 +58,11 @@ Join-Object -Left $PSCustomObject -Right $DataTable -LeftJoinProperty 'ID' -Righ
 * Noting for now, You can open an Issues if something is needed.
 
 ## Install
-From repository
+From repository (Recommended)
 ```PowerShell
 Install-Module -Name Join-Object -Scope CurrentUser
 ```
-From GitHub
+From GitHub Branch (For testing)
 ```PowerShell
 $Uri = 'https://raw.githubusercontent.com/ili101/Join-Object/master/Install.ps1'; & ([Scriptblock]::Create((irm $Uri))) -FromGitHub $Uri
 ```
