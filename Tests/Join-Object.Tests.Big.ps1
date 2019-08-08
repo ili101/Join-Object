@@ -26,7 +26,7 @@ function Format-Test {
     param
     (
         [Parameter(Mandatory)]
-        [HashTable]$Test
+        [Hashtable]$Test
     )
     if ($TestDataSetName, $Test.Params.Left, $Test.Params.Right, $Test.Description -contains $null) {
         Throw 'Missing param'
@@ -81,9 +81,9 @@ Describe -Name 'Join-Object' -Fixture {
 
             # Execute Cmdlet
             $Measure = Measure-Command {
-                $JoindOutput = Join-Object @Params
+                $JoinedOutput = Join-Object @Params
             }
-            Write-Host ("Execution Time: {0}, Count: {1}, Sample: {2}" -f $Measure, $JoindOutput.Count, $JoindOutput[-1])
+            Write-Host ("Execution Time: {0}, Count: {1}, Sample: {2}" -f $Measure, $JoinedOutput.Count, $JoinedOutput[-1])
         }
     }
 }

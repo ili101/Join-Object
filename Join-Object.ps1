@@ -39,12 +39,12 @@ function Join-Object {
         Each property can:
             - Be a plain property name like "Name"
             - Contain wildcards like "*"
-            - Be a hashtable like @{Name="Product Name";Expression={$_.Name}}.
+            - Be a Hashtable like @{Name="Product Name";Expression={$_.Name}}.
                  Name is the output property name
                  Expression is the property value ($_ as the current object)
 
                  Alternatively, use the Suffix or Prefix parameter to avoid collisions
-                 Each property using this hashtable syntax will be excluded from suffixes and prefixes
+                 Each property using this Hashtable syntax will be excluded from suffixes and prefixes
 
     .PARAMETER RightProperties
         One or more properties to keep from Right.  Default is to keep all Right properties (*).
@@ -52,12 +52,12 @@ function Join-Object {
         Each property can:
             - Be a plain property name like "Name"
             - Contain wildcards like "*"
-            - Be a hashtable like @{Name="Product Name";Expression={$_.Name}}.
+            - Be a Hashtable like @{Name="Product Name";Expression={$_.Name}}.
                  Name is the output property name
                  Expression is the property value ($_ as the current object)
 
                  Alternatively, use the Suffix or Prefix parameter to avoid collisions
-                 Each property using this hashtable syntax will be excluded from suffixes and prefixes
+                 Each property using this Hashtable syntax will be excluded from suffixes and prefixes
 
     .PARAMETER Prefix
         If specified, prepend Right object property names with this prefix to avoid collisions
@@ -99,14 +99,14 @@ function Join-Object {
         #Define some input data.
 
         $l = 1..5 | Foreach-Object {
-            [pscustomobject]@{
+            [PSCustomObject]@{
                 Name = "jsmith$_"
                 Birthday = (Get-Date).adddays(-1)
             }
         }
 
         $r = 4..7 | Foreach-Object{
-            [pscustomobject]@{
+            [PSCustomObject]@{
                 Department = "Department $_"
                 Name = "Department $_"
                 Manager = "jsmith$_"
@@ -127,14 +127,14 @@ function Join-Object {
         #Define some input data.
 
         $l = 1..5 | Foreach-Object {
-            [pscustomobject]@{
+            [PSCustomObject]@{
                 Name = "jsmith$_"
                 Birthday = (Get-Date).adddays(-1)
             }
         }
 
         $r = 4..7 | Foreach-Object{
-            [pscustomobject]@{
+            [PSCustomObject]@{
                 Department = "Department $_"
                 Name = "Department $_"
                 Manager = "jsmith$_"
@@ -172,11 +172,11 @@ function Join-Object {
         # Import some SSNs.
         $SSNs = Import-CSV -Path D:\SSNs.csv
 
-        #Get AD users, and match up by a common value, samaccountname in this case:
-        Get-ADUser -Filter "samaccountname -like 'wframe*'" |
-            Join-Object -LeftJoinProperty samaccountname -Right $SSNs `
-                        -RightJoinProperty samaccountname -RightProperties ssn `
-                        -LeftProperties samaccountname, enabled, objectclass
+        #Get AD users, and match up by a common value, SamAccountName in this case:
+        Get-ADUser -Filter "SamAccountName -like 'WFrame*'" |
+            Join-Object -LeftJoinProperty SamAccountName -Right $SSNs `
+                        -RightJoinProperty SamAccountName -RightProperties ssn `
+                        -LeftProperties SamAccountName, enabled, ObjectClass
 
     .NOTES
         This borrows from:
@@ -187,7 +187,7 @@ function Join-Object {
             Always display full set of properties
             Display properties in order (left first, right second)
             If specified, add suffix or prefix to right object property names to avoid collisions
-            Use a hashtable rather than ordereddictionary (avoid case sensitivity)
+            Use a Hashtable rather than OrderedDictionary (avoid case sensitivity)
 
     .LINK
         http://ramblingcookiemonster.github.io/Join-Object/
@@ -222,7 +222,7 @@ function Join-Object {
 
         [switch]$KeepRightJoinProperty,
 
-        [validateset('AllInLeft', 'OnlyIfInBoth', 'AllInBoth')]
+        [ValidateSet('AllInLeft', 'OnlyIfInBoth', 'AllInBoth')]
         [Parameter(Mandatory = $false)]
         [string]$Type = 'AllInLeft',
 
@@ -235,11 +235,11 @@ function Join-Object {
         [switch]$DataTable,
         [Parameter(ParameterSetName = 'PassThru')]
         [Parameter(ParameterSetName = 'DataTable')]
-        [hashtable]$DataTableTypes,
+        [Hashtable]$DataTableTypes,
 
-        [validateset('SingleOnly', 'DuplicateLines', 'SubGroups')]
+        [ValidateSet('SingleOnly', 'DuplicateLines', 'SubGroups')]
         [string]$LeftMultiMode = 'SingleOnly',
-        [validateset('SingleOnly', 'DuplicateLines', 'SubGroups')]
+        [ValidateSet('SingleOnly', 'DuplicateLines', 'SubGroups')]
         [string]$RightMultiMode = 'SingleOnly',
 
         [switch]$AddKey,
@@ -333,7 +333,7 @@ function Join-Object {
         else {
             $ObjectProperties = $Object[0].PSObject.Properties.Name
         }
-        if ($SelectProperties -is [hashtable] -or $SelectProperties -is [Collections.Specialized.OrderedDictionary]) {
+        if ($SelectProperties -is [Hashtable] -or $SelectProperties -is [Collections.Specialized.OrderedDictionary]) {
             $SelectProperties.GetEnumerator() | Where-Object { $_.Key -notin $ExcludeProperties } | ForEach-Object { $Properties.Add($_.Key, $Prefix + $_.Value + $Suffix) }
         }
         elseif ($SelectProperties -eq '*') {
@@ -664,7 +664,7 @@ function Join-Object {
     }
 
     foreach ($Item in @($Query.GetEnumerator())) {
-        if ($Item.Value -is [scriptblock]) {
+        if ($Item.Value -is [Scriptblock]) {
             $Query[$Item.Key] = $Item.Value.ToString()
         }
     }

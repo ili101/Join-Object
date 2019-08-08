@@ -113,7 +113,7 @@ ID Sub IntO Name Junk   IntT
 #>
 
 . $ExampleData
-# Example 6: JoinScript. Manipulate the JoinProperty for the comparison with a ScriptBlock.
+# Example 6: JoinScript. Manipulate the JoinProperty for the comparison with a Scriptblock.
 $Params = @{
     Left              = $PSCustomObject
     Right             = $DataTable

@@ -71,7 +71,7 @@ function Format-Test {
     param
     (
         [Parameter(Mandatory)]
-        [HashTable]$Test
+        [Hashtable]$Test
     )
     if ($TestDataSetName, $Test.Params.Left, $Test.Params.Right, $Test.Description -contains $null) {
         Throw 'Missing param'
@@ -100,7 +100,7 @@ function ConvertFrom-DataTable {
                 $InputObject.Columns.ColumnName
             }
             else {
-                $InputObject.psobject.Properties.Name | Where-Object { $_ -notin ('RowError', 'RowState', 'Table', 'ItemArray', 'HasErrors') }
+                $InputObject.PSObject.Properties.Name | Where-Object { $_ -notin ('RowError', 'RowState', 'Table', 'ItemArray', 'HasErrors') }
             }
         }
         foreach ($DataRow in $InputObject) {
@@ -203,7 +203,7 @@ Describe -Name 'Join-Object' -Fixture {
             Format-Test @{
                 Description          = 'DataTable Error'
                 ExpectedErrorOn      = 'Test'
-                ExpectedErrorMessage = "but some values were missing: 'psobject{IDD=3; IntT=; Junk=S3; Name=X; R_IntO=; R_Sub=S3}"
+                ExpectedErrorMessage = "but some values were missing: 'PSObject{IDD=3; IntT=; Junk=S3; Name=X; R_IntO=; R_Sub=S3}"
                 Params               = @{
                     Left                   = 'DataTable'
                     Right                  = 'PSCustomObject'
@@ -915,7 +915,7 @@ Describe -Name 'Join-Object' -Fixture {
                 $Description,
                 $RunScript,
                 $ExpectedErrorMessage,
-                [validateset('Test', 'Run')]
+                [ValidateSet('Test', 'Run')]
                 $ExpectedErrorOn
             )
             #if ($TestName -notlike '*Default Multi Join*') { Continue }
