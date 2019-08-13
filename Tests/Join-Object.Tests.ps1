@@ -1,8 +1,11 @@
 ﻿#Requires -Modules Pester
 #Requires -Modules @{ ModuleName = 'Assert' ; ModuleVersion = '999.9.2' }
-
-$Verbose = @{ Verbose = $false }
-#$Verbose = @{ Verbose = $true }
+[CmdletBinding()]
+Param
+(
+    [Switch]$SaveMode,
+    [String[]]$FilterTests
+)
 
 if ($PSScriptRoot) {
     $ScriptRoot = $PSScriptRoot
@@ -17,7 +20,7 @@ else {
     $ScriptRoot = '.'
 }
 
-$TestDataSetSmall = {
+$DataSetSmall = {
     $PSCustomObject = @(
         [PSCustomObject]@{ ID = 1 ; Sub = 'S1' ; IntO = 6 }
         [PSCustomObject]@{ ID = 2 ; Sub = 'S2' ; IntO = 7 }
@@ -43,50 +46,35 @@ $TestDataSetSmall = {
     $null = $DataTable.Rows.Add(1, 'A', 'AAA', 5)
     $null = $DataTable.Rows.Add(3, 'C', 'S3', $null)
     $null = $DataTable.Rows.Add(4, 'D', $null, $null)
-}
-#. $TestDataSetSmall
 
-$TestDataSetSmallMulti = {
-    $PSCustomObject = @(
+    $PSCustomObjectMulti = @(
         [PSCustomObject]@{ ID = 1 ; Sub = 'S1' ; IntO = 6 }
         [PSCustomObject]@{ ID = 1 ; Sub = 'S12' ; IntO = 62 }
         [PSCustomObject]@{ ID = 2 ; Sub = 'S2' ; IntO = 7 }
         [PSCustomObject]@{ ID = 2 ; Sub = 'S22' ; IntO = 72 }
     )
 
-    $DataTable = [Data.DataTable]::new('Test')
-    $null = $DataTable.Columns.Add('IDD', [System.Int32])
-    $null = $DataTable.Columns.Add('Name')
-    $null = $DataTable.Columns.Add('Junk')
-    $null = $DataTable.Columns.Add('IntT', [System.Int32])
-    $null = $DataTable.Rows.Add(1, 'A', 'AAA', 5)
-    $null = $DataTable.Rows.Add(1, 'A2', 'AAA2', 52)
-    $null = $DataTable.Rows.Add(3, 'C', 'S3', $null)
-    $null = $DataTable.Rows.Add(3, 'C2', 'S32', $null)
+    $DataTableMulti = [Data.DataTable]::new('Test')
+    $null = $DataTableMulti.Columns.Add('IDD', [System.Int32])
+    $null = $DataTableMulti.Columns.Add('Name')
+    $null = $DataTableMulti.Columns.Add('Junk')
+    $null = $DataTableMulti.Columns.Add('IntT', [System.Int32])
+    $null = $DataTableMulti.Rows.Add(1, 'A', 'AAA', 5)
+    $null = $DataTableMulti.Rows.Add(1, 'A2', 'AAA2', 52)
+    $null = $DataTableMulti.Rows.Add(3, 'C', 'S3', $null)
+    $null = $DataTableMulti.Rows.Add(3, 'C2', 'S32', $null)
 }
-#. $TestDataSetSmallMulti
-
-function Format-Test {
-    [CmdletBinding()]
-    param
-    (
-        [Parameter(Mandatory)]
-        [Hashtable]$Test
-    )
-    if ($TestDataSetName, $Test.Params.Left, $Test.Params.Right, $Test.Description -contains $null) {
-        Throw 'Missing param'
-    }
-
-    $Test.TestName = '{0}, {3}. {1} - {2}' -f $TestDataSetName, $Test.Params.Left, $Test.Params.Right, $Test.Description
-    $Test.TestDataSet = Get-Variable -Name $TestDataSetName -ValueOnly
-    $Test
-}
+#. $DataSetSmall
 
 function ConvertFrom-DataTable {
+    <#
+        .SYNOPSIS
+        Convert DataTable to PSCustomObject, Support Deserialized DataTable.
+    #>
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory, Position = 0, ValueFromPipeline)]
+        [Parameter(Mandatory, ValueFromPipeline)]
         [ValidateScript( { $_ -is [System.Data.DataRow] } )]
         $InputObject
     )
@@ -96,7 +84,7 @@ function ConvertFrom-DataTable {
     process {
         if ($First) {
             $First = $false
-            $DataSetProperties = if ($InputObject -is [System.Data.DataTable]) {
+            $Properties = if ($InputObject -is [System.Data.DataTable]) {
                 $InputObject.Columns.ColumnName
             }
             else {
@@ -105,23 +93,27 @@ function ConvertFrom-DataTable {
         }
         foreach ($DataRow in $InputObject) {
             $RowHash = [ordered]@{ }
-            foreach ($DataSetProperty in $DataSetProperties) {
-                if ($DataRow.$DataSetProperty -is [DBNull]) {
-                    $RowHash.$DataSetProperty = $null
+            foreach ($Property in $Properties) {
+                if ($DataRow.$Property -is [DBNull]) {
+                    $RowHash[$Property] = $null
                 }
                 else {
-                    $RowHash.$DataSetProperty = $DataRow.$DataSetProperty
+                    $RowHash[$Property] = $DataRow.$Property
                 }
             }
             [PSCustomObject]$RowHash
         }
     }
 }
-
 function ConvertTo-DataTable {
+    <#
+        .SYNOPSIS
+        Convert PSCustomObject to DataTable.
+        Warning: Column type taken from firs line, null will be [Object].
+    #>
     [CmdletBinding()]
     param(
-        [Parameter(Position = 0, Mandatory, ValueFromPipeline)]
+        [Parameter(Mandatory, ValueFromPipeline)]
         $InputObject
     )
     begin {
@@ -144,6 +136,41 @@ function ConvertTo-DataTable {
     }
 }
 
+
+function Format-Test {
+    <#
+        .SYNOPSIS
+        Adds "TestName" and "DataSet" to the test.
+        Assumes $DataSetName and its value exists.
+    #>
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory)]
+        [Hashtable]$Test
+    )
+    if ($DataSetName, $Test.Params.Left, $Test.Params.Right -contains $null) {
+        Throw 'Missing param'
+    }
+
+    $Data = '{0}, {1} - {2}' -f $DataSetName, $Test.Params.Left, $Test.Params.Right
+    $OutputType = switch ($Test.Params) {
+        { $_.DataTable } { 'DataTable' }
+        { $_.PassThru } { 'PassThru' }
+    }
+    $OutputType = if ($OutputType) {
+        '{0}' -f ($OutputType -join '&')
+    }
+    $Description = if ($Test.Description) {
+        '({0})' -f $Test.Description
+    }
+
+
+
+    $Test.TestName = (($Data, $Test.Params.Type, $OutputType, $Description) -ne $null) -join '. '
+    $Test.DataSet = Get-Variable -Name $DataSetName -ValueOnly
+    $Test
+}
 function Get-Params {
     [CmdletBinding()]
     param
@@ -170,10 +197,9 @@ function Get-Params {
 }
 
 Describe -Name 'Join-Object' -Fixture {
-    $TestDataSetName = 'TestDataSetSmall'
-    Context -Name $TestDataSetName -Fixture {
-        Class EqualityComparerMy : Collections.Generic.EqualityComparer[object] {
-            [bool] Equals([object]$Object1 , [object]$Object2) {
+    Context -Name ($DataSetName = 'DataSetSmall') -Fixture {
+        Class EqualityComparerMy : Collections.Generic.EqualityComparer[Object] {
+            [bool] Equals([Object]$Object1 , [Object]$Object2) {
                 if ($Object1 -contains $Object2 -or $Object1 -in $Object2) {
                     return $true
                 }
@@ -181,13 +207,13 @@ Describe -Name 'Join-Object' -Fixture {
                     return $false
                 }
             }
-            [int] GetHashCode([object]$Object) {
+            [int] GetHashCode([Object]$Object) {
                 return 1
             }
         }
         $TestCases = @(
             Format-Test @{
-                Description          = 'Default Error'
+                Description          = 'Error, Mismatch'
                 ExpectedErrorOn      = 'Test'
                 ExpectedErrorMessage = "Object{ID=3; R_IntT=; R_Name=X; Subscription=S3}'."
                 Params               = @{
@@ -201,7 +227,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description          = 'DataTable Error'
+                Description          = 'Error, Mismatch'
                 ExpectedErrorOn      = 'Test'
                 ExpectedErrorMessage = "but some values were missing: 'PSObject{IDD=3; IntT=; Junk=S3; Name=X; R_IntO=; R_Sub=S3}"
                 Params               = @{
@@ -216,8 +242,7 @@ Describe -Name 'Join-Object' -Fixture {
             }
 
             Format-Test @{
-                Description = 'Default'
-                Params      = @{
+                Params = @{
                     Left                   = 'PSCustomObject'
                     Right                  = 'DataTable'
                     LeftJoinProperty       = 'ID'
@@ -228,8 +253,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'Default'
-                Params      = @{
+                Params = @{
                     Left                  = 'DataTable'
                     Right                 = 'PSCustomObject'
                     LeftJoinProperty      = 'IDD'
@@ -240,8 +264,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'Default AllInBoth'
-                Params      = @{
+                Params = @{
                     Left                   = 'PSCustomObject'
                     Right                  = 'DataTable'
                     LeftJoinProperty       = 'ID'
@@ -253,8 +276,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'Default AllInBoth'
-                Params      = @{
+                Params = @{
                     Left                  = 'DataTable'
                     Right                 = 'PSCustomObject'
                     LeftJoinProperty      = 'IDD'
@@ -266,8 +288,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'Default OnlyIfInBoth'
-                Params      = @{
+                Params = @{
                     Left                   = 'PSCustomObject'
                     Right                  = 'DataTable'
                     LeftJoinProperty       = 'ID'
@@ -279,8 +300,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'Default OnlyIfInBoth'
-                Params      = @{
+                Params = @{
                     Left                  = 'DataTable'
                     Right                 = 'PSCustomObject'
                     LeftJoinProperty      = 'IDD'
@@ -293,8 +313,7 @@ Describe -Name 'Join-Object' -Fixture {
             }
 
             Format-Test @{
-                Description = 'PassThru'
-                Params      = @{
+                Params = @{
                     Left                   = 'PSCustomObject'
                     Right                  = 'DataTable'
                     LeftJoinProperty       = 'ID'
@@ -306,8 +325,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'PassThru'
-                Params      = @{
+                Params = @{
                     Left                  = 'DataTable'
                     Right                 = 'PSCustomObject'
                     LeftJoinProperty      = 'IDD'
@@ -320,7 +338,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description          = 'PassThru AllInBoth Error'
+                Description          = 'Error, PassThru+AllInBoth'
                 ExpectedErrorOn      = 'Run'
                 ExpectedErrorMessage = '"-PassThru" and "-Type AllInBoth" are not compatible'
                 Params               = @{
@@ -336,7 +354,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description          = 'PassThru AllInBoth Error'
+                Description          = 'Error, PassThru+AllInBoth'
                 ExpectedErrorOn      = 'Run'
                 ExpectedErrorMessage = '"-PassThru" and "-Type AllInBoth" are not compatible'
                 Params               = @{
@@ -353,8 +371,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'PassThru OnlyIfInBoth'
-                Params      = @{
+                Params = @{
                     Left                   = 'PSCustomObject'
                     Right                  = 'DataTable'
                     LeftJoinProperty       = 'ID'
@@ -367,8 +384,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'PassThru OnlyIfInBoth'
-                Params      = @{
+                Params = @{
                     Left                  = 'DataTable'
                     Right                 = 'PSCustomObject'
                     LeftJoinProperty      = 'IDD'
@@ -383,8 +399,7 @@ Describe -Name 'Join-Object' -Fixture {
             }
 
             Format-Test @{
-                Description = 'DataTable'
-                Params      = @{
+                Params = @{
                     Left                   = 'DataTable'
                     Right                  = 'PSCustomObject'
                     LeftJoinProperty       = 'IDD'
@@ -395,8 +410,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'DataTable'
-                Params      = @{
+                Params = @{
                     Left                   = 'PSCustomObject'
                     Right                  = 'DataTable'
                     LeftJoinProperty       = 'ID'
@@ -407,8 +421,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'DataTable AllInBoth'
-                Params      = @{
+                Params = @{
                     Left                   = 'PSCustomObject'
                     Right                  = 'DataTable'
                     LeftJoinProperty       = 'ID'
@@ -420,8 +433,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'DataTable AllInBoth'
-                Params      = @{
+                Params = @{
                     Left                   = 'DataTable'
                     Right                  = 'PSCustomObject'
                     LeftJoinProperty       = 'IDD'
@@ -433,8 +445,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'DataTable OnlyIfInBoth'
-                Params      = @{
+                Params = @{
                     Left                   = 'PSCustomObject'
                     Right                  = 'DataTable'
                     LeftJoinProperty       = 'ID'
@@ -446,8 +457,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'DataTable OnlyIfInBoth'
-                Params      = @{
+                Params = @{
                     Left                   = 'DataTable'
                     Right                  = 'PSCustomObject'
                     LeftJoinProperty       = 'IDD'
@@ -460,19 +470,19 @@ Describe -Name 'Join-Object' -Fixture {
             }
 
             Format-Test @{
-                Description = 'Default Ordered'
+                Description = 'Ordered'
                 Params      = @{
                     Left                   = 'PSCustomObject'
                     Right                  = 'DataTable'
                     LeftJoinProperty       = 'ID'
                     RightJoinProperty      = 'IDD'
-                    LeftProperties         = [ordered]@{ Sub = 'Subscription' ; ID = 'ID' }
+                    LeftProperties         = [Ordered]@{ Sub = 'Subscription' ; ID = 'ID' }
                     ExcludeRightProperties = 'Junk'
                     Prefix                 = 'R_'
                 }
             }
             Format-Test @{
-                Description = 'Default DBNull to $null'
+                Description = 'DBNull to $null'
                 Params      = @{
                     Left              = 'PSCustomObject'
                     Right             = 'DataTable'
@@ -481,7 +491,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'Default Single'
+                Description = 'Single'
                 Params      = @{
                     Left                   = 'PSCustomObject[0]'
                     Right                  = 'DataTable'
@@ -493,7 +503,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'Default KeepRightJoinProperty'
+                Description = 'KeepRightJoinProperty'
                 Params      = @{
                     Left                   = 'PSCustomObject'
                     Right                  = 'DataTable'
@@ -506,7 +516,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'Default Multi Join'
+                Description = 'Multi Join'
                 Params      = @{
                     Left                   = 'PSCustomObject'
                     Right                  = 'DataTable'
@@ -518,7 +528,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'Default JoinScript'
+                Description = 'JoinScript'
                 Params      = @{
                     Left                   = 'PSCustomObject'
                     Right                  = 'DataTable'
@@ -532,7 +542,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'Default JoinScript2'
+                Description = 'JoinScript String'
                 Params      = @{
                     Left                   = 'PSCustomObject'
                     Right                  = 'DataTable'
@@ -545,7 +555,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'DataTable DataTableTypes'
+                Description = 'DataTableTypes'
                 Params      = @{
                     Left                   = 'DataTable'
                     Right                  = 'PSCustomObject'
@@ -558,7 +568,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'PassThru DataTableTypes'
+                Description = 'DataTableTypes'
                 Params      = @{
                     Left                   = 'DataTable'
                     Right                  = 'PSCustomObject'
@@ -571,7 +581,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description          = 'Default No AllowColumnsMerging'
+                Description          = 'Error, No AllowColumnsMerging'
                 ExpectedErrorOn      = 'Run'
                 ExpectedErrorMessage = "Item has already been added. Key in dictionary: 'Junk'"
                 Params               = @{
@@ -582,7 +592,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description          = 'Default AllowColumnsMerging'
+                Description          = 'Error, AllowColumnsMerging-DataTable'
                 ExpectedErrorOn      = 'Run'
                 ExpectedErrorMessage = '"-AllowColumnsMerging" support only on DataTable output'
                 Params               = @{
@@ -594,7 +604,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'DataTable AllowColumnsMerging'
+                Description = 'AllowColumnsMerging'
                 Params      = @{
                     Left                = 'DataTable'
                     Right               = 'PSCustomObjectJunk'
@@ -605,7 +615,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description          = 'PassThru AllowColumnsMerging'
+                Description          = 'Error, AllowColumnsMerging-OutDataTable'
                 ExpectedErrorOn      = 'Run'
                 ExpectedErrorMessage = '"-AllowColumnsMerging" support only on DataTable output'
                 Params               = @{
@@ -618,7 +628,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'PassThru AllowColumnsMerging'
+                Description = 'AllowColumnsMerging'
                 Params      = @{
                     Left                = 'DataTable'
                     Right               = 'PSCustomObjectJunk'
@@ -629,7 +639,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'PassThru AllowColumnsMerging'
+                Description = 'AllowColumnsMerging'
                 Params      = @{
                     Left                = 'DataTable'
                     Right               = '[DataTable]PSCustomObjectJunk'
@@ -640,7 +650,7 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'Default Comparer'
+                Description = 'Comparer'
                 Params      = @{
                     Left                   = 'DataTable'
                     Right                  = 'PSCustomObjectKeyArray'
@@ -652,16 +662,14 @@ Describe -Name 'Join-Object' -Fixture {
                     Comparer               = [EqualityComparerMy]::new()
                 }
             }
-        )
-        $TestDataSetName = 'TestDataSetSmallMulti'
-        $TestCases += @(
+
             Format-Test @{
-                Description          = 'DataTable AllInLeft SingleOnly not supported Error'
+                Description          = 'Error, SingleOnly+BasicJoin'
                 ExpectedErrorOn      = 'Run'
                 ExpectedErrorMessage = '"-Type AllInLeft" and "-Type OnlyIfInBoth" support only "-LeftMultiMode DuplicateLines"'
                 Params               = @{
-                    Left                   = 'PSCustomObject'
-                    Right                  = 'DataTable'
+                    Left                   = 'PSCustomObjectMulti'
+                    Right                  = 'DataTableMulti'
                     LeftJoinProperty       = 'ID'
                     RightJoinProperty      = 'IDD'
                     ExcludeRightProperties = 'Junk'
@@ -672,12 +680,12 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description          = 'DataTable OnlyIfInBoth SingleOnly not supported Error'
+                Description          = 'Error, SingleOnly+BasicJoin'
                 ExpectedErrorOn      = 'Run'
                 ExpectedErrorMessage = '"-Type OnlyIfInBoth" support only "-RightMultiMode DuplicateLines"'
                 Params               = @{
-                    Left              = 'DataTable'
-                    Right             = 'PSCustomObject'
+                    Left              = 'DataTableMulti'
+                    Right             = 'PSCustomObjectMulti'
                     LeftJoinProperty  = 'IDD'
                     RightJoinProperty = 'ID'
                     Prefix            = 'R_'
@@ -687,12 +695,12 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description          = 'DataTable AllInLeft SingleOnly Error'
+                Description          = 'Error, SingleOnly'
                 ExpectedErrorOn      = 'Run'
                 ExpectedErrorMessage = 'Sequence contains more than one element'
                 Params               = @{
-                    Left                   = 'PSCustomObject'
-                    Right                  = 'DataTable'
+                    Left                   = 'PSCustomObjectMulti'
+                    Right                  = 'DataTableMulti'
                     LeftJoinProperty       = 'ID'
                     RightJoinProperty      = 'IDD'
                     ExcludeRightProperties = 'Junk'
@@ -703,12 +711,12 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description          = 'DataTable AllInBoth SingleOnly Error'
+                Description          = 'Error, SingleOnly'
                 ExpectedErrorOn      = 'Run'
                 ExpectedErrorMessage = 'Sequence contains more than one element'
                 Params               = @{
-                    Left                   = 'PSCustomObject'
-                    Right                  = 'DataTable'
+                    Left                   = 'PSCustomObjectMulti'
+                    Right                  = 'DataTableMulti'
                     LeftJoinProperty       = 'ID'
                     RightJoinProperty      = 'IDD'
                     ExcludeRightProperties = 'Junk'
@@ -719,10 +727,10 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'DataTable AllInBoth'
+                Description = 'DuplicateLines'
                 Params      = @{
-                    Left                   = 'PSCustomObject'
-                    Right                  = 'DataTable'
+                    Left                   = 'PSCustomObjectMulti'
+                    Right                  = 'DataTableMulti'
                     LeftJoinProperty       = 'ID'
                     RightJoinProperty      = 'IDD'
                     ExcludeRightProperties = 'Junk'
@@ -734,10 +742,10 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'DataTable AllInBoth'
+                Description = 'DuplicateLines'
                 Params      = @{
-                    Left              = 'DataTable'
-                    Right             = 'PSCustomObject'
+                    Left              = 'DataTableMulti'
+                    Right             = 'PSCustomObjectMulti'
                     LeftJoinProperty  = 'IDD'
                     RightJoinProperty = 'ID'
                     Prefix            = 'R_'
@@ -748,10 +756,10 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'DataTable AllInBoth SubGroups'
+                Description = 'SubGroups'
                 Params      = @{
-                    Left                   = 'PSCustomObject'
-                    Right                  = 'DataTable'
+                    Left                   = 'PSCustomObjectMulti'
+                    Right                  = 'DataTableMulti'
                     LeftJoinProperty       = 'ID'
                     RightJoinProperty      = 'IDD'
                     ExcludeRightProperties = 'Junk'
@@ -763,10 +771,10 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'DataTable AllInBoth SubGroups'
+                Description = 'SubGroups'
                 Params      = @{
-                    Left              = 'DataTable'
-                    Right             = 'PSCustomObject'
+                    Left              = 'DataTableMulti'
+                    Right             = 'PSCustomObjectMulti'
                     LeftJoinProperty  = 'IDD'
                     RightJoinProperty = 'ID'
                     Prefix            = 'R_'
@@ -777,10 +785,10 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'Default AllInBoth SubGroups'
+                Description = 'SubGroups'
                 Params      = @{
-                    Left                   = 'PSCustomObject'
-                    Right                  = 'DataTable'
+                    Left                   = 'PSCustomObjectMulti'
+                    Right                  = 'DataTableMulti'
                     LeftJoinProperty       = 'ID'
                     RightJoinProperty      = 'IDD'
                     ExcludeRightProperties = 'Junk'
@@ -791,10 +799,10 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'Default AllInBoth SubGroups'
+                Description = 'SubGroups'
                 Params      = @{
-                    Left              = 'DataTable'
-                    Right             = 'PSCustomObject'
+                    Left              = 'DataTableMulti'
+                    Right             = 'PSCustomObjectMulti'
                     LeftJoinProperty  = 'IDD'
                     RightJoinProperty = 'ID'
                     Prefix            = 'R_'
@@ -804,10 +812,10 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'PassThru AllInLeft SubGroups'
+                Description = 'SubGroups'
                 Params      = @{
-                    Left                   = 'PSCustomObject'
-                    Right                  = 'DataTable'
+                    Left                   = 'PSCustomObjectMulti'
+                    Right                  = 'DataTableMulti'
                     LeftJoinProperty       = 'ID'
                     RightJoinProperty      = 'IDD'
                     ExcludeRightProperties = 'Junk'
@@ -818,10 +826,10 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'PassThru AllInLeft SubGroups'
+                Description = 'SubGroups'
                 Params      = @{
-                    Left                   = 'PSCustomObject'
-                    Right                  = '[PSCustomObject]DataTable'
+                    Left                   = 'PSCustomObjectMulti'
+                    Right                  = '[PSCustomObject]DataTableMulti'
                     LeftJoinProperty       = 'ID'
                     RightJoinProperty      = 'IDD'
                     ExcludeRightProperties = 'Junk'
@@ -832,10 +840,10 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'PassThru AllInLeft SubGroups'
+                Description = 'SubGroups'
                 Params      = @{
-                    Left              = 'DataTable'
-                    Right             = 'PSCustomObject'
+                    Left              = 'DataTableMulti'
+                    Right             = 'PSCustomObjectMulti'
                     LeftJoinProperty  = 'IDD'
                     RightJoinProperty = 'ID'
                     Prefix            = 'R_'
@@ -845,10 +853,10 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'PassThru AllInLeft SubGroups'
+                Description = 'SubGroups'
                 Params      = @{
-                    Left              = 'DataTable'
-                    Right             = '[DataTable]PSCustomObject'
+                    Left              = 'DataTableMulti'
+                    Right             = '[DataTable]PSCustomObjectMulti'
                     LeftJoinProperty  = 'IDD'
                     RightJoinProperty = 'ID'
                     Prefix            = 'R_'
@@ -858,10 +866,10 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'Default AllInBoth SubGroups Key'
+                Description = 'SubGroups Key'
                 Params      = @{
-                    Left                   = 'PSCustomObject'
-                    Right                  = 'DataTable'
+                    Left                   = 'PSCustomObjectMulti'
+                    Right                  = 'DataTableMulti'
                     LeftJoinProperty       = 'ID'
                     RightJoinProperty      = 'IDD'
                     ExcludeRightProperties = 'Junk'
@@ -873,12 +881,12 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description          = 'Default SubGroups Key Error'
+                Description          = 'Error, AddKey-AllInBoth'
                 ExpectedErrorOn      = 'Run'
                 ExpectedErrorMessage = '"-AddKey" support only "-Type AllInBoth"'
                 Params               = @{
-                    Left                   = 'PSCustomObject'
-                    Right                  = 'DataTable'
+                    Left                   = 'PSCustomObjectMulti'
+                    Right                  = 'DataTableMulti'
                     LeftJoinProperty       = 'ID'
                     RightJoinProperty      = 'IDD'
                     ExcludeRightProperties = 'Junk'
@@ -889,10 +897,10 @@ Describe -Name 'Join-Object' -Fixture {
                 }
             }
             Format-Test @{
-                Description = 'DataTable AllInBoth SubGroups Key'
+                Description = 'SubGroups Key'
                 Params      = @{
-                    Left                   = 'PSCustomObject'
-                    Right                  = 'DataTable'
+                    Left                   = 'PSCustomObjectMulti'
+                    Right                  = 'DataTableMulti'
                     LeftJoinProperty       = 'ID'
                     RightJoinProperty      = 'IDD'
                     ExcludeRightProperties = 'Junk'
@@ -906,22 +914,34 @@ Describe -Name 'Join-Object' -Fixture {
                     KeepRightJoinProperty  = $true
                 }
             }
+            Format-Test @{
+                Description = 'SubArray'
+                RunScript   = { Set-ItResult -Pending -Because 'Bug?' }
+                Params      = @{
+                    Left              = 'DataTable'
+                    Right             = 'PSCustomObjectMulti'
+                    LeftJoinProperty  = 'IDD'
+                    RightJoinProperty = 'ID'
+                    Prefix            = 'R_'
+                    RightMultiMode    = 'DuplicateLines'
+                }
+            }
         )
+        if ($FilterTests) {
+            $TestCases = $TestCases | Where-Object TestName -In $FilterTests
+        }
         It -name "Testing <TestName>" -TestCases $TestCases -test {
             param (
                 $Params,
-                $TestDataSet,
+                $DataSet,
                 $TestName,
-                $Description,
                 $RunScript,
                 $ExpectedErrorMessage,
                 [ValidateSet('Test', 'Run')]
                 $ExpectedErrorOn
             )
-            #if ($TestName -notlike '*Default Multi Join*') { Continue }
-
             # Load Data
-            . $TestDataSet
+            . $DataSet
             if ($RunScript) {
                 . $RunScript
             }
@@ -929,8 +949,8 @@ Describe -Name 'Join-Object' -Fixture {
             $Params.Right = Get-Params -Param $Params.Right
 
             # Save Before Data Copy
-            $BeforeLeft = [System.Management.Automation.PSSerializer]::Deserialize([System.Management.Automation.PSSerializer]::Serialize($Params.Left, 2))
-            $BeforeRight = [System.Management.Automation.PSSerializer]::Deserialize([System.Management.Automation.PSSerializer]::Serialize($Params.Right, 2))
+            $BeforeLeft = [System.Management.Automation.PSSerializer]::Deserialize([System.Management.Automation.PSSerializer]::Serialize($Params.Left, 3))
+            $BeforeRight = [System.Management.Automation.PSSerializer]::Deserialize([System.Management.Automation.PSSerializer]::Serialize($Params.Right, 3))
 
             # Execute Cmdlet
             if ($ExpectedErrorOn -eq 'Run') {
@@ -940,17 +960,22 @@ Describe -Name 'Join-Object' -Fixture {
             else {
                 $JoinedOutput = Join-Object @Params
             }
-            Write-Verbose ('it returns:' + ($JoinedOutput | Format-Table | Out-String)) @Verbose
+            Write-Verbose ('it returns:' + ($JoinedOutput | Format-Table | Out-String))
 
-            <# Save CompareData (Xml)
-            Write-Host ($TestName + ($JoinedOutput | Format-Table | Out-String))
-            Export-Clixml -LiteralPath "$ScriptRoot\CompareData\$TestName.xml" -InputObject $JoinedOutput -Depth 3
-            #>
+            # Save CompareData (Xml)
+            if ($SaveMode) {
+                Write-Host ($TestName + ($JoinedOutput | Format-Table | Out-String))
+
+                if ($JoinedOutput -is [Array] -and ($SubArrayTest = $JoinedOutput | ForEach-Object { $_ -is [Array] }) -contains $true) {
+                    Write-Warning ("SubArrayTest $SubArrayTest")
+                }
+                Export-Clixml -LiteralPath "$ScriptRoot\CompareData\$TestName.xml" -InputObject $JoinedOutput -Depth 3 -Confirm
+            }
 
             # Get CompareData
             $CompareDataXml = (Get-Content -LiteralPath "$ScriptRoot\CompareData\$TestName.xml") -join [Environment]::NewLine
             $CompareDataNew = [System.Management.Automation.PSSerializer]::Deserialize($CompareDataXml)
-            Write-Verbose ('it should return:' + ($CompareDataNew | Format-Table | Out-String)) @Verbose
+            Write-Verbose ('it should return:' + ($CompareDataNew | Format-Table | Out-String))
 
             # Test
             if ($ExpectedErrorOn -eq 'Test') {

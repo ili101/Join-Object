@@ -5,6 +5,7 @@
         "Cmdlet",
         "Computername",
         "Deserialize",
+        "Deserialized",
         "HKLM",
         "Hashtable",
         "Inno",
