@@ -1,7 +1,7 @@
 # Fix Could not create SSL/TLS secure channel
 #$SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol
 #[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-$Branch = 'Test' #'master'
+$Branch = 'Test2' #'master'
 $Repository = 'Assert'
 $PathZip = Join-Path ([IO.Path]::GetTempPath()) "$Repository-$Branch.zip"
 $PathPsd1 = Join-Path ([IO.Path]::GetTempPath()) "$Repository-$Branch" | Join-Path -ChildPath "$Repository.psd1"

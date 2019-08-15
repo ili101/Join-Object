@@ -1,11 +1,12 @@
 ﻿#Requires -Modules Pester
-#Requires -Modules @{ ModuleName = 'Assert' ; ModuleVersion = '999.9.2' }
+#Requires -Modules @{ ModuleName = 'Assert' ; ModuleVersion = '999.9.5' }
 [CmdletBinding()]
 Param
 (
     [Switch]$SaveMode,
     [String[]]$FilterTests
 )
+$EquivalencyOption = Get-EquivalencyOption -Comparator 'StrictEquality'-StrictOrder
 
 if ($PSScriptRoot) {
     $ScriptRoot = $PSScriptRoot
@@ -979,19 +980,19 @@ Describe -Name 'Join-Object' -Fixture {
 
             # Test
             if ($ExpectedErrorOn -eq 'Test') {
-                { Assert-Equivalent -Actual $JoinedOutput -Expected $CompareDataNew -StrictOrder -StrictType } | Should -Throw -ExpectedMessage $ExpectedErrorMessage
+                { Assert-Equivalent -Actual $JoinedOutput -Expected $CompareDataNew -Options $EquivalencyOption } | Should -Throw -ExpectedMessage $ExpectedErrorMessage
             }
             else {
-                Assert-Equivalent -Actual $JoinedOutput -Expected $CompareDataNew -StrictOrder -StrictType
+                Assert-Equivalent -Actual $JoinedOutput -Expected $CompareDataNew -Options $EquivalencyOption
             }
 
             if ($Params.PassThru) {
-                Assert-Equivalent -Actual $Params.Left -Expected $CompareDataNew -StrictOrder -StrictType
+                Assert-Equivalent -Actual $Params.Left -Expected $CompareDataNew -Options $EquivalencyOption
             }
             else {
-                Assert-Equivalent -Actual $Params.Left -Expected $BeforeLeft -StrictOrder -StrictType
+                Assert-Equivalent -Actual $Params.Left -Expected $BeforeLeft -Options $EquivalencyOption
             }
-            Assert-Equivalent -Actual $Params.Right -Expected $BeforeRight -StrictOrder -StrictType
+            Assert-Equivalent -Actual $Params.Right -Expected $BeforeRight -Options $EquivalencyOption
 
             if (!$Params.PassThru) {
                 if ($Params.DataTable) {
