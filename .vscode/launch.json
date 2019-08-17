@@ -15,6 +15,16 @@
         {
             "type": "PowerShell",
             "request": "launch",
+            "name": "PowerShell Pester Tests Big",
+            "script": "Import-Module -Name '.\\' -Force ; Invoke-Pester -Script .\\Tests\\Join-Object.Tests.Big.ps1",
+            "args": [
+                ""
+            ],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
             "name": "PowerShell Launch Current File",
             "script": "${file}",
             "args": [],
