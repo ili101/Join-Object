@@ -475,39 +475,41 @@ function Join-Object {
             Set-OutDataTable -OutDataTable $OutDataTable -Object $Right -SelectedProperties $SelectedRightProperties -AllowColumnsMerging $AllowColumnsMerging
         }
     }
-    elseif ($PassThru -and $Left -is [Data.DataTable]) {
-        # Remove LeftLine
-        foreach ($ColumnName in $Left.Columns.ColumnName) {
-            if ($ColumnName -notin $SelectedLeftProperties.Keys) {
-                $Left.Columns.Remove($ColumnName)
+    elseif ($PassThru) {
+        if ($Left -is [Data.DataTable]) {
+            # Remove LeftLine
+            foreach ($ColumnName in $Left.Columns.ColumnName) {
+                if ($ColumnName -notin $SelectedLeftProperties.Keys) {
+                    $Left.Columns.Remove($ColumnName)
+                }
             }
-        }
-        # Rename LeftLine
-        foreach ($item in $SelectedLeftProperties.GetEnumerator()) {
-            if ($item.Key -ne $item.value -and ($Column = $Left.Columns.Item($item.Key))) {
-                $Column.ColumnName = $item.value
+            # Rename LeftLine
+            foreach ($item in $SelectedLeftProperties.GetEnumerator()) {
+                if ($item.Key -ne $item.value -and ($Column = $Left.Columns.Item($item.Key))) {
+                    $Column.ColumnName = $item.value
+                }
             }
-        }
-        if ($RightMultiMode -eq 'SubGroups') {
-            $null = $Left.Columns.Add('RightGroup', [Object])
-        }
-        else {
-            # Add RightLine to LeftLine
-            foreach ($item in $SelectedRightProperties.GetEnumerator()) {
-                if (!$AllowColumnsMerging -or !$Left.Columns.Item($item.Value)) {
-                    if ($null -ne $DataTableTypes.($item.Value)) {
-                        $null = $Left.Columns.Add($item.Value, $DataTableTypes.($item.Value))
-                    }
-                    else {
-                        $null = $Left.Columns.Add($item.Value)
+            if ($RightMultiMode -eq 'SubGroups') {
+                $null = $Left.Columns.Add('RightGroup', [Object])
+            }
+            else {
+                # Add RightLine to LeftLine
+                foreach ($item in $SelectedRightProperties.GetEnumerator()) {
+                    if (!$AllowColumnsMerging -or !$Left.Columns.Item($item.Value)) {
+                        if ($null -ne $DataTableTypes.($item.Value)) {
+                            $null = $Left.Columns.Add($item.Value, $DataTableTypes.($item.Value))
+                        }
+                        else {
+                            $null = $Left.Columns.Add($item.Value)
+                        }
                     }
                 }
             }
         }
-    }
-    if ($PassThru -and $Right -is [Data.DataTable]) {
-        $OutDataTableSubGroupTemplateRight = [Data.DataTable]::new('RightGroup')
-        Set-OutDataTable -OutDataTable $OutDataTableSubGroupTemplateRight -Object $Right -SelectedProperties $SelectedRightProperties
+        if ($Right -is [Data.DataTable] -and $RightMultiMode -eq 'SubGroups') {
+            $OutDataTableSubGroupTemplateRight = [Data.DataTable]::new('RightGroup')
+            Set-OutDataTable -OutDataTable $OutDataTableSubGroupTemplateRight -Object $Right -SelectedProperties $SelectedRightProperties
+        }
     }
     #endregion Prepare Data
     #region Main
@@ -586,15 +588,19 @@ function Join-Object {
         if ($Left -is [Data.DataTable]) {
             $QueryTemp = @{
                 Main        = { _SidesScript_ }
-                Left        = { }
-                Side        = { _DataTable_ }
                 SideReplace = '_Row_', 'LeftLine'
             }
-            if ($Right -is [Data.DataTable]) {
-                $QueryTemp['SideSubGroup'] = $QueryParts['DataTableFromSubGroup'].Replace('_Row_', 'LeftLine').Replace('_SubGroup_', $QueryParts['SubGroupFromDataTable'])
+            if ($RightMultiMode -eq 'SubGroups') {
+                $QueryTemp['SideSubGroupBase'] = $QueryParts['DataTableFromSubGroup']
+                if ($Right -is [Data.DataTable]) {
+                    $QueryTemp['SideSubGroup'] = $QueryParts['SubGroupFromDataTable']
+                }
+                else {
+                    $QueryTemp['SideSubGroup'] = $QueryParts['SubGroupFromPSCustomObject']
+                }
             }
             else {
-                $QueryTemp['SideSubGroup'] = $QueryParts['DataTableFromSubGroup'].Replace('_Row_', 'LeftLine').Replace('_SubGroup_', $QueryParts['SubGroupFromPSCustomObject'])
+                $QueryTemp['Right'] = { _DataTable_ }
             }
             $QueryTemp
         }
@@ -617,42 +623,58 @@ function Join-Object {
                     }
                     _SidesScript_
                 }
-                Left        = { }
-                Side        = { _PSCustomObject_ }
                 SideReplace = '_Row_\.Add([^\r\n]*)', 'LeftLine.PSObject.Properties.Add([Management.Automation.PSNoteProperty]::new$1)'
             }
-            if ($Right -is [Data.DataTable]) {
-                $QueryTemp['SideSubGroup'] = ($QueryParts['PSCustomObjectFromSubGroup'] -Replace $QueryTemp['SideReplace']).Replace('_SubGroup_', $QueryParts['SubGroupFromDataTable'])
+            if ($RightMultiMode -eq 'SubGroups') {
+                $QueryTemp['SideSubGroupBase'] = $QueryParts['PSCustomObjectFromSubGroup']
+                if ($Right -is [Data.DataTable]) {
+                    $QueryTemp['SideSubGroup'] = $QueryParts['SubGroupFromDataTable']
+                }
+                else {
+                    $QueryTemp['SideSubGroup'] = $QueryParts['SubGroupFromPSCustomObject']
+                }
             }
             else {
-                $QueryTemp['SideSubGroup'] = ($QueryParts['PSCustomObjectFromSubGroup'] -Replace $QueryTemp['SideReplace']).Replace('_SubGroup_', $QueryParts['SubGroupFromPSCustomObject'])
+                $QueryTemp['Right'] = { _PSCustomObject_ }
             }
             $QueryTemp
         }
     }
     elseif ($DataTable) {
-        @{
-            Main         = {
+        $QueryTemp = @{
+            Main        = {
                 $RowMain = $OutDataTable.Rows.Add()
                 _SidesScript_
             }
-            Side         = { _DataTable_ }
-            SideReplace  = '_Row_', 'RowMain'
-            SideSubGroup = $QueryParts['DataTableFromSubGroup'].Replace('_Row_', 'RowMain').Replace('_SubGroup_', $QueryParts['SubGroupFromDataTable'])
+            SideReplace = '_Row_', 'RowMain'
         }
+        if ($LeftMultiMode -eq 'SubGroups' -or $RightMultiMode -eq 'SubGroups') {
+            $QueryTemp['SideSubGroupBase'] = $QueryParts['DataTableFromSubGroup']
+            $QueryTemp['SideSubGroup'] = $QueryParts['SubGroupFromDataTable']
+        }
+        if ($LeftMultiMode -ne 'SubGroups' -or $RightMultiMode -ne 'SubGroups') {
+            $QueryTemp['Side'] = { _DataTable_ }
+        }
+        $QueryTemp
     }
     else {
         # PSCustomObject
-        @{
-            Main         = {
+        $QueryTemp = @{
+            Main        = {
                 $RowMain = [ordered]@{ }
                 _SidesScript_
                 [PSCustomObject]$RowMain
             }
-            Side         = { _PSCustomObject_ }
-            SideReplace  = '_Row_', 'RowMain'
-            SideSubGroup = $QueryParts['PSCustomObjectFromSubGroup'].Replace('_Row_', 'RowMain').Replace('_SubGroup_', $QueryParts['SubGroupFromPSCustomObject'])
+            SideReplace = '_Row_', 'RowMain'
         }
+        if ($LeftMultiMode -eq 'SubGroups' -or $RightMultiMode -eq 'SubGroups') {
+            $QueryTemp['SideSubGroupBase'] = $QueryParts['PSCustomObjectFromSubGroup']
+            $QueryTemp['SideSubGroup'] = $QueryParts['SubGroupFromPSCustomObject']
+        }
+        if ($LeftMultiMode -ne 'SubGroups' -or $RightMultiMode -ne 'SubGroups') {
+            $QueryTemp['Side'] = { _PSCustomObject_ }
+        }
+        $QueryTemp
     }
 
     $Query['Base'] = {
@@ -690,29 +712,33 @@ function Join-Object {
         if ($MultiMode -eq 'SubGroups') {
             $Query[$Side + 'Enumerable'] = { $_Side_Lines = if ($_Side_Line.Count) { $_Side_Line } }
             $Query[$Side] = if ($Object -is [Data.DataTable]) {
-                $Query['SideSubGroup'].Replace('_DataTable_', $QueryParts['DataTableFromDataTable']).Replace('_PSCustomObject_', $QueryParts['PSCustomObjectFromAny'])
+                ($Query['SideSubGroupBase'] -Replace $Query['SideReplace']).Replace('_SubGroup_', $Query['SideSubGroup']).Replace('_DataTable_', $QueryParts['DataTableFromDataTable']).Replace('_PSCustomObject_', $QueryParts['PSCustomObjectFromAny'])
             }
             else {
-                $Query['SideSubGroup'].Replace('_DataTable_', $QueryParts['DataTableFromAny']).Replace('_PSCustomObject_', $QueryParts['PSCustomObjectFromPSCustomObject'])
+                ($Query['SideSubGroupBase'] -Replace $Query['SideReplace']).Replace('_SubGroup_', $Query['SideSubGroup']).Replace('_DataTable_', $QueryParts['DataTableFromAny']).Replace('_PSCustomObject_', $QueryParts['PSCustomObjectFromPSCustomObject'])
             }
             $Query[$Side] = $Query[$Side].Replace('_Row_', 'RowSubGroup')
         }
         else {
-            if ($null -eq $Query[$Side]) {
-                $Query[$Side] = $Query['Side']
+            if ($Query[$Side] -or $Query['Side']) {
+                if ($null -eq $Query[$Side]) {
+                    $Query[$Side] = $Query['Side']
+                }
+                if ($null -ne $MultiMode -and $Query[$Side] -like '*_DataTable_*') {
+                    $Query[$Side] = $QueryParts['IfSideLine'].Replace('_SideScript_', $Query[$Side])
+                }
+                $Query[$Side] = if ($Object -is [Data.DataTable]) {
+                    $Query[$Side].Replace('_DataTable_', $QueryParts['DataTableFromDataTable']).Replace('_PSCustomObject_', $QueryParts['PSCustomObjectFromAny'])
+                }
+                else {
+                    $Query[$Side].Replace('_DataTable_', $QueryParts['DataTableFromAny']).Replace('_PSCustomObject_', $QueryParts['PSCustomObjectFromPSCustomObject'])
+                }
+                $Query[$Side] = $Query[$Side] -Replace $Query['SideReplace']
             }
-            if ($null -ne $MultiMode -and $Query[$Side] -like '*_DataTable_*') {
-                $Query[$Side] = $QueryParts['IfSideLine'].Replace('_SideScript_', $Query[$Side])
-            }
-            $Query[$Side] = if ($Object -is [Data.DataTable]) {
-                $Query[$Side].Replace('_DataTable_', $QueryParts['DataTableFromDataTable']).Replace('_PSCustomObject_', $QueryParts['PSCustomObjectFromAny'])
-            }
-            else {
-                $Query[$Side].Replace('_DataTable_', $QueryParts['DataTableFromAny']).Replace('_PSCustomObject_', $QueryParts['PSCustomObjectFromPSCustomObject'])
-            }
-            $Query[$Side] = $Query[$Side] -Replace $Query['SideReplace']
         }
-        $Query[$Side] = $Query[$Side].Replace('_Side_', $Side)
+        if ($Query[$Side]) {
+            $Query[$Side] = $Query[$Side].Replace('_Side_', $Side)
+        }
         if ($Query[$Side + 'Enumerable']) {
             $Query[$Side + 'Enumerable'] = $Query[$Side + 'Enumerable'].ToString().Replace('_Side_', $Side)
         }
