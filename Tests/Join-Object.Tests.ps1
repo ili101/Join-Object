@@ -788,7 +788,17 @@ Describe -Name 'Join-Object' -Fixture {
             }
             Format-Test @{
                 Description = 'SubArray'
-                RunScript   = { Set-ItResult -Pending -Because 'Bug?' }
+                Params      = @{
+                    Left              = 'PSCustomObjectMulti'
+                    Right             = 'DataTable'
+                    LeftJoinProperty  = 'ID'
+                    RightJoinProperty = 'IDD'
+                    Prefix            = 'R_'
+                }
+            }
+            Format-Test @{
+                Description = 'SubArray'
+                #RunScript   = { Set-ItResult -Pending -Because 'Bug?' }
                 Params      = @{
                     Left              = 'DataTable'
                     Right             = 'PSCustomObjectMulti'
@@ -837,7 +847,10 @@ Describe -Name 'Join-Object' -Fixture {
 
             # Save CompareData (Xml)
             if ($SaveMode) {
-                Write-Host ($TestName + ($JoinedOutput | Format-Table | Out-String))
+                Write-Host ("{0}`nLeft:{1}Right:{2}Params:{3}Result:{4}" -f $TestName,
+                    ($Params.Left | Format-Table | Out-String), ($Params.Right | Format-Table | Out-String),
+                    (([PSCustomObject]$Params) | Select-Object -ExcludeProperty 'Left', 'Right' -Property '*' | Format-List | Out-String),
+                    ($JoinedOutput | Format-Table | Out-String))
 
                 if ($JoinedOutput -is [Array] -and ($SubArrayTest = $JoinedOutput | ForEach-Object { $_ -is [Array] }) -contains $true) {
                     Write-Warning ("SubArrayTest $SubArrayTest")

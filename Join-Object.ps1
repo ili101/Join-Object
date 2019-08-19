@@ -810,6 +810,9 @@ function Join-Object {
         elseif ($DataTable) {
             , $OutDataTable
         }
+        elseif ($LeftMultiMode -eq 'DuplicateLines' -or $RightMultiMode -eq 'DuplicateLines') {
+            $Result.ForEach( { $_ } )
+        }
         else {
             $Result
         }
