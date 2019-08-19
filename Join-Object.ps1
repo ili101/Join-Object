@@ -242,7 +242,7 @@ function Join-Object {
         [ValidateSet('SingleOnly', 'DuplicateLines', 'SubGroups')]
         [string]$RightMultiMode = 'SingleOnly',
 
-        [switch]$AddKey,
+        [String]$AddKey,
         [switch]$AllowColumnsMerging,
         [Collections.Generic.IEqualityComparer[Object]]$Comparer
     )
@@ -456,7 +456,7 @@ function Join-Object {
     if ($DataTable) {
         $OutDataTable = [Data.DataTable]::new('Joined')
         if ($AddKey) {
-            $null = $OutDataTable.Columns.Add('Key')
+            $null = $OutDataTable.Columns.Add($AddKey)
         }
         if ($LeftMultiMode -eq 'SubGroups') {
             $OutDataTableSubGroupTemplateLeft = [Data.DataTable]::new('LeftGroup')
@@ -748,9 +748,15 @@ function Join-Object {
 
     if ($AddKey) {
         $KeyScript = {
-            $RowMain.Key = $Key
+            $RowMain._Key_ = $Key
             _SidesScript_
         }.ToString()
+        $KeyScript = if ($DataTable) {
+            $KeyScript.Replace('._Key_', "['$AddKey']")
+        }
+        else {
+            $KeyScript.Replace('_Key_', $AddKey)
+        }
         $Query['Main'] = $Query['Main'].Replace('_SidesScript_', $KeyScript)
     }
 

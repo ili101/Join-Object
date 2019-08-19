@@ -749,7 +749,7 @@ Describe -Name 'Join-Object' -Fixture {
                     Type                   = 'AllInBoth'
                     LeftMultiMode          = 'SubGroups'
                     RightMultiMode         = 'SubGroups'
-                    AddKey                 = $true
+                    AddKey                 = 'JoinKey'
                 }
             }
             Format-Test @{
@@ -765,7 +765,7 @@ Describe -Name 'Join-Object' -Fixture {
                     Prefix                 = 'R_'
                     LeftMultiMode          = 'SubGroups'
                     RightMultiMode         = 'SubGroups'
-                    AddKey                 = $true
+                    AddKey                 = 'JoinKey'
                 }
             }
             Format-Test @{
@@ -781,7 +781,7 @@ Describe -Name 'Join-Object' -Fixture {
                     Type                   = 'AllInBoth'
                     LeftMultiMode          = 'DuplicateLines'
                     RightMultiMode         = 'SubGroups'
-                    AddKey                 = $true
+                    AddKey                 = 'JoinKey'
                     DataTable              = $true
                     KeepRightJoinProperty  = $true
                 }
@@ -847,10 +847,18 @@ Describe -Name 'Join-Object' -Fixture {
 
             # Save CompareData (Xml)
             if ($SaveMode) {
-                Write-Host ("{0}`nLeft:{1}Right:{2}Params:{3}Result:{4}" -f $TestName,
+                try {
+                    $CompareDataXml = (Get-Content -LiteralPath "$ScriptRoot\CompareData\$TestName.xml" -ErrorAction 'Stop') -join [Environment]::NewLine
+                    $CompareDataNew = [System.Management.Automation.PSSerializer]::Deserialize($CompareDataXml)
+                }
+                catch {
+                    $CompareDataNew = 'None'
+                }
+                Write-Host ("{0}`nLeft:{1}Right:{2}Params:{3}Result:{4}Replacing:{5}" -f $TestName,
                     ($Params.Left | Format-Table | Out-String), ($Params.Right | Format-Table | Out-String),
                     (([PSCustomObject]$Params) | Select-Object -ExcludeProperty 'Left', 'Right' -Property '*' | Format-List | Out-String),
-                    ($JoinedOutput | Format-Table | Out-String))
+                    ($JoinedOutput | Format-Table | Out-String), ($CompareDataNew | Format-Table | Out-String)
+                )
 
                 if ($JoinedOutput -is [Array] -and ($SubArrayTest = $JoinedOutput | ForEach-Object { $_ -is [Array] }) -contains $true) {
                     Write-Warning ("SubArrayTest $SubArrayTest")
