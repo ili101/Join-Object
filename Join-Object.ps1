@@ -247,10 +247,10 @@ function Join-Object {
         [Collections.Generic.IEqualityComparer[Object]]$Comparer
     )
     #region Validate Params
-    if ($PassThru -and $Type -eq 'AllInBoth') {
+    if ($PassThru -and ($Type -in ('AllInBoth', 'OnlyIfInBoth') -or ($Type -eq 'AllInLeft' -and $RightMultiMode -eq 'DuplicateLines'))) {
         $PSCmdlet.ThrowTerminatingError(
             [Management.Automation.ErrorRecord]::new(
-                [ArgumentException]::new('"-PassThru" and "-Type AllInBoth" are not compatible'),
+                [ArgumentException]::new('"-PassThru" compatible only with "-Type AllInLeft" with "-RightMultiMode" "SingleOnly" or "SubGroups"'),
                 'Incompatible Arguments',
                 [Management.Automation.ErrorCategory]::InvalidArgument,
                 $Type

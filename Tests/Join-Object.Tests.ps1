@@ -212,7 +212,7 @@ Describe -Name 'Join-Object' -Fixture {
             Format-Test @{
                 Description          = 'Error, PassThru+AllInBoth'
                 ExpectedErrorOn      = 'Run'
-                ExpectedErrorMessage = '"-PassThru" and "-Type AllInBoth" are not compatible'
+                ExpectedErrorMessage = '"-PassThru" compatible only with "-Type AllInLeft" with "-RightMultiMode" "SingleOnly" or "SubGroups"'
                 Params               = @{
                     Left                   = 'PSCustomObject'
                     Right                  = 'DataTable'
@@ -225,10 +225,11 @@ Describe -Name 'Join-Object' -Fixture {
                     Type                   = 'AllInBoth'
                 }
             }
+            # PassThru cannot add lines.
             Format-Test @{
                 Description          = 'Error, PassThru+AllInBoth'
                 ExpectedErrorOn      = 'Run'
-                ExpectedErrorMessage = '"-PassThru" and "-Type AllInBoth" are not compatible'
+                ExpectedErrorMessage = '"-PassThru" compatible only with "-Type AllInLeft" with "-RightMultiMode" "SingleOnly" or "SubGroups"'
                 Params               = @{
                     Left                  = 'DataTable'
                     Right                 = 'PSCustomObject'
@@ -242,31 +243,37 @@ Describe -Name 'Join-Object' -Fixture {
                     Type                  = 'AllInBoth'
                 }
             }
+            # PassThru cannot remove lines.
             Format-Test @{
-                Params = @{
-                    Left                   = 'PSCustomObject'
-                    Right                  = 'DataTable'
+                Description          = 'Error, PassThru+OnlyIfInBoth'
+                ExpectedErrorOn      = 'Run'
+                ExpectedErrorMessage = '"-PassThru" compatible only with "-Type AllInLeft" with "-RightMultiMode" "SingleOnly" or "SubGroups"'
+                Params               = @{
+                    Left                   = 'PSCustomObjectMulti'
+                    Right                  = 'DataTableMulti'
                     LeftJoinProperty       = 'ID'
                     RightJoinProperty      = 'IDD'
-                    LeftProperties         = @{ ID = 'ID' ; Sub = 'Subscription' }
                     ExcludeRightProperties = 'Junk'
                     Prefix                 = 'R_'
                     PassThru               = $true
                     Type                   = 'OnlyIfInBoth'
                 }
             }
+            # PassThru cannot duplicate lines.
             Format-Test @{
-                Params = @{
-                    Left                  = 'DataTable'
-                    Right                 = 'PSCustomObject'
-                    LeftJoinProperty      = 'IDD'
-                    RightJoinProperty     = 'ID'
-                    LeftProperties        = @{ IDD = 'IDD' ; Name = 'NewName' }
-                    RightProperties       = @{ ID = 'ID' ; Sub = 'Subscription' }
-                    ExcludeLeftProperties = 'Junk'
-                    Suffix                = '_R'
-                    PassThru              = $true
-                    Type                  = 'OnlyIfInBoth'
+                Description          = 'Error, PassThru+AllInLeft+RightDuplicate'
+                ExpectedErrorOn      = 'Run'
+                ExpectedErrorMessage = '"-PassThru" compatible only with "-Type AllInLeft" with "-RightMultiMode" "SingleOnly" or "SubGroups"'
+                Params               = @{
+                    Left                   = 'PSCustomObjectMulti'
+                    Right                  = 'DataTableMulti'
+                    LeftJoinProperty       = 'ID'
+                    RightJoinProperty      = 'IDD'
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                    PassThru               = $true
+                    Type                   = 'AllInLeft'
+                    RightMultiMode          = 'DuplicateLines'
                 }
             }
 

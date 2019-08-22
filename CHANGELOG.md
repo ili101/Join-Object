@@ -1,3 +1,38 @@
+## 2.0.0 - 2019/08/22 (Stable)
+### New
+* PowerShell Core 7 is now supported!
+* `-LeftJoinScript` and `-RightJoinScript` now support non string output (String is still used if scriptblock provided and not Func``2).
+* `-Comparer` allow use of custom [EqualityComparer].
+### Fixed
+* Fixed DuplicateLines with non DataTable output can create output with "hidden" sub arrays. Linq Join seems to not unroll the output so for example you can get this output:
+```
+IDD Name Junk IntT R_Sub R_IntO
+--- ---- ---- ---- ----- ------
+  1 A    AAA     5 S1         6
+  1 A    AAA     5 S12       62
+  3 C    S3
+  4 D
+```
+It looks like an array with 4 lines of PSCustomObjects but it's actually an array with 3 lines as the first line is actually an array containing the first 2 lines. This will be unrolled in the new version to an array with 4 PSCustomObjects. :warning: breaking change.
+* PowerShell Core 7: Join-Object SubGroups [EmptyPartition`1] Fix.
+* `-PassThru` will now throw an error when used with `-Type OnlyIfInBoth` as lines cannot be removed, and with `-Type AllInLeft` + `-RightMultiMode DuplicateLines` as lines cannot be duplicated. :warning: breaking change.
+### Changed
+`-AddKey` is now a String that takes the name of the key column to create. :warning: breaking change.
+### Improved
+* `/Examples/Join-Object.Examples.ps1` was updated.
+### Updated
+* MoreLinq Updated to 3.2.0.
+### Testing
+* Update To Module.Template 2.0.1, Test now use Azure pipeline Windows 2019 and AppVeyor on Ubuntu1804 and Windows 2019 (PowerShell Framework and core 7.0.0 Preview 3).
+* Update to custom version of Assert 0.9.5.
+* PowerShell Core 7: Test 1 ExpectedErrorMessage Fix.
+* PowerShell Core 7: Tests PSCustomObject.Count -eq 1 Fix.
+### Code Cleanup
+* Change format to VSCode default on all files.
+* cSpell.words updated and spelling corrections.
+* Refactor Tests.
+* Refactor Join-Object.
+
 ## 1.0.1 - 2018/12/17 (Stable)
 ### Added
 * **-AllowColumnsMerging** Allow duplicate columns in the Left and Right Objects, will overwrite the conflicting Left data with the Right data (Ignoring Nulls), Supported only on DataTable output for now.

@@ -29,7 +29,7 @@ install:
   #- ps: 'Install-Module -Name Assert -Force'
   #- ps: '& .\Tests\Assert.ps1'
   # PowerShell Core
-  - ps: '& .\Tests\InstallPowerShell.ps1 -Version "7.0.0-preview.2"' # Install other PowerShell Core version (Optional)
+  - ps: '& .\Tests\InstallPowerShell.ps1 -Version "7.0.0-preview.3"' # Install other PowerShell Core version (Optional)
   - pwsh: 'Install-Module -Name Pester -Force'
   #- pwsh: 'Install-Module -Name Assert -Force'
   #- pwsh: '& .\Tests\Assert.ps1'
@@ -43,7 +43,7 @@ test_script:
 # Deploy
 deploy_script:
   - ps: '& .\Tests\CI.ps1 -Artifact'
-  - ps: '$null = Install-PackageProvider -Name NuGet -Force ; & .\Tests\Publish.ps1'
+  #- ps: '$null = Install-PackageProvider -Name NuGet -Force ; & .\Tests\Publish.ps1'
 
 # Linux setup
 for:
