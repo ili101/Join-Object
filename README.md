@@ -48,8 +48,9 @@ Join-Object -Left $PSCustomObject -Right $DataTable -LeftJoinProperty 'ID' -Righ
 * **-RightJoinScript** and **-LeftJoinScript** parameters to support custom joining scripts.
 * -RightJoinProperty and -LeftJoinProperty supports multiple Properties (String Array) to **join on multiple columns**.
 * **-DataTable** parameter to output as "DataTable".
-* **-AddKey** can be used with "-Type AllInBoth" to add a column named "Key" containing the joining key.
+* **-AddKey** can be used with "-Type AllInBoth" to add a column containing the joining key.
 * **-AllowColumnsMerging** Allow duplicate columns in the Left and Right Objects, will overwrite the conflicting Left data with the Right data (Ignoring Nulls), Supported only on DataTable output for now.
+* **-Comparer** allow use of custom [EqualityComparer].
 
 ## Missing functionality
 * -Type "AllInRight".
@@ -58,11 +59,11 @@ Join-Object -Left $PSCustomObject -Right $DataTable -LeftJoinProperty 'ID' -Righ
 * Noting for now, You can open an Issues if something is needed.
 
 ## Install
-From repository
+From repository (Recommended)
 ```PowerShell
 Install-Module -Name Join-Object -Scope CurrentUser
 ```
-From GitHub
+From GitHub Branch (For testing)
 ```PowerShell
 $Uri = 'https://raw.githubusercontent.com/ili101/Join-Object/master/Install.ps1'; & ([Scriptblock]::Create((irm $Uri))) -FromGitHub $Uri
 ```
@@ -72,6 +73,15 @@ If you fund a bug or added functionality or anything else just fork and send pul
 
 ##  Changelog
 [CHANGELOG.md](https://github.com/ili101/Join-Object/blob/master/CHANGELOG.md)
+
+## Default and supported join modes
+| Join Type     | Linq mode     | LeftMultiMode supported                   | RightMultiMode supported                  | PassThru              |
+|---------------|---------------|-------------------------------------------|-------------------------------------------|-----------------------|
+| OnlyIfInBoth  | Join          | **DuplicateLines**                        | **DuplicateLines**                        | Not Supported         |
+| **AllInLeft** | GroupJoin     | **DuplicateLines**                        | **SingleOnly**, DuplicateLines, SubGroups | SingleOnly, SubGroups |
+| AllInBoth     | FullGroupJoin | **SingleOnly**, DuplicateLines, SubGroups | **SingleOnly**, DuplicateLines, SubGroups | Not Supported         |
+
+\* **Bold** signifies the default setting.
 
 # More PowerShell stuff
 https://github.com/ili101/PowerShell

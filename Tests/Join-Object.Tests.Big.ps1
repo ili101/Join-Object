@@ -1,97 +1,73 @@
 #Requires -Modules Pester
-#Requires -Modules @{ModuleName = 'Assert' ; ModuleVersion = '0.9.2'}
 #Requires -Modules PSSQLite
 
-$Verbose = @{Verbose = $false}
-#$Verbose = @{Verbose = $true}
-
-if ($PSScriptRoot)
-{
+if ($PSScriptRoot) {
     $ScriptRoot = $PSScriptRoot
 }
-elseif ($psISE.CurrentFile.IsUntitled -eq $false)
-{
+elseif ($psISE.CurrentFile.IsUntitled -eq $false) {
     $ScriptRoot = Split-Path -Path $psISE.CurrentFile.FullPath
 }
-elseif ($null -ne $psEditor.GetEditorContext().CurrentFile.Path -and $psEditor.GetEditorContext().CurrentFile.Path -notlike 'untitled:*')
-{
+elseif ($null -ne $psEditor.GetEditorContext().CurrentFile.Path -and $psEditor.GetEditorContext().CurrentFile.Path -notlike 'untitled:*') {
     $ScriptRoot = Split-Path -Path $psEditor.GetEditorContext().CurrentFile.Path
 }
-else
-{
+else {
     $ScriptRoot = '.'
 }
+. "$ScriptRoot\TestHelpers.ps1"
 
-$TestDataSetBig10k = "$ScriptRoot\TestDataSetBig10k.db"
-$TestDataSetBig100k = "$ScriptRoot\TestDataSetBig100k.db"
-
-function Format-Test
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter(Mandatory)]
-        [HashTable]$Test
-    )
-    if ($TestDataSetName, $Test.Params.Left, $Test.Params.Right, $Test.Description -contains $null)
-    {
-        Throw 'Missing param'
-    }
-
-    $Test.TestName = '{0}, {3}. {1} - {2}' -f $TestDataSetName, ($Test.Params.Left.Values -join ''), ($Test.Params.Right.Values -join ''), $Test.Description
-    $Test
-}
-
-function Get-Params
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter(Mandatory)]
-        [Hashtable]$Param
-    )
-    $Output = Invoke-SqliteQuery -DataSource (Get-Variable -Name $TestDataSetName -ValueOnly) -Query ('SELECT * FROM {0}' -f $Param.Table) -As $Param.As
-    , $Output
-}
+$DataSetBig10k  = "$ScriptRoot\TestDataSetBig10k.db"
+$DataSetBig100k = "$ScriptRoot\TestDataSetBig100k.db"
 
 Describe -Name 'Join-Object' -Fixture {
-    $TestDataSetName = 'TestDataSetBig100k'
-    Context -Name $TestDataSetName -Fixture {
-        It -name "Testing <TestName>" -TestCases @(
+    Context -Name ($DataSetName = 'DataSetBig100k') -Fixture {
+        It -Name "Testing: <TestName>" -TestCases @(
             Format-Test @{
-                Description = 'Basic'
-                Params      = @{
-                    Left              = @{Table = 'authors' ; As = 'DataTable'}
-                    Right             = @{Table = 'posts' ; As = 'DataTable'}
+                Params = @{
+                    Left              = @{ Table = 'authors' ; As = 'DataTable' }
+                    Right             = @{ Table = 'posts' ; As = 'DataTable' }
                     LeftJoinProperty  = 'author_id'
                     RightJoinProperty = 'author_id'
                     #DataTable         = $true
                     #RightMultiMode    = 'SubGroups'
                 }
             }
-        ) -test {
+        ) -Test {
             param (
                 $Params,
-                #$TestDataSet,
+                $DataSet,
                 $TestName,
-                $Description,
-                $RunScript
+                $RunScript,
+                $ExpectedErrorMessage,
+                [ValidateSet('Test', 'Run')]
+                $ExpectedErrorOn
             )
-            #if ($TestName -ne 'Small: PSCustomObjects - DataTable, DataTable') {Continue}
-
-            # Load Data
-            if ($RunScript)
-            {
+            if ($RunScript) {
                 . $RunScript
             }
-            $Params.Left = Get-Params -Param $Params.Left
-            $Params.Right = Get-Params -Param $Params.Right
+
+            # Load Data
+            try {
+                $DbConnection = New-SQLiteConnection -DataSource $DataSet
+                $Params.Left = Get-Params -Param $Params.Left -DbConnection $DbConnection
+                $Params.Right = Get-Params -Param $Params.Right -DbConnection $DbConnection
+            }
+            finally {
+                $DbConnection.Dispose()
+            }
 
             # Execute Cmdlet
             $Measure = Measure-Command {
-                $JoindOutput = Join-Object @Params
+                $JoinedOutput = Join-Object @Params
             }
-            Write-Host ("Execution Time: {0}, Count: {1}, Sample: {2}" -f $Measure, $JoindOutput.Count, $JoindOutput[-1])
+
+            if ($JoinedOutput -is [Data.DataTable]) {
+                Write-Host ("Execution Time: {0}, Count: {1}, Type: {2}." -f $Measure, $JoinedOutput.Rows.Count, $JoinedOutput.GetType())
+                Write-Host ('Sample:' + ($JoinedOutput.Rows[$JoinedOutput.Rows.Count - 1] | Out-String).TrimEnd())
+            }
+            else {
+                Write-Host ("Execution Time: {0}, Count: {1}, Type: {2}." -f $Measure, $JoinedOutput.Count, $JoinedOutput.GetType())
+                Write-Host ('Sample:' + ($JoinedOutput[-1] | Out-String).TrimEnd())
+            }
         }
     }
 }

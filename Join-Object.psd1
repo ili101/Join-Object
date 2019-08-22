@@ -32,7 +32,7 @@
     # Description of the functionality provided by this module
     Description       = @'
 Join-Object LINQ Edition.
-Aims to provide the exact functibility of https://github.com/RamblingCookieMonster/PowerShell/blob/master/Join-Object.ps1 with much better performance.
+Aims to provide the exact functionality of https://github.com/RamblingCookieMonster/PowerShell/blob/master/Join-Object.ps1 with much better performance.
 Initial testing shows at last 100 times faster.
 
 ## Explanation and usage Examples
@@ -96,7 +96,7 @@ See RamblingCookieMonster guide http://ramblingcookiemonster.github.io/Join-Obje
     # List of all files packaged with this module
     # FileList = @()
 
-    # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
+    # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData Hashtable with additional module metadata used by PowerShell.
     PrivateData       = @{
 
         PSData = @{
@@ -119,9 +119,9 @@ Change Log
 https://github.com/ili101/Join-Object/blob/master/CHANGELOG.md
 '@
 
-        } # End of PSData hashtable
+        } # End of PSData Hashtable
 
-    } # End of PrivateData hashtable
+    } # End of PrivateData Hashtable
 
     # HelpInfo URI of this module
     # HelpInfoURI = ''

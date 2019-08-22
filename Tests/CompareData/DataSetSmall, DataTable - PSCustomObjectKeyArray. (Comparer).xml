@@ -1,0 +1,47 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>System.Object[]</T>
+      <T>System.Array</T>
+      <T>System.Object</T>
+    </TN>
+    <LST>
+      <Obj RefId="1">
+        <TN RefId="1">
+          <T>System.Management.Automation.PSCustomObject</T>
+          <T>System.Object</T>
+        </TN>
+        <MS>
+          <I32 N="IDD">1</I32>
+          <S N="Name">A</S>
+          <S N="Junk">AAA</S>
+          <I32 N="IntT">5</I32>
+          <S N="R_Sub">S1</S>
+          <I32 N="R_IntO">6</I32>
+        </MS>
+      </Obj>
+      <Obj RefId="2">
+        <TNRef RefId="1" />
+        <MS>
+          <I32 N="IDD">3</I32>
+          <S N="Name">C</S>
+          <S N="Junk">S3</S>
+          <Nil N="IntT" />
+          <S N="R_Sub">S1</S>
+          <I32 N="R_IntO">6</I32>
+        </MS>
+      </Obj>
+      <Obj RefId="3">
+        <TNRef RefId="1" />
+        <MS>
+          <I32 N="IDD">4</I32>
+          <S N="Name">D</S>
+          <Nil N="Junk" />
+          <Nil N="IntT" />
+          <S N="R_Sub">S4</S>
+          <Nil N="R_IntO" />
+        </MS>
+      </Obj>
+    </LST>
+  </Obj>
+</Objs>

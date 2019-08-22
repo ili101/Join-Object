@@ -1,0 +1,59 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include:
+    - '*'
+    # - master
+    # - releases/*
+  paths:
+    exclude:
+    - README.md
+    - CHANGELOG.md
+
+jobs:
+  - job: windows2019
+    pool:
+      vmImage: 'windows-2019'
+
+    steps:
+    - powershell: 'Install-Module -Name Pester -Force -SkipPublisherCheck'
+      displayName: 'Update Pester'
+    - powershell: '& ./Tests/Assert.ps1 ; ./Tests/CI.ps1 -Test'
+      displayName: 'Install and Test'
+
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'NUnit'
+        testResultsFiles: '**/TestResults*.xml'
+        failTaskOnFailedTests: true
+
+    - powershell: './Tests/CI.ps1 -Artifact'
+      displayName: 'Prepare Artifact'
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)'
+        artifact: 'Modules'
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Build.SourcesDirectory)'
+        artifact: 'Source'
+
+  - job: ubuntu1604
+    pool:
+      vmImage: 'ubuntu-16.04'
+
+    steps:
+    - powershell: 'Install-Module -Name Pester -Force'
+      displayName: 'Update Pester'
+    - powershell: '& ./Tests/Assert.ps1 ; ./Tests/CI.ps1 -Test'
+      displayName: 'Install and Test'
+
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'NUnit'
+        testResultsFiles: '**/TestResults*.xml'
+        failTaskOnFailedTests: true
