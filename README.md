@@ -74,5 +74,14 @@ If you fund a bug or added functionality or anything else just fork and send pul
 ##  Changelog
 [CHANGELOG.md](https://github.com/ili101/Join-Object/blob/master/CHANGELOG.md)
 
+## Default and supported join modes
+| Join Type     | Linq mode     | LeftMultiMode supported                   | RightMultiMode supported                  | PassThru              |
+|---------------|---------------|-------------------------------------------|-------------------------------------------|-----------------------|
+| OnlyIfInBoth  | Join          | **DuplicateLines**                        | **DuplicateLines**                        | Not Supported         |
+| **AllInLeft** | GroupJoin     | **DuplicateLines**                        | **SingleOnly**, DuplicateLines, SubGroups | SingleOnly, SubGroups |
+| AllInBoth     | FullGroupJoin | **SingleOnly**, DuplicateLines, SubGroups | **SingleOnly**, DuplicateLines, SubGroups | Not Supported         |
+
+\* **Bold** signifies the default setting.
+
 # More PowerShell stuff
 https://github.com/ili101/PowerShell

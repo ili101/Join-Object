@@ -1,7 +1,7 @@
 ## 2.0.0 - 2019/08/22 (Stable)
 ### New
 * PowerShell Core 7 is now supported!
-* `-LeftJoinScript` and `-RightJoinScript` now support non string output (String is still used if scriptblock provided and not Func``2).
+* `-LeftJoinScript` and `-RightJoinScript` now support non string output (String is still used if scriptblock provided and not Func\`2).
 * `-Comparer` allow use of custom [EqualityComparer].
 ### Fixed
 * Fixed DuplicateLines with non DataTable output can create output with "hidden" sub arrays. Linq Join seems to not unroll the output so for example you can get this output:
