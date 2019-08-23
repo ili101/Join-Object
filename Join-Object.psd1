@@ -12,7 +12,7 @@
     RootModule        = 'Join-Object.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '2.0.0'
+    ModuleVersion     = '2.0.1'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -32,11 +32,11 @@
     # Description of the functionality provided by this module
     Description       = @'
 Join-Object LINQ Edition.
+Join data from two sets of objects based on a common value.
 Aims to provide the exact functionality of https://github.com/RamblingCookieMonster/PowerShell/blob/master/Join-Object.ps1 with much better performance.
 Initial testing shows at last 100 times faster.
 
-## Explanation and usage Examples
-See RamblingCookieMonster guide http://ramblingcookiemonster.github.io/Join-Object/ and https://github.com/ili101/Join-Object/blob/master/Examples/Join-Object.Examples.ps1
+More info at https://github.com/ili101/Join-Object/blob/master/README.md
 '@
 
     # Minimum version of the Windows PowerShell engine required by this module
@@ -102,7 +102,7 @@ See RamblingCookieMonster guide http://ramblingcookiemonster.github.io/Join-Obje
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags         = @('Join-Object', 'LINQ')
+            Tags         = @('Join', 'Join-Object', 'LINQ', 'Combine', 'Merge', 'Union', 'Compare', 'Table', 'DataTable')
 
             # A URL to the license for this module.
             # LicenseUri = ''

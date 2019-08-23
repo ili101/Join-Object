@@ -1,3 +1,7 @@
+## 2.0.1 - 2019/08/24 (Stable)
+### Documentation
+* Updated Description and Tags.
+
 ## 2.0.0 - 2019/08/22 (Stable)
 ### New
 * PowerShell Core 7 is now supported!

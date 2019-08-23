@@ -131,7 +131,7 @@ Join-Object @Params | Format-Table
 #>
 
 . $ExampleData
-# Example 7: -AddKey. can be used with "-Type AllInBoth" to add a column named "Key" containing the joining key.
+# Example 7: -AddKey. can be used with "-Type AllInBoth" to add a column containing the joining key.
 $Params = @{
     Left              = $PSCustomObject
     Right             = $DataTable
@@ -139,14 +139,14 @@ $Params = @{
     RightJoinProperty = 'IDD'
 	LeftProperties    = 'Sub'
 	Type              = 'AllInBoth'
-	AddKey            = $true
+	AddKey            = 'Index'
 }
 Join-Object @Params | Format-Table
 <# Output
-	Key Sub Name Junk   IntT
-	--- --- ---- ----   ----
-	1   S1  foo  AAA  123456
-	2   S2
-	3   S3  Bar  S3
-	4       D
+    Index Sub Name Junk   IntT
+    ----- --- ---- ----   ----
+    1     S1  foo  AAA  123456
+    2     S2
+    3     S3  Bar  S3
+    4         D
 #>
