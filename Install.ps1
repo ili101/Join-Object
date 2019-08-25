@@ -77,7 +77,7 @@ Try {
         else {
             $ModulePathIndex = 1
         }
-        if ($IsLinux) {
+        if ($IsLinux -or $IsMacOS) {
             $ModulePathSeparator = ':'
         }
         else {
