@@ -22,7 +22,7 @@ jobs:
     steps:
     - powershell: 'Install-Module -Name Pester -Force -SkipPublisherCheck'
       displayName: 'Update Pester'
-    - powershell: './CI/CI.ps1 -Test'
+    - powershell: '& ./CI/Assert.ps1 ; ./CI/CI.ps1 -Test'
       displayName: 'Install and Test'
 
     - task: PublishTestResults@2
@@ -51,7 +51,7 @@ jobs:
     steps:
     - pwsh: 'Install-Module -Name Pester -Force'
       displayName: 'Update Pester'
-    - pwsh: './CI/CI.ps1 -Test'
+    - pwsh: '& ./CI/Assert.ps1 ; ./CI/CI.ps1 -Test'
       displayName: 'Install and Test'
 
     - task: PublishTestResults@2
@@ -67,7 +67,7 @@ jobs:
     steps:
     - powershell: 'Install-Module -Name Pester -Force'
       displayName: 'Update Pester'
-    - powershell: '& ./Tests/Assert.ps1 ; ./CI/CI.ps1 -Test'
+    - powershell: '& ./CI/Assert.ps1 ; ./CI/CI.ps1 -Test'
       displayName: 'Install and Test'
 
     - task: PublishTestResults@2
@@ -83,7 +83,7 @@ jobs:
     steps:
     - powershell: 'Install-Module -Name Pester -Force'
       displayName: 'Update Pester'
-    - powershell: './CI/CI.ps1 -Test'
+    - powershell: '& ./CI/Assert.ps1 ; ./CI/CI.ps1 -Test'
       displayName: 'Install and Test'
 
     - task: PublishTestResults@2

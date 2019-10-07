@@ -57,7 +57,7 @@ for:
     install:
       - pwsh: '& .\CI\CI.ps1 -Initialize' # Set AppVeyor build version
       - pwsh: 'Install-Module -Name Pester -Force'
-      - pwsh: 'Install-Module -Name Assert -Force'
+      #- pwsh: 'Install-Module -Name Assert -Force'
     # To run your custom scripts instead of automatic tests
     test_script:
       - pwsh: '& .\CI\Assert.ps1 ; & .\CI\CI.ps1 -Test'
