@@ -1,4 +1,4 @@
-﻿#Requires -Modules Pester
+#Requires -Modules Pester
 #Requires -Modules @{ ModuleName = 'Assert' ; ModuleVersion = '999.9.5' }
 [CmdletBinding()]
 Param
