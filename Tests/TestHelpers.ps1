@@ -130,6 +130,9 @@ function Get-Params {
         elseif ($ParamSplit[0] -eq '[DataTable]') {
             $Output = (Get-Variable -Name $ParamSplit[1]).Value | ConvertTo-DataTable
         }
+        elseif ($ParamSplit[0] -eq '[Collections.ArrayList]') {
+            $Output = [Collections.ArrayList](Get-Variable -Name $ParamSplit[1]).Value
+        }
         else {
             $Output = (Get-Variable -Name $ParamSplit[0]).Value
         }
