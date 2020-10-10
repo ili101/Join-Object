@@ -22,7 +22,7 @@ jobs:
     steps:
     - powershell: 'Install-Module -Name Pester -Force -SkipPublisherCheck -MaximumVersion 4.99.99'
       displayName: 'Update Pester'
-    - powershell: '& ./CI/Assert.ps1 ; ./CI/CI.ps1 -Test'
+    - powershell: 'Import-Module -Name Pester -MaximumVersion 4.99.99 ; & ./CI/Assert.ps1 ; ./CI/CI.ps1 -Test'
       displayName: 'Install and Test'
 
     - task: PublishTestResults@2
