@@ -777,7 +777,7 @@ function Join-Object {
     if ($Left -is [Data.DataTable]) {
         $LeftNew = [DataTableExtensions]::AsEnumerable($Left)
     }
-    elseif ($Left -is [PSCustomObject]) {
+    elseif ($Left -is [PSCustomObject] -or $Left -is [Collections.ArrayList]) {
         $LeftNew = @($Left)
     }
     else {
@@ -786,7 +786,7 @@ function Join-Object {
     if ($Right -is [Data.DataTable]) {
         $RightNew = [DataTableExtensions]::AsEnumerable($Right)
     }
-    elseif ($Right -is [PSCustomObject]) {
+    elseif ($Right -is [PSCustomObject] -or $Right -is [Collections.ArrayList]) {
         $RightNew = @($Right)
     }
     else {

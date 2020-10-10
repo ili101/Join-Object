@@ -1,3 +1,7 @@
+## 2.0.2 - 2020/10/XX (Stable)
+### New
+* Add ArrayList input support.
+
 ## 2.0.1 - 2019/08/24 (Stable)
 ### Documentation
 * Updated Description and Tags.

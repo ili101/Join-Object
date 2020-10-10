@@ -815,6 +815,17 @@ Describe -Name 'Join-Object' -Fixture {
                     RightMultiMode    = 'DuplicateLines'
                 }
             }
+            Format-Test @{
+                Params = @{
+                    Left                   = '[Collections.ArrayList]PSCustomObject'
+                    Right                  = 'DataTable'
+                    LeftJoinProperty       = 'ID'
+                    RightJoinProperty      = 'IDD'
+                    LeftProperties         = @{ ID = 'ID' ; Sub = 'Subscription' }
+                    ExcludeRightProperties = 'Junk'
+                    Prefix                 = 'R_'
+                }
+            }
         )
         if ($FilterTests) {
             $TestCases = $TestCases | Where-Object TestName -In $FilterTests
