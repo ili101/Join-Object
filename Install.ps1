@@ -124,7 +124,7 @@ Try {
             else {
                 if (-not (Test-Path -Path $TargetPathItem)) {
                     $null = New-Item -Path $TargetPathItem -ItemType Directory -ErrorAction Stop
-                    Write-Verbose -Message 'Created module folder: "{0}"' -f $TargetPathItem
+                    Write-Verbose -Message ('Created module folder: "{0}"' -f $TargetPathItem)
                 }
                 $SubLinks = (Invoke-RestMethod -Uri $Link.git_url -Body @{recursive = '1' }).tree
                 foreach ($SubLink in $SubLinks) {
@@ -132,7 +132,7 @@ Try {
                     if ($SubLink.'type' -EQ 'tree') {
                         if (-not (Test-Path -Path $TargetPathSub)) {
                             $null = New-Item -Path $TargetPathSub -ItemType Directory -ErrorAction Stop
-                            Write-Verbose -Message 'Created module folder: "{0}"' -f $TargetPathSub
+                            Write-Verbose -Message ('Created module folder: "{0}"' -f $TargetPathSub)
                         }
                     }
                     else {
