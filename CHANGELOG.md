@@ -1,6 +1,6 @@
-## 2.0.2 - 2020/10/XX (Stable)
+## 2.0.2 - 2020/11/09 (Stable)
 ### New
-* Add ArrayList input support.
+* Add support for [ArrayList] input in addition for [Array] And [DataTable].
 
 ## 2.0.1 - 2019/08/24 (Stable)
 ### Documentation
