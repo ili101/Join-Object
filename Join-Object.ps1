@@ -752,10 +752,10 @@ function Join-Object {
             _SidesScript_
         }.ToString()
         $KeyScript = if ($DataTable) {
-            $KeyScript.Replace('._Key_', "['$AddKey']")
+            $KeyScript.Replace('._Key_', '[$AddKey]')
         }
         else {
-            $KeyScript.Replace('_Key_', "'$AddKey'")
+            $KeyScript.Replace('_Key_', '$AddKey')
         }
         $Query['Main'] = $Query['Main'].Replace('_SidesScript_', $KeyScript)
     }

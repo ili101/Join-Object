@@ -1,3 +1,8 @@
+## 2.0.3 - 2022/04/02 (Stable)
+### Fixed
+* [Issues #16](https://github.com/ili101/Join-Object/issues/16) - Fixed escape error bug when not using `-DataTable`, and `-AddKey` parameter contains a spaces (thank you [franklesniak](https://github.com/franklesniak) for reporting).
+* Fixed escape error bug when using `-DataTable`, and `-AddKey` parameter contains single quotes.
+
 ## 2.0.2 - 2020/11/09 (Stable)
 ### New
 * Add support for [ArrayList] input in addition for [Array] And [DataTable].
